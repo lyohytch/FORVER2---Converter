@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>converter</class>
+ <widget class="QMainWindow" name="converter">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>converter</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_template"/>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionFAQ"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuExecute">
+    <property name="title">
+     <string>Execute</string>
+    </property>
+    <addaction name="actionLoad_Target_Data_from_DB"/>
+    <addaction name="actionLoad_Target_Data"/>
+    <addaction name="actionConvert_files"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_Template_Data"/>
+    <addaction name="actionExport_template_data_to_DB"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport_all"/>
+    <addaction name="actionChange_DB_structure"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_correlation_model"/>
+    <addaction name="actionLoad_correlation_model"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuExecute"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionFAQ">
+   <property name="text">
+    <string>FAQ</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open target file...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionOpen_template">
+   <property name="text">
+    <string>Open template...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
+  </action>
+  <action name="actionOpen_files_to_convert">
+   <property name="text">
+    <string>Open files to convert...</string>
+   </property>
+  </action>
+  <action name="actionConvert_files">
+   <property name="text">
+    <string>Convert and export target data to DB </string>
+   </property>
+  </action>
+  <action name="actionChange_DB_structure">
+   <property name="text">
+    <string>Change DB structure</string>
+   </property>
+  </action>
+  <action name="actionLoad_Template_Data">
+   <property name="text">
+    <string>Load Template Data from FILE</string>
+   </property>
+  </action>
+  <action name="actionLoad_Target_Data">
+   <property name="text">
+    <string>Load Target Data from FILE</string>
+   </property>
+  </action>
+  <action name="actionExport_template_data_to_DB">
+   <property name="text">
+    <string>Export template data to DB</string>
+   </property>
+  </action>
+  <action name="actionLoad_Target_Data_from_DB">
+   <property name="text">
+    <string>Load Target Data from DB</string>
+   </property>
+  </action>
+  <action name="actionExport_all">
+   <property name="text">
+    <string>Export all to DB</string>
+   </property>
+  </action>
+  <action name="actionSave_correlation_model">
+   <property name="text">
+    <string>Save correlation model</string>
+   </property>
+  </action>
+  <action name="actionLoad_correlation_model">
+   <property name="text">
+    <string>Load correlation model</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>converter</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
