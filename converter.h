@@ -99,6 +99,7 @@ private slots:
     void FunctionIsChecked(int id);
     void FillTable();
     void completeAddingToDB(int aError, QString errStr);
+    void makeRequestSlot();
 signals:
     void loadDataComplete();
     void loadDescComplete();

@@ -2,10 +2,16 @@
 #include <QDebug>
 
 querymodel::querymodel(CorrelationModel *acorrModel):
-        corrModel(acorrModel)
+         corrModel(acorrModel)
 {
     qDebug()<<Q_FUNC_INFO;
 }
+
+void querymodel::run()
+{
+    this->makeRequest();
+}
+
 //У нас есть структура
 //id(for example, generic_133) , name, type(me,dv,av,ed,cb,et,rm)
 void querymodel::makeRequest()
@@ -20,6 +26,7 @@ void querymodel::makeRequest()
     //1 request = 1 item in iListData
     //Заполняется один раз
     fillingRequestList();
+    emit this->makeRequestSignal();
 }
 void querymodel::makeCreateTableRequest()
 {

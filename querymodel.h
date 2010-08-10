@@ -1,14 +1,18 @@
 #ifndef QUERYMODEL_H
 #define QUERYMODEL_H
 #include <QStringList>
+#include <QRunnable>
+#include <QObject>
 #include "qmodeldescribing.h"
 #include "correlationmodel.h"
 #include "constants.h"
 //About class: QModelDescribing => QStringList
 //me,dv,av,ed,cb,et,rm
 
-class querymodel
+class querymodel: public QObject, public QRunnable
 {
+    Q_OBJECT
+
 protected:
     QStringList listOfRequests;//список запросов к базе данных
 
@@ -41,12 +45,16 @@ public:
         rm,
         un
     };
-    querymodel(CorrelationModel *acorrModel);
+    querymodel(CorrelationModel *acorrModel = 0);
+    virtual void run();
     void makeRequest();
     QStringList getRequestDesc() const {return iQueryRequestDesc;};
     QStringList getRequestData() const {return iQueryRequestData;};
     QStringList getRequestList() const {return listOfRequests;};
     QStringList getCreateTable() const {return iCreateTblRequests;};
+
+signals:
+    void makeRequestSignal();
 private:
     CellType iCellType;
     //Fill in lists

@@ -39,7 +39,7 @@ converter::converter(QWidget *parent) :
             SLOT(FillTable()),Qt::QueuedConnection);
 
     //QueryModel
-    queryModel = new querymodel(corrModel);
+   // queryModel = new querymodel(corrModel);
     //queryModel4 = new querymodel(model4);
     //connect(mssqlQuery4,SIGNAL(complete(int,QString)),this,
             //SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
@@ -93,7 +93,7 @@ converter::~converter()
     //Delete corr model
     if(corrModel) delete corrModel;
     //Delete query model
-    if(queryModel) delete queryModel;
+    //if(queryModel) delete queryModel;
     //if(queryModel4) delete queryModel4;
 
     //Delete layout
@@ -366,15 +366,14 @@ void converter::on_actionExport_template_data_to_DB_triggered()
     {
         //Make string request
         qDebug()<<"=======Start Loading Template======";
-        queryModel->makeRequest();
-        //Adding data to DB
-        //MSSQL Query
-        mssqlQuery = new mssqlquery(0,queryModel);
-        //mssqlQuery4 = new mssqlquery(0,queryModel4);
-        //TODO make connect to receive signal from object
-        connect(mssqlQuery,SIGNAL(complete(int,QString)),this,
-                SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
-        QThreadPool::globalInstance()->start(mssqlQuery);
+        queryModel = new querymodel(corrModel);
+        queryModel->setAutoDelete(false);
+        connect(queryModel, SIGNAL(makeRequestSignal()), this,
+                SLOT(makeRequestSlot()), Qt::QueuedConnection);
+        QThreadPool::globalInstance()->start(queryModel);
+
+        //TODO move to slot
+
         qDebug()<<"=======End Template======";
     }
     else
@@ -391,15 +390,11 @@ void converter::on_actionConvert_files_triggered()
     {
         //Make string request
         qDebug()<<"=======Start Converting======";
-        queryModel->makeRequest();
-        //Adding data to DB
-        //MSSQL Query
-        mssqlQuery = new mssqlquery(0,queryModel);
-        //mssqlQuery4 = new mssqlquery(0,queryModel4);
-        //TODO make connect to receive signal from object
-        connect(mssqlQuery,SIGNAL(complete(int,QString)),this,
-                SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
-        QThreadPool::globalInstance()->start(mssqlQuery);
+        queryModel = new querymodel(corrModel);
+        queryModel->setAutoDelete(false);
+        connect(queryModel, SIGNAL(makeRequestSignal()), this,
+                SLOT(makeRequestSlot()), Qt::QueuedConnection);
+        QThreadPool::globalInstance()->start(queryModel);
         qDebug()<<"=======End Converting======";
     }
     else
@@ -421,6 +416,24 @@ void converter::completeAddingToDB(int aError,QString errStr)
     qDebug()<<Q_FUNC_INFO<<" id = "<<aError<<" Msg: "<<errStr;
     pLabel->setText("Adding data was complete. ErrorMessage: " + errStr);
 
+}
+
+void converter::makeRequestSlot()
+{
+    qDebug()<<Q_FUNC_INFO;
+    //Adding data to DB
+    //MSSQL Query
+    mssqlQuery = new mssqlquery(0,queryModel);
+    //mssqlQuery4 = new mssqlquery(0,queryModel4);
+    //TODO make connect to receive signal from object
+    connect(mssqlQuery,SIGNAL(complete(int,QString)),this,
+            SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
+    QThreadPool::globalInstance()->start(mssqlQuery);
+    if(queryModel)
+    {
+        delete queryModel;
+        queryModel = NULL;
+    }
 }
 
 void converter::init()
