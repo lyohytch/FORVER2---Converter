@@ -21,6 +21,7 @@ HEADERS += converter.h \
 FORMS += converter.ui
 #CONFIG settings
 CONFIG(debug):DEFINES += DEBUGING
+DEFINES+=PROS
 #CONFIG(release):DEFINES += QT_NO_DEBUG_OUTPUT
 #CONFIG(release):DEFINES += QT_NO_DEBUG
 

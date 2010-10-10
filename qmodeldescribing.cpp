@@ -61,6 +61,28 @@ void QModelDescribing::appendToList(const QString &filename)
         qCritical()<<__PRETTY_FUNCTION__<<"File "<<filename<<" doesn't exist";
     }
 }
+void QModelDescribing::addingDataToList(QTextStream *fileStream)
+{
+    qDebug()<<Q_FUNC_INFO<<" Start";
+    QMap<QString, QVariant> *oneRecord;
+    while (!fileStream->atEnd())
+    {
+        QString line = fileStream->readLine();
+        oneRecord = process_line(line);
+        if(oneRecord != NULL)
+        {
+            moveOneRecordToList(*oneRecord);
+            delete oneRecord;
+        }
+    }
+    qDebug()<<Q_FUNC_INFO<<" End";
+}
+
+void QModelDescribing::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
+{
+    oneRec.insert(numb,iListDescribing.count());
+    iListDescribing.append(oneRec);
+}
 
 void QModelDescribing::loadingData(const QString &filename)
 {
@@ -251,7 +273,8 @@ void QModelDescribing::fillSignificantList()
  void QModelDescribing::setStatNameByFile(const QString &filename)
  {
      if(filename.endsWith("Sprav1.txt",Qt::CaseSensitive) ||
-        filename.endsWith("sprav_d.txt",Qt::CaseSensitive))
+        filename.endsWith("sprav_d.txt",Qt::CaseSensitive) ||
+        filename.endsWith("F1.TXT", Qt::CaseSensitive))
      {
          statName = generic;
      }
@@ -303,25 +326,6 @@ QModelDescribingOld4::QModelDescribingOld4(QObject *parent):
         QModelDescribing(parent)
 {
 
-}
-
-void QModelDescribingOld4::addingDataToList(QTextStream *fileStream)
-{
-    qDebug()<<Q_FUNC_INFO<<" Start";
-    QMap<QString, QVariant> *oneRecord;
-    int i = 0;
-    while (!fileStream->atEnd())
-    {
-        QString line = fileStream->readLine();
-        oneRecord = process_line(line);
-        if(oneRecord != NULL)
-        {
-            oneRecord->insert(numb,i++);
-            iListDescribing.append(*oneRecord);
-            delete oneRecord;
-        }
-    }
-    qDebug()<<Q_FUNC_INFO<<" End";
 }
 
 bool QModelDescribingOld4::checkFileStructure(QTextStream *fileStream)
@@ -599,26 +603,6 @@ QModelDescribingDemo::QModelDescribingDemo(QObject *parent):
 
 }
 
-void QModelDescribingDemo::addingDataToList(QTextStream *fileStream)
-{
-    qDebug()<<Q_FUNC_INFO;
-    qDebug()<<Q_FUNC_INFO<<" Start";
-    QMap<QString, QVariant> *oneRecord;
-    int i = 0;
-    while (!fileStream->atEnd())
-    {
-        QString line = fileStream->readLine();
-        oneRecord = process_line(line);
-        if(oneRecord != NULL)
-        {
-            oneRecord->insert(numb,i++);
-            iListDescribing.append(*oneRecord);
-            delete oneRecord;
-        }
-    }
-    qDebug()<<Q_FUNC_INFO<<" End";
-}
-
 QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
 {
    // qDebug()<<Q_FUNC_INFO<<"::"<<line;
@@ -774,13 +758,57 @@ QVariantList QModelDescribingDemo::initDataStructure()
 QModelDescribingPros::QModelDescribingPros(QObject *parent):
         QModelDescribing(parent)
 {
-
+   isProcessLine = 1;
 }
 
-void QModelDescribingPros::addingDataToList(QTextStream *fileStream)
+
+bool QModelDescribingPros::checkFileStructure(QTextStream *fileStream)
 {
-    //TODO implemented this
+    qDebug()<<__PRETTY_FUNCTION__<<"Not implemented yet. Accept all files";
     Q_UNUSED(fileStream);
+    bool accept = true;
+
+    return accept;
+}
+
+QMap<QString, QVariant>* QModelDescribingPros::process_line(const QString &line)
+{
+    qDebug()<<Q_FUNC_INFO;
+    QMap<QString,QVariant> *retMap = new QMap<QString,QVariant>; //QMap["prosDesc", tempList]
+    QMap<QString,QVariant> tempRet;
+    QVariantList tempList; // QList [QMap<QString, QVariant>]
+    QStringList ids = line.split(';', QString::SkipEmptyParts);
+    if(!ids.isEmpty() && ids.count() > 1 && isProcessLine)
+    {
+        //Complete DESCRIBING LIST
+         tempRet.insert(level, QVariant(1));
+         tempRet.insert(type, "");
+        foreach(QString idval, ids)
+        {
+            idval.remove(" ");
+            tempRet.insert(id,statName+idval);
+            tempRet.insert(name, idval);
+            tempList.append(tempRet);
+        }
+        retMap->insert(prosDesc, tempList);
+        isProcessLine = 0;
+        return retMap;
+    }
+    return NULL;
+}
+
+void QModelDescribingPros::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
+{
+    int i = 0;
+    QVariantList tmpList = oneRec.value(prosDesc).toList();
+    if(!tmpList.isEmpty())
+    {
+        foreach(QVariant oneElem, tmpList)
+        {
+            oneElem.toMap().insert(numb, i++);
+            iListDescribing.append(oneElem.toMap());
+        }
+    }
 }
 
 //-------------------QModelDescribingPros--------------------------------------

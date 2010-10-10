@@ -49,6 +49,7 @@ const QString error("error");//Ошибка
 const QString numb("number");//Номер по порядку
 const QString repeat("repeat");//дублируюший элемент
 const QString rapid("rapid");
+const QString prosDesc("prosDesc");//
 
 //Data model fields
 const QString generic("generic_");
@@ -84,6 +85,10 @@ const int agef = 0;
 const int concatf = 1;
 const int nonef = 2;
 
+//Describing definitions
+const int TARGETDESC = 0;
+const int TEMPLATEDESC = 1;
+
 //Predefined file paths
 #ifdef Q_OS_LINUX
 const QString demopath("Resources/Description/sprav_d.txt");
@@ -103,5 +108,6 @@ const QString target1path("..\\Resources\\Description\\old\\Sprav1.txt");
 const QString target2path("..\\Resources\\Description\\old\\Sprav2.txt");
 const QString target3path("..\\Resources\\Description\\old\\Sprav3.txt");
 const QString target4path("..\\Resources\\Description\\old\\Sprav4.txt");
+const QString prosTestPath("..\\Resources\\Description\\F1.TXT");
 #endif
 #endif // CONSTANTS_H

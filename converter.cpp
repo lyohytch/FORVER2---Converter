@@ -27,32 +27,41 @@ converter::converter(QWidget *parent) :
     treed = new TreeViewModel(this,true);
     connect(treed,SIGNAL(doubleClicked(const QModelIndex &)),this,
             SLOT(ElementTreeTemplateActivated(const QModelIndex &)),Qt::QueuedConnection);
+    //Template files Pros
+    modelP = new QModelDescribingPros();
+    treep = new TreeViewModel(this, false);
+    connect(treep, SIGNAL(doubleClicked(const QModelIndex &)), this,
+            SLOT(ElementTreeTemplateActivated(const QModelIndex &)), Qt::QueuedConnection);
 
-    //TODO implement it
+
+    models = new QModelDescribing*[2];
+    models[TARGETDESC] = modelP;
+    models[TEMPLATEDESC] = modelD;
+
+    trees = new TreeViewModel*[2];
+    trees[TARGETDESC] = treep;
+    trees[TEMPLATEDESC] = treed;
+
     //Correlation model
-    corrModel = new CorrelationModel(this,modelD,model4);
+    corrModel = new CorrelationModel(this,models[TEMPLATEDESC],models[TARGETDESC]);
     connect(corrModel,SIGNAL(doubleClicked(const QModelIndex &)),this,
             SLOT(ElementTableActivated(const QModelIndex &)),Qt::QueuedConnection);
+
+
 
 
     connect(this,SIGNAL(loadDescComplete()),this,
             SLOT(FillTable()),Qt::QueuedConnection);
 
-    //QueryModel
-   // queryModel = new querymodel(corrModel);
-    //queryModel4 = new querymodel(model4);
-    //connect(mssqlQuery4,SIGNAL(complete(int,QString)),this,
-            //SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
-
 
     //Put tree model on widget
     layout  = new QHBoxLayout;
     //template
-    layout->addWidget(treed);
+    layout->addWidget(trees[TEMPLATEDESC]);
     //table - corrModel
     layout->addWidget(corrModel);
     //target
-    layout->addWidget(tree4);
+    layout->addWidget(trees[TARGETDESC]);
     this->centralWidget()->setLayout(layout);
     pLabel = new QLabel;
     pLabel->setText("Application started. Please load target and template files to start converting");
@@ -90,11 +99,14 @@ converter::~converter()
     //Delete template
     if(modelD) delete modelD;
     if(treed) delete treed;
+    //Delete template pros
+    if(modelP) delete modelP;
+    if(treep) delete treep;
+
     //Delete corr model
     if(corrModel) delete corrModel;
-    //Delete query model
-    //if(queryModel) delete queryModel;
-    //if(queryModel4) delete queryModel4;
+    if(models) delete models;
+    if(trees) delete trees;
 
     //Delete layout
     if(layout) delete layout;
@@ -141,18 +153,18 @@ void converter::on_actionOpen_triggered()
     //---------------------
     if(filenames.count() > 0)
     {
-        model4->resetAllList();
+        models[TARGETDESC]->resetAllList();
         corrModel->clearTable();
     }
     for(int i = 0; i < filenames.count() ;i++)
     {
-        model4->appendToList(filenames[i]);
+        models[TARGETDESC]->appendToList(filenames[i]);
     }
-    if(model4->getListDescribing().count() > 0)
+    if(models[TARGETDESC]->getListDescribing().count() > 0)
     {
         //TODO попробовать просто отобразить модель
-        model4->createModel();
-        tree4->loadModel(model4);
+        models[TARGETDESC]->createModel();
+        trees[TARGETDESC]->loadModel(models[TARGETDESC]);
         pLabel->setText("Target model was created");
         emit loadDescComplete();
     }
@@ -177,18 +189,18 @@ void converter::on_actionOpen_template_triggered()
     //---------------------
     if(filenames.count() > 0)
     {
-        modelD->resetAllList();
+        models[TARGETDESC]->resetAllList();
         corrModel->clearTable();
     }
     for(int i = 0; i < filenames.count() ;i++)
     {
-        modelD->appendToList(filenames[i]);
+        models[TARGETDESC]->appendToList(filenames[i]);
     }
-    if(modelD->getListDescribing().count() > 0)
+    if(models[TARGETDESC]->getListDescribing().count() > 0)
     {
         //TODO попробовать просто отобразить модель
-        modelD->createModel();
-        treed->loadModel(modelD);
+        models[TARGETDESC]->createModel();
+        treed->loadModel(models[TARGETDESC]);
         pLabel->setText("Template model was created");
         emit loadDescComplete();
     }
@@ -199,7 +211,7 @@ void converter::ElementTreeTargetActivated(const QModelIndex &index)
 {
     qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
     qDebug()<<Q_FUNC_INFO<<"index.row() = "<<rowId;
-    if(corrModel->applyTreeClick(iTarget) && model4->isSignificant(index.data(Qt::UserRole + 1)))
+    if(corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
     {
         //TODO как-то нужно это добавить в таблицу
         corrModel->changeTargetValue(iTarget,rowId,index.data(Qt::UserRole + 1),countTV);
@@ -216,7 +228,7 @@ void converter::ElementTreeTemplateActivated(const QModelIndex &index)
 {
     qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
     qDebug()<<Q_FUNC_INFO<<"index.row() = "<<rowId;
-    if(corrModel->applyTreeClick(iTemplate) && modelD->isSignificant(index.data(Qt::UserRole + 1)))
+    if(corrModel->applyTreeClick(iTemplate) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
     {
         //Нужен только один элемент Лучше использовать QVariant ?
         corrModel->changeTemplateValue(iTemplate,rowId,index.data(Qt::UserRole + 1));
@@ -283,7 +295,7 @@ void converter::FillTable()
 {
     qDebug()<<Q_FUNC_INFO<<" fill in table if it need";
     //сдклать isValid
-    if(model4->isValid() && modelD->isValid())
+    if(models[TARGETDESC]->isValid() && models[TARGETDESC]->isValid())
     {
         //TODO do something
         corrModel->fillInTable();
@@ -298,7 +310,7 @@ void converter::on_actionLoad_Template_Data_triggered()
 {
     qDebug()<<Q_FUNC_INFO;
     //Create file dialog
-    if(!modelD->isValid())
+    if(!models[TARGETDESC]->isValid())
     {
         qWarning()<<Q_FUNC_INFO<<" Description wasn't loaded";
         this->statusBar()->showMessage("Template Description wasn't loaded",5000);
@@ -317,11 +329,11 @@ void converter::on_actionLoad_Template_Data_triggered()
     if(filenames.count() > 0)
     {
         //Reset data
-        modelD->resetDataList();
+        models[TARGETDESC]->resetDataList();
     }
     for(int i = 0; i < filenames.count();i++)
     {
-        modelD->loadingData(filenames[i]);
+        models[TARGETDESC]->loadingData(filenames[i]);
     }
 }
 
@@ -330,7 +342,7 @@ void converter::on_actionLoad_Target_Data_triggered()
     qDebug()<<Q_FUNC_INFO;
     qDebug()<<Q_FUNC_INFO;
     //Create file dialog
-    if(!model4->isValid())
+    if(!models[TARGETDESC]->isValid())
     {
         qWarning()<<Q_FUNC_INFO<<" Description wasn't loaded";
         this->statusBar()->showMessage("Target Description wasn't loaded",5000);
@@ -348,13 +360,13 @@ void converter::on_actionLoad_Target_Data_triggered()
     //---------------------
     foreach(QString fname, filenames)
     {
-        model4->loadingData(fname);
+        models[TARGETDESC]->loadingData(fname);
     }
-    if(model4->isValidDataTemp())
+    if(models[TARGETDESC]->isValidDataTemp())
     {
         //Reset data
-        model4->resetDataList();
-        model4->dataPrepare();
+        models[TARGETDESC]->resetDataList();
+        models[TARGETDESC]->dataPrepare();
         pLabel->setText("Target data successfully loaded");
     }
 }
@@ -362,7 +374,7 @@ void converter::on_actionLoad_Target_Data_triggered()
 void converter::on_actionExport_template_data_to_DB_triggered()
 {
     qDebug()<<Q_FUNC_INFO;
-    if(modelD->isValidData())
+    if(models[TEMPLATEDESC]->isValidData())
     {
         //Make string request
         qDebug()<<"=======Start Loading Template======";
@@ -386,7 +398,7 @@ void converter::on_actionExport_template_data_to_DB_triggered()
 void converter::on_actionConvert_files_triggered()
 {
     qDebug()<<Q_FUNC_INFO;//У нас должны быть загружены данные и модель демо версии
-    if(model4->isValidData() && modelD->isValid())
+    if(models[TARGETDESC]->isValidData() && models[TEMPLATEDESC]->isValid())
     {
         //Make string request
         qDebug()<<"=======Start Converting======";
@@ -436,45 +448,46 @@ void converter::makeRequestSlot()
     }
 }
 
+void converter::init_load(QModelDescribing *loadedModel, TreeViewModel *tree)
+{
+    QStringList filenames;
+    if(loadedModel == modelD)
+    {
+       filenames.append(demopath);
+    }
+    else if(loadedModel == model4)
+    {
+            filenames.append(target1path);
+            filenames.append(target2path);
+            filenames.append(target3path);
+            filenames.append(target4path);
+     }
+    else if(loadedModel == modelP)
+    {
+            filenames.append(prosTestPath);
+    }
+
+
+    foreach(QString fname, filenames)
+    {
+        loadedModel->appendToList(fname);
+    }
+    if(loadedModel->getListDescribing().count() > 0)
+    {
+        //TODO попробовать просто отобразить модель
+        loadedModel->createModel();
+        tree->loadModel(loadedModel);
+        pLabel->setText("Model was loaded");
+        emit loadDescComplete();
+    }
+}
+
 void converter::init()
 {
     //Template
     qDebug()<<Q_FUNC_INFO;
-    QStringList filenames;    
-    filenames.clear();
-    filenames.append(demopath);
-    for(int i = 0; i < filenames.count() ;i++)
-    {
-        modelD->appendToList(filenames[i]);
-    }
-    if(modelD->getListDescribing().count() > 0)
-    {
-        //TODO попробовать просто отобразить модель
-        modelD->createModel();
-        treed->loadModel(modelD);
-        pLabel->setText("Template model was created");
-        emit loadDescComplete();
-    }
-
-    //Target
-    filenames.clear();
-    filenames.append(target1path);
-    filenames.append(target2path);
-    filenames.append(target3path);
-    filenames.append(target4path);
-    for(int i = 0; i < filenames.count() ;i++)
-    {
-        model4->appendToList(filenames[i]);
-    }
-    if(model4->getListDescribing().count() > 0)
-    {
-        //TODO попробовать просто отобразить модель
-        model4->createModel();
-        tree4->loadModel(model4);
-        pLabel->setText("Target model was created");
-        emit loadDescComplete();
-    }
-
+    init_load(models[TEMPLATEDESC], trees[TEMPLATEDESC]);
+    init_load(models[TARGETDESC], trees[TARGETDESC]);
 }
 
 void converter::on_actionSave_correlation_model_triggered()

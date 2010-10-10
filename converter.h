@@ -55,7 +55,16 @@ private:
     //Template
     QModelDescribingDemo *modelD;
     TreeViewModel *treed;
-    //Correlation Model
+    //Template proc
+    QModelDescribingPros *modelP;
+
+    //Describing template
+    QModelDescribing **models;
+    TreeViewModel **trees;
+
+    TreeViewModel *treep;
+
+    //General Correlation Model
     CorrelationModel *corrModel;
 
     //QueryModel QModelDescring->StringList
@@ -78,6 +87,7 @@ private:
 
     bool applyTreeClick(int id);
     void setApplyTreeClick(int id);
+    void init_load(QModelDescribing *loadedModel, TreeViewModel *tree);
     void init();
     int rowId;//   
     bool countTV;//  

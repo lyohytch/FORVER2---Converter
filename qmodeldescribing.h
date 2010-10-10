@@ -20,18 +20,19 @@ private:
 protected:
      QString statName;//"generic_","figurant_","locus_delicti_","weapon_"
     //GENERAL
-   /*child*/ virtual void addingDataToList(QTextStream *fileStream) {qDebug()<<Q_FUNC_INFO;Q_UNUSED(fileStream);};
+     void addingDataToList(QTextStream *fileStream);
     //TODO move to protect
     /**
      *Список из карт типа (id,name,type,level,value) value == NULL for Description Files
      */
-    QVariantList iListDescribing;
+    QVariantList iListDescribing;// General describing list
     QVariantList iListSignificant;
     QVariantList iListData;// QList<  [[[  QList<QMap<QString, QVariant> > ]]]  >
     /*child*/virtual bool checkFileStructure(QTextStream *fileStream) {qDebug()<<Q_FUNC_INFO;Q_UNUSED(fileStream); return true;};
     virtual void setChildItem(const QVariantList &iList,int i,int levels,QStandardItem *parent);
     /*child*/virtual bool isValidString(const QMap<QString,QVariant> &checkMap);
     /*child*/virtual QMap<QString, QVariant>* process_line(const QString &line){qDebug()<<Q_FUNC_INFO;Q_UNUSED(line);return NULL;};
+    virtual void moveOneRecordToList(QMap<QString, QVariant> & oneRec);
     //TODO implement process_line.<Methods can be overloaded in children objects>
     virtual QString readElement(const QString &line,int &k);
     virtual bool turn(const QString &line, int &k, int cTurn);
@@ -61,6 +62,8 @@ public:
     virtual bool isSignificant(const QVariant &value);
     QVariant findById(const QVariant &id);//Найти элемент по ид в iListSignificant
     //DATA
+    /*child*/virtual bool isValidDataTemp() {qDebug()<<Q_FUNC_INFO; return true;};
+    /*child*/virtual void dataPrepare(){ qDebug()<<Q_FUNC_INFO;};
     virtual bool isValidData();//isDataLoaded?
     void loadingData(const QString &filename);
     void resetDataList();
@@ -81,13 +84,12 @@ public:
     QModelDescribingOld4(QObject *parent = 0);
     ~QModelDescribingOld4() {};
     //DATA
-    void dataPrepare();//iListDataTemp ->iListData
+    virtual void dataPrepare();//iListDataTemp ->iListData
     //virtual bool isValid(){qDebug()<<Q_FUNC_INFO<<"Not implemented yet";return true;};
-    bool isValidDataTemp();
+    virtual bool isValidDataTemp();
 protected:
     //GENERAL
     QVariantList iListDataTemp;//Массив мапов типа (ид, значение), где значение - данные из конкретного файла
-   virtual  void addingDataToList(QTextStream *fileStream);
     //TODO implement checkFileStructure
    virtual  bool checkFileStructure(QTextStream *fileStream);
     //TODO implement isValid()
@@ -118,7 +120,6 @@ public:
 
 protected:
     //GENERAL
-    virtual void addingDataToList(QTextStream *fileStream);
     virtual QMap<QString, QVariant>* process_line(const QString &line);
     virtual  bool checkFileStructure(QTextStream *fileStream);
     virtual bool isValidString(const QMap<QString,QVariant> &checkMap);
@@ -143,7 +144,12 @@ public:
     QModelDescribingPros(QObject *parent = 0);
     ~QModelDescribingPros() {};
 protected:
-    void addingDataToList(QTextStream *fileStream);
+    //GENERAL
+    virtual QMap<QString, QVariant>* process_line(const QString &line);
+    virtual bool checkFileStructure(QTextStream *fileStream);
+    virtual void moveOneRecordToList(QMap<QString, QVariant> & oneRec);
+private:
+    bool isProcessLine;
 };
 
 #endif // QMODELDESCRIBING_H
