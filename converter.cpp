@@ -17,6 +17,7 @@ converter::converter(QWidget *parent) :
     isTemplateRow = false;
     QDesktopWidget *d = QApplication::desktop();
     this->setGeometry(100,100,d->width()/3,d->height() - 400);
+    //TODO rework it for more productivity
     //Target files
     model4 = new QModelDescribingOld4();
     tree4 = new TreeViewModel(this,false);
@@ -27,11 +28,11 @@ converter::converter(QWidget *parent) :
     treed = new TreeViewModel(this,true);
     connect(treed,SIGNAL(doubleClicked(const QModelIndex &)),this,
             SLOT(ElementTreeTemplateActivated(const QModelIndex &)),Qt::QueuedConnection);
-    //Template files Pros
+    //Target files Pros
     modelP = new QModelDescribingPros();
     treep = new TreeViewModel(this, false);
     connect(treep, SIGNAL(doubleClicked(const QModelIndex &)), this,
-            SLOT(ElementTreeTemplateActivated(const QModelIndex &)), Qt::QueuedConnection);
+            SLOT(ElementTreeTargetActivated(const QModelIndex &)), Qt::QueuedConnection);
 
 
     models = new QModelDescribing*[2];
@@ -46,9 +47,6 @@ converter::converter(QWidget *parent) :
     corrModel = new CorrelationModel(this,models[TEMPLATEDESC],models[TARGETDESC]);
     connect(corrModel,SIGNAL(doubleClicked(const QModelIndex &)),this,
             SLOT(ElementTableActivated(const QModelIndex &)),Qt::QueuedConnection);
-
-
-
 
     connect(this,SIGNAL(loadDescComplete()),this,
             SLOT(FillTable()),Qt::QueuedConnection);
@@ -189,18 +187,18 @@ void converter::on_actionOpen_template_triggered()
     //---------------------
     if(filenames.count() > 0)
     {
-        models[TARGETDESC]->resetAllList();
+        models[TEMPLATEDESC]->resetAllList();
         corrModel->clearTable();
     }
     for(int i = 0; i < filenames.count() ;i++)
     {
-        models[TARGETDESC]->appendToList(filenames[i]);
+        models[TEMPLATEDESC]->appendToList(filenames[i]);
     }
     if(models[TARGETDESC]->getListDescribing().count() > 0)
     {
         //TODO попробовать просто отобразить модель
-        models[TARGETDESC]->createModel();
-        treed->loadModel(models[TARGETDESC]);
+        models[TEMPLATEDESC]->createModel();
+        treed->loadModel(models[TEMPLATEDESC]);
         pLabel->setText("Template model was created");
         emit loadDescComplete();
     }
@@ -210,7 +208,7 @@ void converter::on_actionOpen_template_triggered()
 void converter::ElementTreeTargetActivated(const QModelIndex &index)
 {
     qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
-    qDebug()<<Q_FUNC_INFO<<"index.row() = "<<rowId;
+    qDebug()<<Q_FUNC_INFO<<"index.row() = "<<index.row();
     if(corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
     {
         //TODO как-то нужно это добавить в таблицу
@@ -228,7 +226,7 @@ void converter::ElementTreeTemplateActivated(const QModelIndex &index)
 {
     qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
     qDebug()<<Q_FUNC_INFO<<"index.row() = "<<rowId;
-    if(corrModel->applyTreeClick(iTemplate) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
+    if(corrModel->applyTreeClick(iTemplate) && models[TEMPLATEDESC]->isSignificant(index.data(Qt::UserRole + 1)))
     {
         //Нужен только один элемент Лучше использовать QVariant ?
         corrModel->changeTemplateValue(iTemplate,rowId,index.data(Qt::UserRole + 1));
@@ -310,7 +308,7 @@ void converter::on_actionLoad_Template_Data_triggered()
 {
     qDebug()<<Q_FUNC_INFO;
     //Create file dialog
-    if(!models[TARGETDESC]->isValid())
+    if(!models[TEMPLATEDESC]->isValid())
     {
         qWarning()<<Q_FUNC_INFO<<" Description wasn't loaded";
         this->statusBar()->showMessage("Template Description wasn't loaded",5000);
@@ -329,11 +327,11 @@ void converter::on_actionLoad_Template_Data_triggered()
     if(filenames.count() > 0)
     {
         //Reset data
-        models[TARGETDESC]->resetDataList();
+        models[TEMPLATEDESC]->resetDataList();
     }
     for(int i = 0; i < filenames.count();i++)
     {
-        models[TARGETDESC]->loadingData(filenames[i]);
+        models[TEMPLATEDESC]->loadingData(filenames[i]);
     }
 }
 
@@ -464,7 +462,10 @@ void converter::init_load(QModelDescribing *loadedModel, TreeViewModel *tree)
      }
     else if(loadedModel == modelP)
     {
-            filenames.append(prosTestPath);
+            filenames.append(prosPathF1);
+            filenames.append(prosPathF2);
+            filenames.append(prosPathF5);
+            filenames.append(prosPathF12);
     }
 
 

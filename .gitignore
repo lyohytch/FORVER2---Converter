@@ -1,0 +1,6 @@
+diplom.pro.user
+Makefile
+*.o
+ui_converter.h
+moc_*
+Demo.Converter

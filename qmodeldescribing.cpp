@@ -186,7 +186,6 @@ void QModelDescribing::setChildItem(const QVariantList &iList,int i,int levels,Q
 }
 bool QModelDescribing::isValidString(const QMap<QString,QVariant> &checkMap)
 {
-    qDebug()<<Q_FUNC_INFO<<" Map:="<<checkMap;
     bool isNull = ((checkMap.value(id)==NULL)||(checkMap.value(level)==NULL)||
                    (checkMap.value(name)==NULL)||(checkMap.value(type)==NULL));
     if(!isNull)
@@ -666,7 +665,6 @@ bool QModelDescribingDemo::checkFileStructure(QTextStream *fileStream)
 
 bool QModelDescribingDemo::isValidString(const QMap<QString,QVariant> &checkMap)
 {
-    qDebug()<<Q_FUNC_INFO<<" Map:="<<checkMap;
     bool isNull = ((checkMap.value(id)==NULL)||(checkMap.value(level)==NULL)||
                    (checkMap.value(name)==NULL)||(checkMap.value(type)==NULL)||
                    (checkMap.value(repeat)==NULL));
@@ -767,7 +765,7 @@ bool QModelDescribingPros::checkFileStructure(QTextStream *fileStream)
     qDebug()<<__PRETTY_FUNCTION__<<"Not implemented yet. Accept all files";
     Q_UNUSED(fileStream);
     bool accept = true;
-
+    isProcessLine = 1;
     return accept;
 }
 

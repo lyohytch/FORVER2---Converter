@@ -5,14 +5,7 @@
 TreeViewModel::TreeViewModel(QWidget * parent,bool isT):
         QTreeView(parent),isTemplate(isT)
 {
-    /*if(isT)
-    {
-        this->setGeometry(0,40,parent->width()/2,parent->height() - 50);
-    }
-    else
-    {
-        this->setGeometry(parent->width()/2+10,40,parent->width()/2 - 10,parent->height() - 50);
-    }*/
+    this->hide();
 }
 void TreeViewModel::loadModel(QStandardItemModel *model)
 {

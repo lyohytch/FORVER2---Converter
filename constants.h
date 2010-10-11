@@ -91,11 +91,15 @@ const int TEMPLATEDESC = 1;
 
 //Predefined file paths
 #ifdef Q_OS_LINUX
-const QString demopath("Resources/Description/sprav_d.txt");
-const QString target1path("Resources/Description/Sprav1.txt");
-const QString target2path("Resources/Description/Sprav2.txt");
-const QString target3path("Resources/Description/Sprav3.txt");
-const QString target4path("Resources/Description/Sprav4.txt");
+const QString demopath("Resources/Description/Demo/sprav_d.txt");
+const QString target1path("Resources/Description/4Views/Sprav1.txt");
+const QString target2path("Resources/Description/4Views/Sprav2.txt");
+const QString target3path("Resources/Description/4Views/Sprav3.txt");
+const QString target4path("Resources/Description/4Views/Sprav4.txt");
+const QString prosPathF1("Resources/Description/PROS/F1.TXT");
+const QString prosPathF2("Resources/Description/PROS/F2.TXT");
+const QString prosPathF5("Resources/Description/PROS/F5.TXT");
+const QString prosPathF12("Resources/Description/PROS/F12.TXT");
 #elif defined Q_OS_WIN32 && !defined DEBUGING
 const QString demopath("Resources\\Description\\sprav_d.txt");
 const QString target1path("Resources\\Description\\Sprav1.txt");
@@ -103,11 +107,14 @@ const QString target2path("Resources\\Description\\Sprav2.txt");
 const QString target3path("Resources\\Description\\Sprav3.txt");
 const QString target4path("Resources\\Description\\Sprav4.txt");
 #else
-const QString demopath("..\\Resources\\Description\\old\\sprav_d.txt");
-const QString target1path("..\\Resources\\Description\\old\\Sprav1.txt");
-const QString target2path("..\\Resources\\Description\\old\\Sprav2.txt");
-const QString target3path("..\\Resources\\Description\\old\\Sprav3.txt");
-const QString target4path("..\\Resources\\Description\\old\\Sprav4.txt");
-const QString prosTestPath("..\\Resources\\Description\\F1.TXT");
+const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
+const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");
+const QString target2path("..\\Resources\\Description\\4Views\\Sprav2.txt");
+const QString target3path("..\\Resources\\Description\\4Views\\Sprav3.txt");
+const QString target4path("..\\Resources\\Description\\4Views\\Sprav4.txt");
+const QString prosPathF1("..\\Resources\\Description\\PROS\F1.TXT");
+const QString prosPathF2("..\\Resources\\Description\\PROS\F2.TXT");
+const QString prosPathF5("..\\Resources\\Description\\PROS\F5.TXT");
+const QString prosPathF12("..\\Resources\\Description\\PROS\F12.TXT");
 #endif
 #endif // CONSTANTS_H
