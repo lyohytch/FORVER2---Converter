@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QFileDialog>
 #include <QTreeView>
 #include <QDesktopWidget>
@@ -133,11 +132,11 @@ void converter::changeEvent(QEvent *e)
     }
 }
 
-//Open target files
+//TODO: request to rework Open target files
 void converter::on_actionOpen_triggered()
 {
     //Target file
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Create file dialog
     QFileDialog dialog(this);
     QStringList filenames;
@@ -170,10 +169,11 @@ void converter::on_actionOpen_triggered()
     //Получить данные из модели
 }
 
+// TODO: request to rework
 void converter::on_actionOpen_template_triggered()
 {
     //Template file
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Create file dialog
     QFileDialog dialog(this);
     QStringList filenames;
@@ -207,8 +207,8 @@ void converter::on_actionOpen_template_triggered()
 
 void converter::ElementTreeTargetActivated(const QModelIndex &index)
 {
-    qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
-    qDebug()<<Q_FUNC_INFO<<"index.row() = "<<index.row();
+    qDebug()<<"index = "<<index.data(Qt::UserRole + 1);
+    qDebug()<<"index.row() = "<<index.row();
     if(corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
     {
         //TODO как-то нужно это добавить в таблицу
@@ -217,15 +217,15 @@ void converter::ElementTreeTargetActivated(const QModelIndex &index)
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<< " target table cell isn't checked or not applicable";
+        qDebug()<< " target table cell isn't checked or not applicable";
         this->statusBar()->showMessage("Target table cell isn't checked or not applicable",3000);
 
     }
 }
 void converter::ElementTreeTemplateActivated(const QModelIndex &index)
 {
-    qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
-    qDebug()<<Q_FUNC_INFO<<"index.row() = "<<rowId;
+    qDebug()<<"index = "<<index.data(Qt::UserRole + 1);
+    qDebug()<<"index.row() = "<<rowId;
     if(corrModel->applyTreeClick(iTemplate) && models[TEMPLATEDESC]->isSignificant(index.data(Qt::UserRole + 1)))
     {
         //Нужен только один элемент Лучше использовать QVariant ?
@@ -233,17 +233,17 @@ void converter::ElementTreeTemplateActivated(const QModelIndex &index)
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<< " template table cell isn't checked or not applicable";
+        qDebug()<< " template table cell isn't checked or not applicable";
         this->statusBar()->showMessage("Template table cell isn't checked or not applicable",3000);
     }
 }
 
 void converter::ElementTableActivated(const QModelIndex &index)
 {
-    qDebug()<<Q_FUNC_INFO<<"index = "<<index.data(Qt::UserRole + 1);
+    qDebug()<<"index = "<<index.data(Qt::UserRole + 1);
     //Определить row
-    qDebug()<<Q_FUNC_INFO<<" index.column():="<<index.column();
-    qDebug()<<Q_FUNC_INFO<<" index.row():="<<index.row();
+    qDebug()<<" index.column():="<<index.column();
+    qDebug()<<" index.row():="<<index.row();
     rowId = index.row();
     //TODO implement three methods
     switch(index.column())
@@ -269,21 +269,21 @@ void converter::ElementTableActivated(const QModelIndex &index)
         }
         break;
     default:
-        qWarning()<<Q_FUNC_INFO<<" Strange column??";
+        qWarning()<<" Strange column??";
     }
 
 }
 void converter::FunctionIsChecked(int id)
 {
-    qDebug()<<Q_FUNC_INFO<<" change function in table. ID = "<<id;
-    qDebug()<<Q_FUNC_INFO<<"index.row() = "<<rowId;
+    qDebug()<<" change function in table. ID = "<<id;
+    qDebug()<<"index.row() = "<<rowId;
     if(corrModel->applyTreeClick(iFunction) )
     {
         corrModel->changeFunctionValue(iFunction,rowId,id);
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<< " function table cell isn't checked or not applicable";
+        qDebug()<< " function table cell isn't checked or not applicable";
         this->statusBar()->showMessage("Function table cell isn't checked or not applicable",3000);
     }
 }
@@ -291,8 +291,7 @@ void converter::FunctionIsChecked(int id)
 
 void converter::FillTable()
 {
-    qDebug()<<Q_FUNC_INFO<<" fill in table if it need";
-    //сдклать isValid
+    qDebug()<<" fill in table if it need";
     if(models[TARGETDESC]->isValid() && models[TARGETDESC]->isValid())
     {
         //TODO do something
@@ -300,17 +299,17 @@ void converter::FillTable()
     }
     else
     {
-        qWarning()<<Q_FUNC_INFO<<" Desc loaded incomplete";
+        qWarning()<<" Desc loaded incomplete";
     }
 }
 
 void converter::on_actionLoad_Template_Data_triggered()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Create file dialog
     if(!models[TEMPLATEDESC]->isValid())
     {
-        qWarning()<<Q_FUNC_INFO<<" Description wasn't loaded";
+        qWarning()<<" Description wasn't loaded";
         this->statusBar()->showMessage("Template Description wasn't loaded",5000);
         return;
     }
@@ -323,47 +322,45 @@ void converter::on_actionLoad_Template_Data_triggered()
     {
         filenames = dialog.selectedFiles();
     }
-    //---------------------
-    if(filenames.count() > 0)
+    //Append data
+    foreach(QString fname, filenames)
     {
-        //Reset data
-        models[TEMPLATEDESC]->resetDataList();
+        models[TEMPLATEDESC]->loadingData(fname);
     }
-    for(int i = 0; i < filenames.count();i++)
-    {
-        models[TEMPLATEDESC]->loadingData(filenames[i]);
-    }
+    // TODO make message when error happened
 }
 
 void converter::on_actionLoad_Target_Data_triggered()
 {
-    qDebug()<<Q_FUNC_INFO;
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Create file dialog
     if(!models[TARGETDESC]->isValid())
     {
-        qWarning()<<Q_FUNC_INFO<<" Description wasn't loaded";
+        qWarning()<<" Description wasn't loaded";
         this->statusBar()->showMessage("Target Description wasn't loaded",5000);
         return;
     }
     QFileDialog dialog(this);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt)"));
+    dialog.setNameFilter(tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)"));
     dialog.setViewMode(QFileDialog::List);
     if(dialog.exec())
     {
         filenames = dialog.selectedFiles();
     }
+
     //---------------------
+    //Нужно добавлять только данные - Сделать кнопку резет
+
+
     foreach(QString fname, filenames)
     {
         models[TARGETDESC]->loadingData(fname);
     }
+    //Попытаться убрать это или добавить в функцию выше
     if(models[TARGETDESC]->isValidDataTemp())
     {
-        //Reset data
-        models[TARGETDESC]->resetDataList();
         models[TARGETDESC]->dataPrepare();
         pLabel->setText("Target data successfully loaded");
     }
@@ -371,7 +368,7 @@ void converter::on_actionLoad_Target_Data_triggered()
 
 void converter::on_actionExport_template_data_to_DB_triggered()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     if(models[TEMPLATEDESC]->isValidData())
     {
         //Make string request
@@ -388,14 +385,15 @@ void converter::on_actionExport_template_data_to_DB_triggered()
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<<" Template data wasn't loaded";
+        qDebug()<<" Template data wasn't loaded";
         this->statusBar()->showMessage("Template data wasn't loaded",3000);
     }
 }
 
 void converter::on_actionConvert_files_triggered()
 {
-    qDebug()<<Q_FUNC_INFO;//У нас должны быть загружены данные и модель демо версии
+    qDebug();
+    //У нас должны быть загружены данные и модель демо версии
     if(models[TARGETDESC]->isValidData() && models[TEMPLATEDESC]->isValid())
     {
         //Make string request
@@ -409,28 +407,28 @@ void converter::on_actionConvert_files_triggered()
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<<" Target data wasn't loaded";
+        qDebug()<<" Target data wasn't loaded";
         this->statusBar()->showMessage("Target data wasn't loaded",3000);
     }
 }
 
 void converter::on_actionExport_all_triggered()
 {
-    qDebug()<<Q_FUNC_INFO<<" Start exporting...";
+    qDebug()<<" Start exporting...";
     on_actionExport_template_data_to_DB_triggered();
     on_actionConvert_files_triggered();
-    qDebug()<<Q_FUNC_INFO<<" End exporting";
+    qDebug()<<" End exporting";
 }
 void converter::completeAddingToDB(int aError,QString errStr)
 {
-    qDebug()<<Q_FUNC_INFO<<" id = "<<aError<<" Msg: "<<errStr;
+    qDebug()<<" id = "<<aError<<" Msg: "<<errStr;
     pLabel->setText("Adding data was complete. ErrorMessage: " + errStr);
 
 }
 
 void converter::makeRequestSlot()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Adding data to DB
     //MSSQL Query
     mssqlQuery = new mssqlquery(0,queryModel);
@@ -486,7 +484,7 @@ void converter::init_load(QModelDescribing *loadedModel, TreeViewModel *tree)
 void converter::init()
 {
     //Template
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     init_load(models[TEMPLATEDESC], trees[TEMPLATEDESC]);
     init_load(models[TARGETDESC], trees[TARGETDESC]);
 }
@@ -558,7 +556,7 @@ void converter::on_actionLoad_correlation_model_triggered()
     }
     if(fname == "")
     {
-        qDebug()<<Q_FUNC_INFO<<" File isn't loaded";
+        qDebug()<<" File isn't loaded";
     }
     else
     {
@@ -577,7 +575,7 @@ void converter::on_actionLoad_correlation_model_triggered()
 
 void converter::on_actionChange_DB_structure_triggered()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     if(corrModel)
     {
         corrModel->clearTable();
@@ -595,13 +593,13 @@ QWidgetFunction::QWidgetFunction():
 
 void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
 {
-    qDebug()<<Q_FUNC_INFO<<" ::func from closed";
+    qDebug()<<" ::func from closed";
     int id = nonef;
     QRadioButton *r1 = this->findChild<QRadioButton *>("AGE");
     if(r1 && r1->isChecked())
     {
         //TODO emit signal to converter
-        qDebug()<<Q_FUNC_INFO<<"::AGE";
+        qDebug()<<"::AGE";
         id = agef;
     }
     else
@@ -609,7 +607,7 @@ void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
         QRadioButton *r2 = this->findChild<QRadioButton *>("CONCAT");
         if(r2 && r2->isChecked())
         {
-            qDebug()<<Q_FUNC_INFO<<"::CONCAT";
+            qDebug()<<"::CONCAT";
             id = concatf;
         }
         else
@@ -617,12 +615,12 @@ void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
             QRadioButton *r3 = this->findChild<QRadioButton *>("NONE");
             if(r3 && r3->isChecked())
             {
-                qDebug()<<Q_FUNC_INFO<<"::NO FUNCTION";
+                qDebug()<<"::NO FUNCTION";
                 id = nonef;
             }
             else
             {
-                qWarning()<<Q_FUNC_INFO<<" Error was encountered";
+                qWarning()<<" Error was encountered";
                 id = nonef;
             }
         }

@@ -1,7 +1,6 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QDebug>
 
 #include "mssqlquery.h"
 
@@ -11,8 +10,8 @@ mssqlquery::mssqlquery(QObject *parent, querymodel *model) :
 }
 void mssqlquery::run()
 {
-    qDebug()<<Q_FUNC_INFO<<"Count requests = "<<queryModel->getRequestList().count();
-    qDebug()<<Q_FUNC_INFO<<"Requests = "<<queryModel->getRequestList();
+    qDebug()<<"Count requests = "<<queryModel->getRequestList().count();
+    qDebug()<<"Requests = "<<queryModel->getRequestList();
     iListofRequests.append(queryModel->getRequestList());
     createRequestList = queryModel->getCreateTable();
     mutex.lock();
@@ -55,7 +54,7 @@ void mssqlquery::run()
                }
                catch(QSqlError e)
                {
-                   qDebug()<<Q_FUNC_INFO<<" err was occured";
+                   qDebug()<<" err was occured";
                    db.rollback();
                    emit complete(1,e.text());
                    return;
@@ -65,7 +64,7 @@ void mssqlquery::run()
 
        }
        //DemoTblName
-       qDebug()<<Q_FUNC_INFO<<"::"<<"Adding data to DB";
+       qDebug()<<"::"<<"Adding data to DB";
        foreach(QString request, iListofRequests)
        {
            db.transaction();

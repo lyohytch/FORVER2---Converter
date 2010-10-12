@@ -1,10 +1,9 @@
 #include "querymodel.h"
-#include <QDebug>
 
 querymodel::querymodel(CorrelationModel *acorrModel):
          corrModel(acorrModel)
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
 }
 
 void querymodel::run()
@@ -16,7 +15,7 @@ void querymodel::run()
 //id(for example, generic_133) , name, type(me,dv,av,ed,cb,et,rm)
 void querymodel::makeRequest()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     initlist();//выполниться один раз
     //Making templates create table, update table and insert into requests
     makeCreateTableRequest();//выполниться один раз
@@ -30,7 +29,7 @@ void querymodel::makeRequest()
 }
 void querymodel::makeCreateTableRequest()
 {
-    qDebug()<<Q_FUNC_INFO<< " Generating template for create table";
+    qDebug()<< " Generating template for create table";
     if( createRequest.isEmpty())
     {
         createRequest += createTbl + space + nameTbl + lBracket +iQueryRequestDesc[0]+ rBracket;
@@ -50,12 +49,12 @@ void querymodel::makeCreateTableRequest()
 }
 void  querymodel::makeUpdateTableRequest()
 {
-    qDebug()<<Q_FUNC_INFO<<" Not implemented yet";
+    qDebug()<<" Not implemented yet";
 }
 void querymodel::makeInsertIntoListRequests()
 {
     //в запросе только один элемент
-    qDebug()<<Q_FUNC_INFO<<" Generating template for insert into";
+    qDebug()<<" Generating template for insert into";
     if(insertRequest.isEmpty())
     {
         insertRequest += insertTbl + space + nameTbl + lBracket;
@@ -76,7 +75,7 @@ void querymodel::makeInsertIntoListRequests()
 }
 void querymodel::initlist()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     QMap<QString, QVariant> oneMap;
     if(iQueryRequestDesc.isEmpty() && iQueryRequestData.isEmpty())
     {
@@ -136,7 +135,7 @@ void querymodel::resetList()
 
 void querymodel::fillingRequestList()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Более простая реализация
     //Сначала для темплейта
     listOfRequests.clear();
@@ -157,7 +156,7 @@ void querymodel::fillingRequestList()
             //Если он есть, то добавить значение - нет, добавить пустое место
             QVariant searchTmpl = reqList[j].toMap().value(id);//Значение ID
             QString foundValue = findByID(tTemplateItem,searchTmpl).toString();
-            qDebug()<<Q_FUNC_INFO<<foundValue;
+            qDebug()<<foundValue;
             if(j == 0)
             {
                 reqString += quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
@@ -184,114 +183,3 @@ QVariant querymodel::findByID(const QVariantList &list, const QVariant &searchTm
     return QVariant();
 }
 
-/*
-//-------------------------querymodelOld4-----------------------
-querymodelOld4::querymodelOld4(QModelDescribing *amodel):
-   querymodel(amodel)
-{
-    qDebug()<<__PRETTY_FUNCTION__;
-    iCellType = querymodelOld4::un;
-}
-
-bool querymodelOld4::convert()
-{
-    qDebug()<<__PRETTY_FUNCTION__;
-    //check for model
-    if ( !checkModel() )
-    {
-        qWarning()<<__FUNCTION__<<" Model isn't correct";
-        return false;
-    }
-
-    //temporary variables
-    QMap<QString, QVariant> oneRecord;
-    QVariantList cpDescribeList = iModel->getListSignificant();
-    int i;
-    //temporary variables
-    for(i = 0;i < cpDescribeList.count() ; i++)
-    {
-        //I know that cpDescribeList[i] is QMap object
-        oneRecord = cpDescribeList[i].toMap();
-        iQueryRequestDesc.append(MapToStrDesc(oneRecord));
-        iQueryRequestData.append(MapToStrData(oneRecord));
-    }
-    return true;
-}
- void querymodelOld4::setCellType(const QString & type)
- {
-     //TODO check it
-     (type == ME)?(iCellType = querymodelOld4::me):
-     (type == DV)?(iCellType = querymodelOld4::dv):
-     (type == AV)?(iCellType = querymodelOld4::av):
-     (type == ED)?(iCellType = querymodelOld4::ed):
-     (type == CB)?(iCellType = querymodelOld4::cb):
-     (type == ET)?(iCellType = querymodelOld4::et):
-     (type == RM)?(iCellType = querymodelOld4::rm):(iCellType = querymodelOld4::un);
- }
-
- QString querymodelOld4::CellTypeToStr()
- {
-      //TODO implement it
-      return VCHARMAX;
- }
-
- QString querymodelOld4::CellTypeToStr(const QString & type)
- {
-     setCellType(type);
-     return CellTypeToStr();
- }
-
- QString querymodelOld4::MapToStrDesc(const QVariantMap &map)
- {
-     QString returnStr = "";
-     //Set iCellType
-     if( (CellTypeToStr(map.value(type).toString())) != "")// if type isn't rm
-     {
-         if(!isData)
-         {
-            returnStr = map.value(id).toString() + space + CellTypeToStr(map.value(type).toString()) + comma;//generic_id type for create taable
-         }
-         else
-         {
-            returnStr = map.value(id).toString() + comma;//insert generic_id values(value);
-         }
-     }
-     return returnStr;
- }
- QString querymodelOld4::MapToStrData(const QVariantMap &map)
- {
-     QString returnStr = "";
-     if(isData)
-     {
-         returnStr = map.value(dvalue).toString() + comma;
-     }
-     return returnStr;
- }
-
- bool querymodelOld4::checkModel()
- {
-     return true;
- }
-
-//-------------------------querymodelOld4-----------------------
-
-
-//-------------------------querymodelDemo-----------------------
- querymodelDemo::querymodelDemo(QModelDescribing *amodel):
-         querymodel(amodel)
- {
-
- }
-
-//-------------------------querymodelDemo-----------------------
-
-
-
-//-------------------------querymodelPros-----------------------
- querymodelPros::querymodelPros(QModelDescribing *amodel):
-         querymodel(amodel)
- {
-
- }
- //-------------------------querymodelPros
-*/

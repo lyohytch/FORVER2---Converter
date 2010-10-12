@@ -1,9 +1,8 @@
+#include <QFile>
+
 #include "qmodeldescribing.h"
 
-#include <QFile>
-#include <QDebug>
 
-#include "constants.h"
 
 QModelDescribing::QModelDescribing(QObject *parent):
         QStandardItemModel(parent)
@@ -32,12 +31,12 @@ QVariantList QModelDescribing::getListData() const
 }
 void QModelDescribing::appendToList(const QString &filename)
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Open file
     QFile fileSource(filename);
     if ( fileSource.exists())
     {
-        qDebug()<<__PRETTY_FUNCTION__<<"File found. Try to take list";
+        qDebug()<<"File found. Try to take list";
         if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             qCritical()<<"File "<<filename<<" can not be open.";
@@ -52,18 +51,18 @@ void QModelDescribing::appendToList(const QString &filename)
             }
             else
             {
-                qWarning()<<__PRETTY_FUNCTION__<<"File structure is incorrect.";
+                qWarning()<<"File structure is incorrect.";
             }
         }
     }
     else
     {
-        qCritical()<<__PRETTY_FUNCTION__<<"File "<<filename<<" doesn't exist";
+        qCritical()<<"File "<<filename<<" doesn't exist";
     }
 }
 void QModelDescribing::addingDataToList(QTextStream *fileStream)
 {
-    qDebug()<<Q_FUNC_INFO<<" Start";
+    qDebug()<<" Start";
     QMap<QString, QVariant> *oneRecord;
     while (!fileStream->atEnd())
     {
@@ -75,7 +74,7 @@ void QModelDescribing::addingDataToList(QTextStream *fileStream)
             delete oneRecord;
         }
     }
-    qDebug()<<Q_FUNC_INFO<<" End";
+    qDebug()<<" End";
 }
 
 void QModelDescribing::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
@@ -86,12 +85,12 @@ void QModelDescribing::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
 
 void QModelDescribing::loadingData(const QString &filename)
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     //Open file
     QFile fileSource(filename);
     if ( fileSource.exists())
     {
-        qDebug()<<__PRETTY_FUNCTION__<<"File found. Try to take list";
+        qDebug()<<"File found. Try to take list";
         if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
         {
             qCritical()<<"File "<<filename<<" can not be open.";
@@ -106,26 +105,23 @@ void QModelDescribing::loadingData(const QString &filename)
             }
             else
             {
-                qWarning()<<__PRETTY_FUNCTION__<<"File structure is incorrect.";
+                qWarning()<<"File structure is incorrect.";
             }
         }
     }
     else
     {
-        qCritical()<<__PRETTY_FUNCTION__<<"File "<<filename<<" doesn't exist";
+        qCritical()<<"File "<<filename<<" doesn't exist";
     }
 }
 
 bool QModelDescribing::createModel()
 {
-    qDebug()<<Q_FUNC_INFO;
-   //TODO implement this function
+    qDebug();
     //Заполнить значимые элементы
     fillSignificantList();
    //Здесь мы заполняем QStandartItemModel
     QStandardItem *rootItem = new QStandardItem("Model");
-    //item->setData(iListDescribing[0].value(name),Qt::UserRole + 1);
-    //this->appendRow(item);
     //Fill in list QStandardItem
     setChildItem(iListDescribing,0,0,rootItem);
     //Append children of rootItem
@@ -204,7 +200,7 @@ QString QModelDescribing::readElement(const QString &line, int &k)
         k++;
         if(k >= line.count())
         {
-            qWarning()<<__PRETTY_FUNCTION__<<"Data out of range!!!";
+            qWarning()<<"Data out of range!!!";
             return NULL;
         }
     }
@@ -218,7 +214,7 @@ bool QModelDescribing::turn(const QString &line, int &k, int cTurn)
     {
         if(k >= line.count())
         {
-            qWarning()<<Q_FUNC_INFO<<"Data out of range!!!";
+            qWarning()<<"Data out of range!!!";
             return false;
         }
         if(line[k] == '\t') ++count;
@@ -263,7 +259,6 @@ void QModelDescribing::fillSignificantList()
              return iListSignificant[i];
          }
      }
-     //qWarning()<<Q_FUNC_INFO<<" uid = "<<uid<<" not found";
      return QVariant();
  }
 
@@ -329,7 +324,7 @@ QModelDescribingOld4::QModelDescribingOld4(QObject *parent):
 
 bool QModelDescribingOld4::checkFileStructure(QTextStream *fileStream)
 {
-    qDebug()<<__PRETTY_FUNCTION__<<"Not implemented yet. Accept all files";
+    qDebug()<<"Not implemented yet. Accept all files";
     Q_UNUSED(fileStream);
     bool accept = true;
 
@@ -345,7 +340,7 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString &line)
     //Сдвиг
     if(!turn(line,k,1))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -353,7 +348,7 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString &line)
     //try to take m_asType
     if(!turn(line,k,5))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -362,14 +357,14 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString &line)
     //Сдвиг для считывания имени
     if(!turn(line,k,4))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(name,readElement(line,k));
     if(!isValidString(*retMap))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -380,7 +375,7 @@ void QModelDescribingOld4::dataPrepare()
 {
 
     //TODO rework it!!!
-    qDebug()<<Q_FUNC_INFO<<"  ===START===   ";
+    qDebug()<<"  ===START===   ";
     QVariantList oneRec;
     QVariantMap oneMap;
     QVariantMap tmpMap;
@@ -405,19 +400,19 @@ void QModelDescribingOld4::dataPrepare()
         //Если у нас некорректное число файлов
         if(count != 5)
         {
-            qWarning()<<Q_FUNC_INFO<<"Data files is not valid";
+            qWarning()<<"Data files is not valid";
             continue;
         }
         oneMap.insert(numb,i++);
         oneMap.insert(rapid,oneRec);
         iListData.append(oneMap);
     }
-    qDebug()<<Q_FUNC_INFO<<"  ===END===   ";
+    qDebug()<<"  ===END===   ";
 
 }
 void QModelDescribingOld4::addingLoadedData(QTextStream *fileStream)
 {
-    qDebug()<<Q_FUNC_INFO<<" Start";
+    qDebug()<<" Start";
     QVariantList oneRecord;
     QVariantMap oneData;
     int i = 0;
@@ -442,7 +437,7 @@ void QModelDescribingOld4::addingLoadedData(QTextStream *fileStream)
     }
     //iListData Element
     //QMap = number, value Value и будет записываться в базу данных
-    qDebug()<<Q_FUNC_INFO<<" End. iListData count" <<iListDataTemp.count();
+    qDebug()<<" End. iListData count" <<iListDataTemp.count();
 }
 int QModelDescribingOld4::setSeekofLine(const QString & statName)
 {
@@ -475,13 +470,13 @@ QVariantList QModelDescribingOld4::process_lineData(const QString &line, const Q
     QVariantMap oneDataMap;
     QVariantList retVar;
     int j = 0;
-   // qDebug()<<Q_FUNC_INFO<<" check data structure: a = "<<listofData.count() - offset<<" ; b = "<<DataStructure.count();
+   qDebug()<<" check data structure: a = "<<listofData.count() - offset<<" ; b = "<<DataStructure.count();
     for(int i = offset; listofData.count();i++)
     {
         //TODO check it
         if(j >= DataStructure.count())
         {
-            qWarning()<<Q_FUNC_INFO<<"File string corrupted";
+            qWarning()<<"File string corrupted";
             return retVar;
         }
         oneDataMap = DataStructure[j].toMap();
@@ -566,7 +561,7 @@ bool QModelDescribingOld4::isValidDataTemp()
 
 QVariant QModelDescribingOld4::getIdByStatName(const QString &statName,const  QVariantList &oneRecord)
 {
-    qDebug()<<Q_FUNC_INFO<<"get id by statName";
+    qDebug()<<"get id by statName";
     QVariant retVar;
     int offset = 0;
     if(statName == generic )
@@ -613,7 +608,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
     //Сдвиг
     if(!turn(line,k,1))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -621,7 +616,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
     //try to take m_asType
     if(!turn(line,k,5))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -630,7 +625,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
     //Сдвиг для считывания имени
     if(!turn(line,k,4))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -638,14 +633,14 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
     //Сдвиг для считывания дублирующего элемента
     if(!turn(line,k,3))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(repeat,readElement(line,k));
     if(!isValidString(*retMap))
     {
-        qWarning()<<Q_FUNC_INFO<<"String isn't valid";
+        qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
@@ -656,7 +651,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
 
 bool QModelDescribingDemo::checkFileStructure(QTextStream *fileStream)
 {
-    qDebug()<<__PRETTY_FUNCTION__<<"Not implemented yet. Accept all files";
+    qDebug()<<"Not implemented yet. Accept all files";
     Q_UNUSED(fileStream);
     bool accept = true;
 
@@ -677,8 +672,7 @@ bool QModelDescribingDemo::isValidString(const QMap<QString,QVariant> &checkMap)
 
 void QModelDescribingDemo::addingLoadedData(QTextStream *fileStream)
 {
-    qDebug()<<Q_FUNC_INFO;
-    qDebug()<<Q_FUNC_INFO<<" Start";
+    qDebug()<<" Start";
     QVariantList oneRecord;
     QVariantMap oneData;
     int i = 0;
@@ -699,7 +693,7 @@ void QModelDescribingDemo::addingLoadedData(QTextStream *fileStream)
     }
     //iListData Element
     //QMap = number, value Value и будет записываться в базу данных
-    qDebug()<<Q_FUNC_INFO<<" End. iListData count" <<iListData.count();
+    qDebug()<<" End. iListData count" <<iListData.count();
 }
 QVariantList QModelDescribingDemo::process_lineData(const QString &line, const QVariantList &DataStructure)
 {
@@ -712,7 +706,7 @@ QVariantList QModelDescribingDemo::process_lineData(const QString &line, const Q
         oneDataMap.insert(dvalue,readElement(line,k));
         if(!turn(line,k,1))
         {
-            qWarning()<<Q_FUNC_INFO<<" String isn't valid";
+            qWarning()<<" String isn't valid";
             return QVariantList();
         }
         retVar.append(oneDataMap);
@@ -762,7 +756,7 @@ QModelDescribingPros::QModelDescribingPros(QObject *parent):
 
 bool QModelDescribingPros::checkFileStructure(QTextStream *fileStream)
 {
-    qDebug()<<__PRETTY_FUNCTION__<<"Not implemented yet. Accept all files";
+    qDebug()<<"Not implemented yet. Accept all files";
     Q_UNUSED(fileStream);
     bool accept = true;
     isProcessLine = 1;
@@ -771,7 +765,7 @@ bool QModelDescribingPros::checkFileStructure(QTextStream *fileStream)
 
 QMap<QString, QVariant>* QModelDescribingPros::process_line(const QString &line)
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     QMap<QString,QVariant> *retMap = new QMap<QString,QVariant>; //QMap["prosDesc", tempList]
     QMap<QString,QVariant> tempRet;
     QVariantList tempList; // QList [QMap<QString, QVariant>]
@@ -807,6 +801,57 @@ void QModelDescribingPros::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
             iListDescribing.append(oneElem.toMap());
         }
     }
+}
+
+
+
+
+void QModelDescribingPros::addingLoadedData(QTextStream *fileStream)
+{
+    qDebug()<<" Start";
+    /*QVariantList oneRecord;
+    QVariantMap oneData;
+    int i = 0;
+    int count = 0;
+    QVariantList dataStructure = initDataStructure();
+    while (!fileStream->atEnd())
+    {
+        QString line = fileStream->readLine();
+        oneRecord = process_lineData(line,dataStructure);//Тут только сразу весь мап
+        //Первые три строки отбрасываем
+        if(!oneRecord.isEmpty() && i >=3 )
+        {
+            oneData.insert(numb,count++);
+            oneData.insert(rapid,oneRecord);
+            iListData.append(oneData);
+        }
+        i++;
+    }
+    */
+    //iListData Element
+    //QMap = number, value Value и будет записываться в базу данных
+    qDebug()<<" End. iListData count" <<iListData.count();
+}
+
+bool QModelDescribingPros::isValidStringData(const QVariantList &)
+{
+    qDebug();
+    return true;
+}
+
+QVariantList QModelDescribingPros::process_lineData(const QString &line, const QVariantList &DataStructure)
+{
+    qDebug();
+    return QVariantList();
+}
+
+void QModelDescribingPros::setStatNameByFileData(const QString &filename)
+{
+}
+
+QVariantList QModelDescribingPros::initDataStructure()
+{
+    return QVariantList();
 }
 
 //-------------------QModelDescribingPros--------------------------------------
