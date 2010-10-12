@@ -1,6 +1,6 @@
 #include <QStandardItem>
 #include "treeviewmodel.h"
-#include <QDebug>
+
 
 TreeViewModel::TreeViewModel(QWidget * parent,bool isT):
         QTreeView(parent),isTemplate(isT)
@@ -9,7 +9,6 @@ TreeViewModel::TreeViewModel(QWidget * parent,bool isT):
 }
 void TreeViewModel::loadModel(QStandardItemModel *model)
 {
-    qDebug()<<Q_FUNC_INFO;
     if(isTemplate)
     {
         model->setHorizontalHeaderLabels(QStringList() << "Template file" );

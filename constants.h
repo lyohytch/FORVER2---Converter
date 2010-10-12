@@ -1,6 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 #include <QString>
+#include <QDebug>
+
 //Сюда добавлять все константы
 //Common
 const QString dot(".");
@@ -49,7 +51,7 @@ const QString error("error");//Ошибка
 const QString numb("number");//Номер по порядку
 const QString repeat("repeat");//дублируюший элемент
 const QString rapid("rapid");
-const QString prosDesc("prosDesc");//
+const QString prosDesc("prosDesc");//вспомогательный контейнер для обработки описаний от прокуратуры
 
 //Data model fields
 const QString generic("generic_");
@@ -117,4 +119,11 @@ const QString prosPathF2("..\\Resources\\Description\\PROS\F2.TXT");
 const QString prosPathF5("..\\Resources\\Description\\PROS\F5.TXT");
 const QString prosPathF12("..\\Resources\\Description\\PROS\F12.TXT");
 #endif
+
+//Helpful qDebug defines
+#define qDebug()            qDebug()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
+#define qWarning()          qWarning()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
+#define qCritical()         qCritical()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
+#define qFatal()            qFatal()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
+
 #endif // CONSTANTS_H

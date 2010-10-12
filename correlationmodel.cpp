@@ -41,7 +41,7 @@ CorrelationModel::~CorrelationModel()
 QVariantList CorrelationModel::targetToCurrent()
 {
     //TODO check it
-    qDebug()<<Q_FUNC_INFO<<" Real start convering....";
+    qDebug()<<" Real start convering....";
     QVariantList retData;
     QVariantList dataList = iTargetModel->getListData();//–ø–æ–ª—É—á–∏—Ç—å —Å–ø–∏—Å–æ–∫ –¥–µ–ª
     QVariantList currDescrList = iCurrentModel->getListSignificant();//—à–∞–±–ª–æ–Ω –¥–ª—è –∑–∞–ø–∏—Å–∏
@@ -108,12 +108,12 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant &search, int &
 
 void CorrelationModel::showCorrelationMap()
 {
-    qDebug()<<Q_FUNC_INFO<<" Not implemented yet";
+    qDebug()<<" Not implemented yet";
 }
 
 void CorrelationModel::fillInTable()
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     clearTable();
     //TODO – “ë– —ï– ¬±– ¬∞– –Ü– ¬ª–°–è–°‚Ä –°–ä – –Ö–°—ì– ¬∂– –Ö– —ï –°‚Ä – —ï– ¬ª–°–ä– —î– —ï – ¬∑– –Ö– ¬∞–°‚Ä°– —ë– —ò–°‚Äπ– ¬µ –°–å– ¬ª– ¬µ– —ò– ¬µ– –Ö–°‚Ä –°‚Äπ=))))
     int iTemplateCount = iCurrentModel->getListSignificant().count();
@@ -155,7 +155,7 @@ void CorrelationModel::fillInTable()
 
 void CorrelationModel::fillInTable(QVariantMap mapTable)
 {
-    qDebug()<<Q_FUNC_INFO<<"not implemented yet";
+    qDebug()<<"not implemented yet";
     clearTable();
     //QMap( List(tempList),List(targList),List(funcList))
     int N = mapTable.value(tempList).toList().count();// ÓÎË˜ÂÒÚ‚Ó ˝ÎÂÏÂÌÚÓ‚ ‚ Ú‡·ÎËˆÂ
@@ -225,7 +225,7 @@ void CorrelationModel::appendTableRow(const QVariantList & rowList)
 {
     //Don't check. Data is correct already
     //Implement without function
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     int i;
     int cRow = rowList.count();
     QVariantMap mapFunc;
@@ -298,7 +298,7 @@ void CorrelationModel::setApplyTreeClick(int id)
 
 void CorrelationModel::changeFunctionValue(int col, int row, int funcId)
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     QStandardItem *item = new QStandardItem(functionName(funcId));
     QVariantMap mapFunc;
     mapFunc.insert(function,CorrelationModel::EfuncList(funcId));
@@ -310,7 +310,7 @@ void CorrelationModel::changeFunctionValue(int col, int row, int funcId)
 
 void CorrelationModel::changeTemplateValue(int col, int row, QVariant data)
 {
-    qDebug()<<Q_FUNC_INFO;
+    qDebug();
     QStandardItem *item = new QStandardItem(data.toMap().value(name).toString());
     item->setData(data,Qt::UserRole + 1);
     item->setEditable(false);
@@ -321,7 +321,7 @@ void CorrelationModel::changeTemplateValue(int col, int row, QVariant data)
 void CorrelationModel::changeTargetValue(int col, int row, QVariant data,bool first)
 {
     //TODO check for multiple data
-    qDebug()<<Q_FUNC_INFO<<"::"<<data<<" is First = "<<first;
+    qDebug()<<"::"<<data<<" is First = "<<first;
     QStandardItem *item;
     if(first)
     {
@@ -363,7 +363,7 @@ void CorrelationModel::changeTargetValue(int col, int row, QVariant data,bool fi
 
  QVariantMap CorrelationModel::tableModelToMap()
  {
-     qDebug()<<Q_FUNC_INFO;
+     qDebug();
      QVariantMap retMap;
      QVariantList atempList;
      QVariantList atargList;

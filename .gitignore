@@ -4,3 +4,4 @@ Makefile
 ui_converter.h
 moc_*
 Demo.Converter
+*.cmf
