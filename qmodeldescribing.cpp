@@ -821,7 +821,6 @@ void QModelDescribingPros::addingLoadedData(QTextStream *fileStream)
     QVariantMap oneData;
     int i = 0;
     QVariantList dataStructure = initDataStructure();
-    tIdList.clear();
     while (!fileStream->atEnd())
     {
         QString line = fileStream->readLine();
@@ -832,12 +831,7 @@ void QModelDescribingPros::addingLoadedData(QTextStream *fileStream)
             //getIdByStatName
             oneData.insert(id,getIdByStatName(statName, oneRecord));
             oneData.insert(rapid,oneRecord);
-            //Не хотим добавлять повторяющиеся элементы
-            if(! tIdList.contains(oneData.value(id)) )
-            {
-                tIdList.append(oneData.value(id));
-                iListDataTemp.append(oneData);
-            }
+            iListDataTemp.append(oneData);
         }
         i++;
     }
@@ -972,34 +966,48 @@ void QModelDescribingPros::dataPrepare()
     qDebug()<<"  ===START===   ";
     QVariantList oneRec;
     QVariantMap oneMap;
+
+    QVariantList genList = QVariantList();
+    QVariantList figList = QVariantList();
+    QVariantList weapList = QVariantList();
+    QVariantList locList = QVariantList();
+
+
     QVariantMap tmpMap;
     QVariant uid;
     int count = 0;
     int i = 0;
     int pos;
+
+    // Мы добавляем все данные,что есть. помечая взятые
     while(!iListDataTemp.isEmpty())
     {
-        oneRec.clear();
-        tmpMap = iListDataTemp.takeAt(0).toMap();
-        oneRec.append(tmpMap.value(rapid).toList());
-        //TODO rework uid
-        uid = tmpMap.value(id);
-        count = 1;
-        while(foundByUId(uid, pos))
-        {
-            tmpMap = iListDataTemp.takeAt(pos).toMap();
-            oneRec.append(tmpMap.value(rapid).toList());
-            count++;
-        }
-        //Если у нас некорректное число файлов - нехватка данных
-        if(count != 4)
-        {
-            qWarning()<<"Data files is not valid";
-            continue;
-        }
-        oneMap.insert(numb,i++);
-        oneMap.insert(rapid,oneRec);
-        iListData.append(oneMap);
+        // Запис, которую мы добавим
+        //make lists
+        int genCount = genList.count();
+        int figCount = figList.count();
+        int weapCount = weapList.count();
+        int locCount = locList.count();
+        for (int i = 0; i < genCount; ++i)
+            for(int j = 0; j < figCount; ++j)
+                for(int l = 0; l < weapCount; ++l)
+                    for(int k = 0; k < locCount; ++k)
+                    {
+                        oneRec.clear();
+                        oneRec.append( genList[i].toMap().value(rapid).toList() );
+                        oneRec.append( figList[j].toMap().value(rapid).toList() );
+                        oneRec.append( weapList[l].toMap().value(rapid).toList() );
+                        oneRec.append( locList[k].toMap().value(rapid).toList() );
+                        oneMap.insert(numb,i++);
+                        oneMap.insert(rapid,oneRec);
+                        iListData.append(oneMap);
+                    }
+        // Удалить всё
+       for(int i = 0; i < genCount; ++i)
+       {
+            iListDataTemp.removeOne(genList[i]);
+       }
+
     }
     qDebug()<<"  ===END===   ";
 

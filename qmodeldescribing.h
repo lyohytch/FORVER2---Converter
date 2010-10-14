@@ -161,7 +161,6 @@ private:
     // Make this function as virtual
     QVariantList initDataStructure();
     QString removeSpaces(const QString &ex);
-    QVariantList tIdList;
 };
 
 #endif // QMODELDESCRIBING_H
