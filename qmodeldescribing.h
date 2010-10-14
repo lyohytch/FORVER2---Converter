@@ -42,8 +42,10 @@ protected:
     /*child*/virtual QVariantList process_lineData(const QString &line, const QVariantList &/*DataStructure*/){qDebug()<<Q_FUNC_INFO;Q_UNUSED(line);return QVariantList();};
     /*child*/virtual bool isValidStringData(const QVariantList &/*checkMap*/){qDebug(); return true;};
     /*child*/ virtual void addingLoadedData(QTextStream *fileStream) {qDebug();Q_UNUSED(fileStream);};
+    virtual bool foundByUId(const QVariant &uid, int &pos);
     void setStatNameByFile(const QString &filename);
     virtual void setStatNameByFileData(const QString &/*filename*/) {};
+    QVariantList iListDataTemp;//Массив мапов типа (ид, значение), где значение - данные из конкретного файла
 public:
     /**
      *
@@ -89,13 +91,11 @@ public:
     virtual bool isValidDataTemp();
 protected:
     //GENERAL
-    QVariantList iListDataTemp;//Массив мапов типа (ид, значение), где значение - данные из конкретного файла
     //TODO implement checkFileStructure
    virtual  bool checkFileStructure(QTextStream *fileStream);
     //TODO implement isValid()
    virtual QMap<QString, QVariant>* process_line(const QString &line);
    //DATA
-   bool foundByUId(const QVariant &uid, int &pos);
    virtual void addingLoadedData(QTextStream *fileStream);
    virtual QVariantList process_lineData(const QString &line, const QVariantList &DataStructure);
    virtual bool isValidStringData(const QVariantList & dataStructure);
@@ -137,7 +137,8 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Класс для формата из прокуратуры: пока ничего неизвестно
+//Класс для формата из прокуратуры, представляет собой 4 файла(формы), в которых данные записываются,
+// начиная с пятой(необязательно) строки. Связующее звено - элемент Р(вероятно, некоторый id)
 class QModelDescribingPros: public QModelDescribing
 {
 public:
@@ -153,10 +154,14 @@ protected:
      virtual QVariantList process_lineData(const QString &line, const QVariantList &DataStructure);
      virtual bool isValidStringData(const QVariantList & dataStructure);
      virtual void setStatNameByFileData(const QString &filename);
+     QVariant getIdByStatName(const QString &statName,const  QVariantList &oneRecord);
+     virtual void dataPrepare();//iListDataTemp=>iListData
 private:
     bool isProcessLine;
     // Make this function as virtual
     QVariantList initDataStructure();
+    QString removeSpaces(const QString &ex);
+    QVariantList tIdList;
 };
 
 #endif // QMODELDESCRIBING_H

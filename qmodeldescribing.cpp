@@ -266,26 +266,31 @@ void QModelDescribing::fillSignificantList()
 
  void QModelDescribing::setStatNameByFile(const QString &filename)
  {
+     //Move to class
      if(filename.endsWith("Sprav1.txt",Qt::CaseSensitive) ||
         filename.endsWith("sprav_d.txt",Qt::CaseSensitive) ||
         filename.endsWith("F1.TXT", Qt::CaseSensitive))
      {
          statName = generic;
      }
-     else if(filename.endsWith("Sprav2.txt",Qt::CaseSensitive))
+     else if(filename.endsWith("Sprav2.txt",Qt::CaseSensitive) ||
+             filename.endsWith("F2.TXT", Qt::CaseSensitive))
      {
          statName = figurant;
      }
-     else if(filename.endsWith("Sprav3.txt",Qt::CaseSensitive))
+     else if(filename.endsWith("Sprav3.txt",Qt::CaseSensitive) ||
+             filename.endsWith("F5.TXT", Qt::CaseSensitive))
      {
          statName = locus;
      }
-     else if(filename.endsWith("Sprav4.txt",Qt::CaseSensitive))
+     else if(filename.endsWith("Sprav4.txt",Qt::CaseSensitive) ||
+             filename.endsWith("F12.TXT", Qt::CaseSensitive))
      {
          statName = weapon;
      }
      else
      {
+         //Adding by default
          statName = "";
      }
  }
@@ -311,6 +316,22 @@ void QModelDescribing::fillSignificantList()
      resetDescList();
      resetDataList();
      resetSignList();
+ }
+
+ bool QModelDescribing::foundByUId(const QVariant &uid, int &pos)
+ {
+     int i = 0;
+     foreach(QVariant oneRec,iListDataTemp)
+     {
+         if(oneRec.toMap().value(id) == uid)
+         {
+            pos = i;
+            return true;
+         }
+         i++;
+     }
+
+     return false;
  }
 
 //----------------------------------------------------------------------------
@@ -539,21 +560,6 @@ void QModelDescribingOld4::setStatNameByFileData(const QString &filename)
     }
 }
 
-bool QModelDescribingOld4::foundByUId(const QVariant &uid, int &pos)
-{
-    int i = 0;
-    foreach(QVariant oneRec,iListDataTemp)
-    {
-        if(oneRec.toMap().value(id) == uid)
-        {
-           pos = i;
-           return true;
-        }
-        i++;
-    }
-
-    return false;
-}
 bool QModelDescribingOld4::isValidDataTemp()
 {
     return iListDataTemp.count() > 0;
@@ -773,14 +779,16 @@ QMap<QString, QVariant>* QModelDescribingPros::process_line(const QString &line)
     if(!ids.isEmpty() && ids.count() > 1 && isProcessLine)
     {
         //Complete DESCRIBING LIST
+         int encounter = 0;
          tempRet.insert(level, QVariant(1));
          tempRet.insert(type, "");
         foreach(QString idval, ids)
         {
             idval.remove(" ");
-            tempRet.insert(id,statName+idval);
+            tempRet.insert(id,statName+encounter);
             tempRet.insert(name, idval);
             tempList.append(tempRet);
+            encounter++;
         }
         retMap->insert(prosDesc, tempList);
         isProcessLine = 0;
@@ -809,49 +817,192 @@ void QModelDescribingPros::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
 void QModelDescribingPros::addingLoadedData(QTextStream *fileStream)
 {
     qDebug()<<" Start";
-    /*QVariantList oneRecord;
+    QVariantList oneRecord;
     QVariantMap oneData;
     int i = 0;
-    int count = 0;
     QVariantList dataStructure = initDataStructure();
+    tIdList.clear();
     while (!fileStream->atEnd())
     {
         QString line = fileStream->readLine();
         oneRecord = process_lineData(line,dataStructure);//Тут только сразу весь мап
         //Первые три строки отбрасываем
-        if(!oneRecord.isEmpty() && i >=3 )
+        if(!oneRecord.isEmpty() && i >=5 )
         {
-            oneData.insert(numb,count++);
+            //getIdByStatName
+            oneData.insert(id,getIdByStatName(statName, oneRecord));
             oneData.insert(rapid,oneRecord);
-            iListData.append(oneData);
+            //Не хотим добавлять повторяющиеся элементы
+            if(! tIdList.contains(oneData.value(id)) )
+            {
+                tIdList.append(oneData.value(id));
+                iListDataTemp.append(oneData);
+            }
         }
         i++;
     }
-    */
     //iListData Element
     //QMap = number, value Value и будет записываться в базу данных
-    qDebug()<<" End. iListData count" <<iListData.count();
+    qDebug()<<" End. iListData count" <<iListDataTemp.count();
 }
 
-bool QModelDescribingPros::isValidStringData(const QVariantList &)
+bool QModelDescribingPros::isValidStringData(const QVariantList & vlist)
 {
-    qDebug();
-    return true;
+    return (vlist.count() > 1);
 }
 
 QVariantList QModelDescribingPros::process_lineData(const QString &line, const QVariantList &DataStructure)
 {
-    qDebug();
-    return QVariantList();
+    QStringList listofData = line.split(';');
+    QVariantMap oneDataMap;
+    QVariantList retVar;
+    int j = 0;
+    qDebug()<<" check data structure: a = "<<listofData.count()<<" ; b = "<<DataStructure.count();
+    foreach(QString dataEl, listofData)
+    {
+        //TODO check it
+        if(j >= DataStructure.count())
+        {
+            qWarning()<<"File string corrupted";
+            return retVar;
+        }
+        //TODO remove unneccessary spaces
+        QString dataElR = removeSpaces(dataEl);
+        oneDataMap = DataStructure[j].toMap();
+        oneDataMap.insert(dvalue,dataElR);
+        if(isSignificant(DataStructure[j]))
+        {
+            retVar.append(oneDataMap);
+        }
+        j++;
+    }
+
+    if ( !isValidStringData(retVar) )
+    {
+        return QVariantList();
+    }
+    return retVar;
 }
 
 void QModelDescribingPros::setStatNameByFileData(const QString &filename)
 {
+    //TODO implement it = REAL=> FAKE names
+    if(filename.endsWith("F1.TXT", Qt::CaseSensitive))
+    {
+        statName = generic;
+    }
+    else if (filename.endsWith("F2.TXT", Qt::CaseSensitive))
+    {
+        statName = figurant;
+    }
+    else if( filename.endsWith("F12.TXT", Qt::CaseSensitive))
+    {
+        statName = weapon;
+    }
+    else if( filename.endsWith("F5.TXT", Qt::CaseSensitive))
+    {
+        statName = locus;
+    }
 }
 
 QVariantList QModelDescribingPros::initDataStructure()
 {
-    return QVariantList();
+    QVariantList retVar;
+    for( int i = 0; i < iListDescribing.count(); i++)
+    {
+        if(iListDescribing[i].toMap().value(id).toString().contains(statName))
+        {
+            retVar.append(iListDescribing[i]);
+        }
+    }
+    return retVar;
+}
+
+QVariant QModelDescribingPros::getIdByStatName(const QString &statName,const  QVariantList &oneRecord)
+{
+    qDebug()<<"get id by statName";
+    // Что делать с повторяющимися записями???
+    QVariant retVar;
+    int offset = 0;
+    if(statName == generic )
+    {
+       offset = 3;
+    }
+    else if(statName == figurant)
+    {
+        offset = 4;
+    }
+    else if(statName == locus)
+    {
+        offset = 3;
+    }
+    else if(statName == weapon)
+    {
+        offset = 3;
+    }
+    retVar = oneRecord.at(offset).toMap().value(dvalue);
+    qDebug()<<retVar;
+    return retVar;
+}
+
+QString QModelDescribingPros::removeSpaces(const QString &ex)
+{
+    QString ret = ex;
+    QStringList exList = ret.split(' ', QString::SkipEmptyParts);
+    int i = 0;
+    foreach(QString elem, exList)
+    {
+       if(i == 0)
+       {
+            ret = elem;
+       }
+       else
+       {
+            ret += " " + elem;
+       }
+       i++;
+    }
+    return ret;
+}
+
+void QModelDescribingPros::dataPrepare()
+{
+
+    //TODO rework it!!!
+    qDebug()<<"  ===START===   ";
+    QVariantList oneRec;
+    QVariantMap oneMap;
+    QVariantMap tmpMap;
+    QVariant uid;
+    int count = 0;
+    int i = 0;
+    int pos;
+    while(!iListDataTemp.isEmpty())
+    {
+        oneRec.clear();
+        tmpMap = iListDataTemp.takeAt(0).toMap();
+        oneRec.append(tmpMap.value(rapid).toList());
+        //TODO rework uid
+        uid = tmpMap.value(id);
+        count = 1;
+        while(foundByUId(uid, pos))
+        {
+            tmpMap = iListDataTemp.takeAt(pos).toMap();
+            oneRec.append(tmpMap.value(rapid).toList());
+            count++;
+        }
+        //Если у нас некорректное число файлов - нехватка данных
+        if(count != 4)
+        {
+            qWarning()<<"Data files is not valid";
+            continue;
+        }
+        oneMap.insert(numb,i++);
+        oneMap.insert(rapid,oneRec);
+        iListData.append(oneMap);
+    }
+    qDebug()<<"  ===END===   ";
+
 }
 
 //-------------------QModelDescribingPros--------------------------------------
