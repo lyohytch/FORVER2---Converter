@@ -1,7 +1,7 @@
 #include "querymodel.h"
 
-querymodel::querymodel(CorrelationModel *acorrModel):
-        corrModel(acorrModel)
+querymodel::querymodel(CorrelationModel* acorrModel):
+    corrModel(acorrModel)
 {
     qDebug();
 }
@@ -29,15 +29,17 @@ void querymodel::makeRequest()
 }
 void querymodel::makeCreateTableRequest()
 {
-    qDebug()<< " Generating template for create table";
-    if ( createRequest.isEmpty()) {
-        createRequest += createTbl + space + nameTbl + lBracket +iQueryRequestDesc[0]+ rBracket;
+    qDebug() << " Generating template for create table";
+    if (createRequest.isEmpty())
+    {
+        createRequest += createTbl + space + nameTbl + lBracket + iQueryRequestDesc[0] + rBracket;
         iCreateTblRequests.clear();
         iCreateTblRequests.append(createRequest);
         QString altRequest;
-        for (int i = 1; i < iQueryRequestDesc.count(); i++) {
-            altRequest =alterTbl+ space + nameTbl + space + addTbl + space+
-                        iQueryRequestDesc[i];
+        for (int i = 1; i < iQueryRequestDesc.count(); i++)
+        {
+            altRequest = alterTbl + space + nameTbl + space + addTbl + space +
+                         iQueryRequestDesc[i];
             iCreateTblRequests.append(altRequest);
         }
     }
@@ -47,18 +49,23 @@ void querymodel::makeCreateTableRequest()
 }
 void  querymodel::makeUpdateTableRequest()
 {
-    qDebug()<<" Not implemented yet";
+    qDebug() << " Not implemented yet";
 }
 void querymodel::makeInsertIntoListRequests()
 {
     //в запросе только один элемент
-    qDebug()<<" Generating template for insert into";
-    if (insertRequest.isEmpty()) {
+    qDebug() << " Generating template for insert into";
+    if (insertRequest.isEmpty())
+    {
         insertRequest += insertTbl + space + nameTbl + lBracket;
-        for (int i = 0; i < iQueryRequestData.count(); i++) {
-            if (i == 0) {
+        for (int i = 0; i < iQueryRequestData.count(); i++)
+        {
+            if (i == 0)
+            {
                 insertRequest += iQueryRequestData[i];
-            } else {
+            }
+            else
+            {
                 insertRequest += comma + iQueryRequestData[i];
             }
         }
@@ -70,9 +77,11 @@ void querymodel::initlist()
 {
     qDebug();
     QMap<QString, QVariant> oneMap;
-    if (iQueryRequestDesc.isEmpty() && iQueryRequestData.isEmpty()) {
+    if (iQueryRequestDesc.isEmpty() && iQueryRequestData.isEmpty())
+    {
         QVariantList reqList = corrModel->getCurrentModel()->getListSignificant();
-        for (int i = 0; i < reqList.count() ; i++) {
+        for (int i = 0; i < reqList.count() ; i++)
+        {
             //I know that cpDescribeList[i] is QMap object
             oneMap = reqList[i].toMap();
             iQueryRequestDesc.append(MapToStrDesc(oneMap));
@@ -82,16 +91,16 @@ void querymodel::initlist()
 
 }
 
-void querymodel::setCellType(const QString & type)
+void querymodel::setCellType(const QString& type)
 {
     //TODO check it
-    (type == ME)?(iCellType = querymodel::me):
-    (type == DV)?(iCellType = querymodel::dv):
-    (type == AV)?(iCellType = querymodel::av):
-    (type == ED)?(iCellType = querymodel::ed):
-    (type == CB)?(iCellType = querymodel::cb):
-    (type == ET)?(iCellType = querymodel::et):
-    (type == RM)?(iCellType = querymodel::rm):(iCellType = querymodel::un);
+    (type == ME) ? (iCellType = querymodel::me) :
+    (type == DV) ? (iCellType = querymodel::dv) :
+    (type == AV) ? (iCellType = querymodel::av) :
+    (type == ED) ? (iCellType = querymodel::ed) :
+    (type == CB) ? (iCellType = querymodel::cb) :
+    (type == ET) ? (iCellType = querymodel::et) :
+    (type == RM) ? (iCellType = querymodel::rm) : (iCellType = querymodel::un);
 }
 
 QString querymodel::CellTypeToStr()
@@ -100,17 +109,17 @@ QString querymodel::CellTypeToStr()
     return VCHARMAX;
 }
 
-QString querymodel::CellTypeToStr(const QString & type)
+QString querymodel::CellTypeToStr(const QString& type)
 {
     setCellType(type);
     return CellTypeToStr();
 }
 
-QString querymodel::MapToStrDesc(const QVariantMap &map)
+QString querymodel::MapToStrDesc(const QVariantMap& map)
 {
     return (map.value(id).toString() + space + CellTypeToStr(map.value(type).toString())/* + comma*/);//generic_id type for create taable
 }
-QString querymodel::MapToStrData(const QVariantMap &map)
+QString querymodel::MapToStrData(const QVariantMap& map)
 {
     return (map.value(id).toString()/* + comma*/);
 }
@@ -136,19 +145,24 @@ void querymodel::fillingRequestList()
     QString reqString;
     tTemplate.append(corrModel->targetToCurrent());// добавили переконвертированные дела из старой версии
     //qDebug()<<Q_FUNC_INFO<<tTemplate.at(1).toMap().value(rapid).toList().at(0).toMap().value(dvalue);
-    for (int i = 0 ; i < tTemplate.count(); i++) {
+    for (int i = 0 ; i < tTemplate.count(); i++)
+    {
         //TODO как представл€етс€ iListData
         reqString = insertRequest;
         tTemplateItem = tTemplate[i].toMap().value(rapid).toList();// ажись так
-        for (int j = 0; j < reqList.count(); j++) {
+        for (int j = 0; j < reqList.count(); j++)
+        {
             //Ќужно найти дл€ каждого reqList такой же элемент в tTemplateItem
             //≈сли он есть, то добавить значение - нет, добавить пустое место
             QVariant searchTmpl = reqList[j].toMap().value(id);//«начение ID
-            QString foundValue = findByID(tTemplateItem,searchTmpl).toString();
-            qDebug()<<foundValue;
-            if (j == 0) {
+            QString foundValue = findByID(tTemplateItem, searchTmpl).toString();
+            qDebug() << foundValue;
+            if (j == 0)
+            {
                 reqString += quote + foundValue + quote;//вывести значение пол€ dvalue в tTemplateItem
-            } else {
+            }
+            else
+            {
                 reqString += comma + quote + foundValue + quote;//вывести значение пол€ dvalue в tTemplateItem
             }
         }
@@ -157,10 +171,12 @@ void querymodel::fillingRequestList()
     }
 }
 
-QVariant querymodel::findByID(const QVariantList &list, const QVariant &searchTmpl)
+QVariant querymodel::findByID(const QVariantList& list, const QVariant& searchTmpl)
 {
-    for (int i = 0; i < list.count(); i++) {
-        if (list[i].toMap().value(id) == searchTmpl) {
+    for (int i = 0; i < list.count(); i++)
+    {
+        if (list[i].toMap().value(id) == searchTmpl)
+        {
             return list[i].toMap().value(dvalue);
         }
     }
