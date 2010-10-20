@@ -9,8 +9,7 @@
 //About class: QModelDescribing => QStringList
 //me,dv,av,ed,cb,et,rm
 
-class querymodel: public QObject, public QRunnable
-{
+class querymodel: public QObject, public QRunnable {
     Q_OBJECT
 
 protected:
@@ -34,8 +33,7 @@ protected:
     void fillingRequestList();
     void initlist();
 public:
-    enum CellType
-    {
+    enum CellType {
         ed = 0,
         dv,
         av,
@@ -48,10 +46,18 @@ public:
     querymodel(CorrelationModel *acorrModel = 0);
     virtual void run();
     void makeRequest();
-    QStringList getRequestDesc() const {return iQueryRequestDesc;};
-    QStringList getRequestData() const {return iQueryRequestData;};
-    QStringList getRequestList() const {return listOfRequests;};
-    QStringList getCreateTable() const {return iCreateTblRequests;};
+    QStringList getRequestDesc() const {
+        return iQueryRequestDesc;
+    };
+    QStringList getRequestData() const {
+        return iQueryRequestData;
+    };
+    QStringList getRequestList() const {
+        return listOfRequests;
+    };
+    QStringList getCreateTable() const {
+        return iCreateTblRequests;
+    };
 
 signals:
     void makeRequestSignal();
@@ -59,8 +65,12 @@ private:
     CellType iCellType;
     //Fill in lists
     void setCellType(const QString & type);
-    void setCellType(CellType type) {iCellType = type;};
-    CellType getCellType() { return iCellType;};
+    void setCellType(CellType type) {
+        iCellType = type;
+    };
+    CellType getCellType() {
+        return iCellType;
+    };
     QString CellTypeToStr();
     QString CellTypeToStr(const QString & type);
     QString MapToStrDesc(const QVariantMap &map);

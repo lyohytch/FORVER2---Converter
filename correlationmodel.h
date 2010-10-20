@@ -11,12 +11,10 @@
 
 typedef QVariant (*ConverterFunction)(QVariantList);
 
-class CorrelationModel:public QTableView
-{
-   Q_OBJECT
+class CorrelationModel:public QTableView {
+    Q_OBJECT
 public:
-    enum EfuncList
-    {
+    enum EfuncList {
         age_func = 0, //QVariant age(QVariant startDate, QVariant endDate);
         concat_func,//QString concat(char *arg1 ...);
         undef_func
@@ -24,9 +22,15 @@ public:
     CorrelationModel(QWidget *parent,QModelDescribing *current,QModelDescribing *target);
     CorrelationModel(QWidget *parent, QModelDescribing *current, QModelDescribing *target, QStandardItemModel *iTableModel);
     ~CorrelationModel();
-    QModelDescribing* getCurrentModel(){return iCurrentModel;};
-    QModelDescribing* getTargetModel(){return iTargetModel;};
-    QStandardItemModel* getTableModel(){return tableModel;};
+    QModelDescribing* getCurrentModel() {
+        return iCurrentModel;
+    };
+    QModelDescribing* getTargetModel() {
+        return iTargetModel;
+    };
+    QStandardItemModel* getTableModel() {
+        return tableModel;
+    };
     QVariantMap tableModelToMap();
     void fillInTable();
     void fillInTable(QVariantMap mapTable);

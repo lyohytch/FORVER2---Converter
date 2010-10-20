@@ -62,17 +62,17 @@ const QString weapon("weapon_");
 //Correlation
 const QString number("number");
 const QString function("function");
-    //target
+//target
 const QString TargetSign("TargetSign");
 const QString TargetData("TargetData");
 const QString TargetDesc("TargetDesc");
-    //template
+//template
 const QString TemplateSign("TemplateSign");
 const QString TemplateData("TemplateData");
 const QString TemplateDesc("TemplateDesc");
-    //table record
+//table record
 const QString TableRecord("TableRecord");
-    //table lists
+//table lists
 const QString tempList("tempList");
 const QString targList("targList");
 const QString funcList("funcList");

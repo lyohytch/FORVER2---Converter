@@ -8,8 +8,8 @@
 #include "constants.h"
 
 converter::converter(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::converter)
+        QMainWindow(parent),
+        ui(new Ui::converter)
 {
     ui->setupUi(this);
     isTargetRow = false;
@@ -89,34 +89,34 @@ converter::converter(QWidget *parent) :
 converter::~converter()
 {
     //Delete target
-    if(model4) delete model4;
+    if (model4) delete model4;
     //Delete template
-    if(modelD) delete modelD;
+    if (modelD) delete modelD;
 
     //Delete template pros
-    if(modelP) delete modelP;
+    if (modelP) delete modelP;
 
 
     //Delete corr model
-    if(corrModel) delete corrModel;
-    if(models) delete models;
-    if(trees[TARGETDESC]) delete trees[TARGETDESC];
-    if(trees[TEMPLATEDESC]) delete trees[TARGETDESC];
-    if(trees) delete trees;
+    if (corrModel) delete corrModel;
+    if (models) delete models;
+    if (trees[TARGETDESC]) delete trees[TARGETDESC];
+    if (trees[TEMPLATEDESC]) delete trees[TARGETDESC];
+    if (trees) delete trees;
 
     //Delete layout
-    if(layout) delete layout;
+    if (layout) delete layout;
 
-    if(pLabel) delete pLabel;
+    if (pLabel) delete pLabel;
 
     //Delete func form
-    if(a1) delete a1;
-    if(a2) delete a2;
-    if(a3) delete a3;
-    if(fLayout) delete fLayout;
-    if(funcWidget) delete funcWidget;
+    if (a1) delete a1;
+    if (a2) delete a2;
+    if (a3) delete a3;
+    if (fLayout) delete fLayout;
+    if (funcWidget) delete funcWidget;
 
-    if(ui) delete ui;
+    if (ui) delete ui;
 }
 
 void converter::changeEvent(QEvent *e)
@@ -142,22 +142,18 @@ void converter::on_actionOpen_triggered()
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setNameFilter(tr("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)"));
     dialog.setViewMode(QFileDialog::List);
-    if(dialog.exec())
-    {
+    if (dialog.exec()) {
         filenames = dialog.selectedFiles();
     }
     //---------------------
     //Если мы смогли установить описание: корректные файлы описания
-    if ( SelectDescription(filenames, TARGETDESC) )
-    {
+    if ( SelectDescription(filenames, TARGETDESC) ) {
         models[TARGETDESC]->resetAllList();
         corrModel->clearTable();
-        foreach(QString fname, filenames)
-        {
+        foreach(QString fname, filenames) {
             models[TARGETDESC]->appendToList(fname);
         }
-        if(models[TARGETDESC]->getListDescribing().count() > 0)
-        {
+        if (models[TARGETDESC]->getListDescribing().count() > 0) {
             //TODO попробовать просто отобразить модель
             models[TARGETDESC]->createModel();
             trees[TARGETDESC]->loadModel(models[TARGETDESC]);
@@ -172,18 +168,15 @@ void converter::on_actionOpen_triggered()
 bool converter::refreshDescribingAndWidgets(int description_id, QModelDescribing *model)
 {
     //Check
-    switch(description_id)
-    {
-    case TARGETDESC:
-        {
-           if(models[TEMPLATEDESC] == model) return false;
-        }
-        break;
-    case TEMPLATEDESC:
-        {
-            if(models[TARGETDESC] == model) return false;
-        }
-        break;
+    switch (description_id) {
+    case TARGETDESC: {
+        if (models[TEMPLATEDESC] == model) return false;
+    }
+    break;
+    case TEMPLATEDESC: {
+        if (models[TARGETDESC] == model) return false;
+    }
+    break;
     default:
         return false;
     }
@@ -198,11 +191,11 @@ bool converter::refreshDescribingAndWidgets(int description_id, QModelDescribing
     //target
     layout->removeWidget(trees[TARGETDESC]);
 
-    if(corrModel) delete corrModel;
+    if (corrModel) delete corrModel;
 
     models[description_id] = model;
 
-   ///////ADDING DATA///////////////
+    ///////ADDING DATA///////////////
     corrModel = new CorrelationModel(this,models[TEMPLATEDESC],models[TARGETDESC]);
     connect(corrModel,SIGNAL(doubleClicked(const QModelIndex &)),this,
             SLOT(ElementTableActivated(const QModelIndex &)),Qt::QueuedConnection);
@@ -223,35 +216,23 @@ bool converter::SelectDescription(const QStringList & filenames, int description
 {
     // Информация об именах файлов
     int old4 = 0, demo = 0, pros = 0;
-    if( filenames.count() > 0)
-    {
-         foreach(QString fname, filenames)
-         {
-             if(fname.contains("Sprav",Qt::CaseSensitive))
-             {
-                 old4++;
-             }
-             else if(fname.contains("sprav_d",Qt::CaseSensitive))
-             {
-                 demo++;
-             }
-             else if(fname.contains("F", Qt::CaseSensitive))
-             {
-                 pros++;
-             }
-         }
-         if(old4 == filenames.count())
-         {
+    if ( filenames.count() > 0) {
+        foreach(QString fname, filenames) {
+            if (fname.contains("Sprav",Qt::CaseSensitive)) {
+                old4++;
+            } else if (fname.contains("sprav_d",Qt::CaseSensitive)) {
+                demo++;
+            } else if (fname.contains("F", Qt::CaseSensitive)) {
+                pros++;
+            }
+        }
+        if (old4 == filenames.count()) {
             return refreshDescribingAndWidgets(description_id, model4);
-         }
-         else if(demo == filenames.count())
-         {
-             return refreshDescribingAndWidgets(description_id, modelD);
-         }
-         else if (pros == filenames.count())
-         {
-             return refreshDescribingAndWidgets(description_id, modelP);
-         }
+        } else if (demo == filenames.count()) {
+            return refreshDescribingAndWidgets(description_id, modelD);
+        } else if (pros == filenames.count()) {
+            return refreshDescribingAndWidgets(description_id, modelP);
+        }
     }
     return false;
 }
@@ -267,22 +248,18 @@ void converter::on_actionOpen_template_triggered()
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setNameFilter(tr("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT)"));
     dialog.setViewMode(QFileDialog::List);
-    if(dialog.exec())
-    {
+    if (dialog.exec()) {
         filenames = dialog.selectedFiles();
     }
     //---------------------
     //Если мы смогли установить описание: корректные файлы описания
-    if ( SelectDescription(filenames, TEMPLATEDESC) )
-    {
+    if ( SelectDescription(filenames, TEMPLATEDESC) ) {
         models[TEMPLATEDESC]->resetAllList();
         corrModel->clearTable();
-        foreach(QString fname, filenames)
-        {
+        foreach(QString fname, filenames) {
             models[TEMPLATEDESC]->appendToList(fname);
         }
-        if(models[TEMPLATEDESC]->getListDescribing().count() > 0)
-        {
+        if (models[TEMPLATEDESC]->getListDescribing().count() > 0) {
             //TODO попробовать просто отобразить модель
             models[TEMPLATEDESC]->createModel();
             trees[TEMPLATEDESC]->loadModel(models[TEMPLATEDESC]);
@@ -297,14 +274,11 @@ void converter::ElementTreeTargetActivated(const QModelIndex &index)
 {
     qDebug()<<"index = "<<index.data(Qt::UserRole + 1);
     qDebug()<<"index.row() = "<<index.row();
-    if(corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
-    {
+    if (corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1))) {
         //TODO как-то нужно это добавить в таблицу
         corrModel->changeTargetValue(iTarget,rowId,index.data(Qt::UserRole + 1),countTV);
         countTV = false;
-    }
-    else
-    {
+    } else {
         qDebug()<< " target table cell isn't checked or not applicable";
         this->statusBar()->showMessage("Target table cell isn't checked or not applicable",3000);
 
@@ -314,13 +288,10 @@ void converter::ElementTreeTemplateActivated(const QModelIndex &index)
 {
     qDebug()<<"index = "<<index.data(Qt::UserRole + 1);
     qDebug()<<"index.row() = "<<rowId;
-    if(corrModel->applyTreeClick(iTemplate) && models[TEMPLATEDESC]->isSignificant(index.data(Qt::UserRole + 1)))
-    {
+    if (corrModel->applyTreeClick(iTemplate) && models[TEMPLATEDESC]->isSignificant(index.data(Qt::UserRole + 1))) {
         //Нужен только один элемент Лучше использовать QVariant ?
         corrModel->changeTemplateValue(iTemplate,rowId,index.data(Qt::UserRole + 1));
-    }
-    else
-    {
+    } else {
         qDebug()<< " template table cell isn't checked or not applicable";
         this->statusBar()->showMessage("Template table cell isn't checked or not applicable",3000);
     }
@@ -334,28 +305,24 @@ void converter::ElementTableActivated(const QModelIndex &index)
     qDebug()<<" index.row():="<<index.row();
     rowId = index.row();
     //TODO implement three methods
-    switch(index.column())
-    {
-        case iTemplate:
-        {
-            corrModel->setApplyTreeClick(iTemplate);
-            pLabel->setText("Change template variable. Row: "+QVariant(index.row() + 1).toString()+" Column: "+QVariant(index.column() + 1).toString());
-        }
-        break;
-        case iTarget:
-        {
-            corrModel->setApplyTreeClick(iTarget);
-            pLabel->setText("Change target variables. Row: "+QVariant(index.row() + 1).toString()+" Column: "+QVariant(index.column() + 1).toString());
-            countTV = true;
-        }
-        break;
-        case iFunction:
-        {
-            corrModel->setApplyTreeClick(iFunction);
-            pLabel->setText("Change function. Row: "+QVariant(index.row() + 1).toString()+" Column: "+QVariant(index.column() + 1).toString());
-            funcWidget->showNormal();
-        }
-        break;
+    switch (index.column()) {
+    case iTemplate: {
+        corrModel->setApplyTreeClick(iTemplate);
+        pLabel->setText("Change template variable. Row: "+QVariant(index.row() + 1).toString()+" Column: "+QVariant(index.column() + 1).toString());
+    }
+    break;
+    case iTarget: {
+        corrModel->setApplyTreeClick(iTarget);
+        pLabel->setText("Change target variables. Row: "+QVariant(index.row() + 1).toString()+" Column: "+QVariant(index.column() + 1).toString());
+        countTV = true;
+    }
+    break;
+    case iFunction: {
+        corrModel->setApplyTreeClick(iFunction);
+        pLabel->setText("Change function. Row: "+QVariant(index.row() + 1).toString()+" Column: "+QVariant(index.column() + 1).toString());
+        funcWidget->showNormal();
+    }
+    break;
     default:
         qWarning()<<" Strange column??";
     }
@@ -365,12 +332,9 @@ void converter::FunctionIsChecked(int id)
 {
     qDebug()<<" change function in table. ID = "<<id;
     qDebug()<<"index.row() = "<<rowId;
-    if(corrModel->applyTreeClick(iFunction) )
-    {
+    if (corrModel->applyTreeClick(iFunction) ) {
         corrModel->changeFunctionValue(iFunction,rowId,id);
-    }
-    else
-    {
+    } else {
         qDebug()<< " function table cell isn't checked or not applicable";
         this->statusBar()->showMessage("Function table cell isn't checked or not applicable",3000);
     }
@@ -380,13 +344,10 @@ void converter::FunctionIsChecked(int id)
 void converter::FillTable()
 {
     qDebug()<<" fill in table if it need";
-    if(models[TARGETDESC]->isValid() && models[TARGETDESC]->isValid())
-    {
+    if (models[TARGETDESC]->isValid() && models[TARGETDESC]->isValid()) {
         //TODO do something
         corrModel->fillInTable();
-    }
-    else
-    {
+    } else {
         qWarning()<<" Desc loaded incomplete";
     }
 }
@@ -395,8 +356,7 @@ void converter::on_actionLoad_Template_Data_triggered()
 {
     qDebug();
     //Create file dialog
-    if(!models[TEMPLATEDESC]->isValid())
-    {
+    if (!models[TEMPLATEDESC]->isValid()) {
         qWarning()<<" Description wasn't loaded";
         this->statusBar()->showMessage("Template Description wasn't loaded",5000);
         return;
@@ -406,13 +366,11 @@ void converter::on_actionLoad_Template_Data_triggered()
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setNameFilter(tr("Text template data files (data_sprav_d.txt)"));
     dialog.setViewMode(QFileDialog::List);
-    if(dialog.exec())
-    {
+    if (dialog.exec()) {
         filenames = dialog.selectedFiles();
     }
     //Append data
-    foreach(QString fname, filenames)
-    {
+    foreach(QString fname, filenames) {
         models[TEMPLATEDESC]->loadingData(fname);
     }
     // TODO make message when error happened
@@ -422,8 +380,7 @@ void converter::on_actionLoad_Target_Data_triggered()
 {
     qDebug();
     //Create file dialog
-    if(!models[TARGETDESC]->isValid())
-    {
+    if (!models[TARGETDESC]->isValid()) {
         qWarning()<<" Description wasn't loaded";
         this->statusBar()->showMessage("Target Description wasn't loaded",5000);
         return;
@@ -433,8 +390,7 @@ void converter::on_actionLoad_Target_Data_triggered()
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setNameFilter(tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)"));
     dialog.setViewMode(QFileDialog::List);
-    if(dialog.exec())
-    {
+    if (dialog.exec()) {
         filenames = dialog.selectedFiles();
     }
 
@@ -442,13 +398,11 @@ void converter::on_actionLoad_Target_Data_triggered()
     //Нужно добавлять только данные - Сделать кнопку резет
 
 
-    foreach(QString fname, filenames)
-    {
+    foreach(QString fname, filenames) {
         models[TARGETDESC]->loadingData(fname);
     }
     //Попытаться убрать это или добавить в функцию выше
-    if(models[TARGETDESC]->isValidDataTemp())
-    {
+    if (models[TARGETDESC]->isValidDataTemp()) {
         models[TARGETDESC]->dataPrepare();
         pLabel->setText("Target data successfully loaded");
     }
@@ -457,8 +411,7 @@ void converter::on_actionLoad_Target_Data_triggered()
 void converter::on_actionExport_template_data_to_DB_triggered()
 {
     qDebug();
-    if(models[TEMPLATEDESC]->isValidData())
-    {
+    if (models[TEMPLATEDESC]->isValidData()) {
         //Make string request
         qDebug()<<"=======Start Loading Template======";
         queryModel = new querymodel(corrModel);
@@ -470,9 +423,7 @@ void converter::on_actionExport_template_data_to_DB_triggered()
         //TODO move to slot
 
         qDebug()<<"=======End Template======";
-    }
-    else
-    {
+    } else {
         qDebug()<<" Template data wasn't loaded";
         this->statusBar()->showMessage("Template data wasn't loaded",3000);
     }
@@ -482,8 +433,7 @@ void converter::on_actionConvert_files_triggered()
 {
     qDebug();
     //У нас должны быть загружены данные и модель демо версии
-    if(models[TARGETDESC]->isValidData() && models[TEMPLATEDESC]->isValid())
-    {
+    if (models[TARGETDESC]->isValidData() && models[TEMPLATEDESC]->isValid()) {
         //Make string request
         qDebug()<<"=======Start Converting======";
         queryModel = new querymodel(corrModel);
@@ -492,9 +442,7 @@ void converter::on_actionConvert_files_triggered()
                 SLOT(makeRequestSlot()), Qt::QueuedConnection);
         QThreadPool::globalInstance()->start(queryModel);
         qDebug()<<"=======End Converting======";
-    }
-    else
-    {
+    } else {
         qDebug()<<" Target data wasn't loaded";
         this->statusBar()->showMessage("Target data wasn't loaded",3000);
     }
@@ -525,8 +473,7 @@ void converter::makeRequestSlot()
     connect(mssqlQuery,SIGNAL(complete(int,QString)),this,
             SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
     QThreadPool::globalInstance()->start(mssqlQuery);
-    if(queryModel)
-    {
+    if (queryModel) {
         delete queryModel;
         queryModel = NULL;
     }
@@ -535,32 +482,25 @@ void converter::makeRequestSlot()
 void converter::init_load(QModelDescribing *loadedModel, TreeViewModel *tree)
 {
     QStringList filenames;
-    if(loadedModel == modelD)
-    {
-       filenames.append(demopath);
-    }
-    else if(loadedModel == model4)
-    {
-            filenames.append(target1path);
-            filenames.append(target2path);
-            filenames.append(target3path);
-            filenames.append(target4path);
-     }
-    else if(loadedModel == modelP)
-    {
-            filenames.append(prosPathF1);
-            filenames.append(prosPathF2);
-            filenames.append(prosPathF5);
-            filenames.append(prosPathF12);
+    if (loadedModel == modelD) {
+        filenames.append(demopath);
+    } else if (loadedModel == model4) {
+        filenames.append(target1path);
+        filenames.append(target2path);
+        filenames.append(target3path);
+        filenames.append(target4path);
+    } else if (loadedModel == modelP) {
+        filenames.append(prosPathF1);
+        filenames.append(prosPathF2);
+        filenames.append(prosPathF5);
+        filenames.append(prosPathF12);
     }
 
 
-    foreach(QString fname, filenames)
-    {
+    foreach(QString fname, filenames) {
         loadedModel->appendToList(fname);
     }
-    if(loadedModel->getListDescribing().count() > 0)
-    {
+    if (loadedModel->getListDescribing().count() > 0) {
         //TODO попробовать просто отобразить модель
         loadedModel->createModel();
         tree->loadModel(loadedModel);
@@ -581,18 +521,16 @@ void converter::on_actionSave_correlation_model_triggered()
 {
     //TEST IT
     QFileDialog dialog(this);
-        dialog.setFileMode(QFileDialog::AnyFile);
-        dialog.setViewMode(QFileDialog::List);
-        QString fname = dialog.getSaveFileName(this, tr("Save File"),
-                                   QString(),
-                                   tr("CorrelationModel files (*.cmf)"));
-    if(!fname.endsWith(cmf))
-    {
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setViewMode(QFileDialog::List);
+    QString fname = dialog.getSaveFileName(this, tr("Save File"),
+                                           QString(),
+                                           tr("CorrelationModel files (*.cmf)"));
+    if (!fname.endsWith(cmf)) {
         fname += cmf;
     }
     QFile corrModelFile(fname);
-    if(corrModelFile.open(QIODevice::WriteOnly))
-    {
+    if (corrModelFile.open(QIODevice::WriteOnly)) {
         QDataStream out(&corrModelFile);
         QVariantMap tableRecord;
         QVariantMap oneRecord;
@@ -632,25 +570,19 @@ void converter::on_actionLoad_correlation_model_triggered()
     dialog.setFileMode(QFileDialog::ExistingFile);
     dialog.setNameFilter(tr("CorrelationModel files (*.cmf)"));
     dialog.setViewMode(QFileDialog::List);
-    if(dialog.exec())
-    {
+    if (dialog.exec()) {
         filenames = dialog.selectedFiles();
     }
-    foreach(QString f, filenames)
-    {
+    foreach(QString f, filenames) {
         //Берём первый попавшийся файл
         fname = f;
         break;
     }
-    if(fname == "")
-    {
+    if (fname == "") {
         qDebug()<<" File isn't loaded";
-    }
-    else
-    {
+    } else {
         QFile cModelFile(fname);
-        if(cModelFile.open(QIODevice::ReadOnly))
-        {
+        if (cModelFile.open(QIODevice::ReadOnly)) {
             QDataStream  in(&cModelFile);
             QVariantMap record;
             in>>record;
@@ -664,8 +596,7 @@ void converter::on_actionLoad_correlation_model_triggered()
 void converter::on_actionChange_DB_structure_triggered()
 {
     qDebug();
-    if(corrModel)
-    {
+    if (corrModel) {
         corrModel->clearTable();
         this->statusBar()->showMessage("Correlation table was cleared. Please load table",3000);
     }
@@ -684,30 +615,21 @@ void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
     qDebug()<<" ::func from closed";
     int id = nonef;
     QRadioButton *r1 = this->findChild<QRadioButton *>("AGE");
-    if(r1 && r1->isChecked())
-    {
+    if (r1 && r1->isChecked()) {
         //TODO emit signal to converter
         qDebug()<<"::AGE";
         id = agef;
-    }
-    else
-    {
+    } else {
         QRadioButton *r2 = this->findChild<QRadioButton *>("CONCAT");
-        if(r2 && r2->isChecked())
-        {
+        if (r2 && r2->isChecked()) {
             qDebug()<<"::CONCAT";
             id = concatf;
-        }
-        else
-        {
+        } else {
             QRadioButton *r3 = this->findChild<QRadioButton *>("NONE");
-            if(r3 && r3->isChecked())
-            {
+            if (r3 && r3->isChecked()) {
                 qDebug()<<"::NO FUNCTION";
                 id = nonef;
-            }
-            else
-            {
+            } else {
                 qWarning()<<" Error was encountered";
                 id = nonef;
             }

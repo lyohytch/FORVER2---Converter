@@ -11,12 +11,9 @@ TreeViewModel::TreeViewModel(QWidget * parent,bool isT):
 void TreeViewModel::loadModel(QStandardItemModel *model)
 {
 
-    if(isTemplate)
-    {
+    if (isTemplate) {
         model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("КУДА КОНВЕРТИРОВАТЬ") );
-    }
-    else
-    {
+    } else {
         model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("ЧТО КОНВЕРТИРОВАТЬ") );
     }
 

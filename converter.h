@@ -14,12 +14,11 @@
 #include "mssqlquery.h"
 
 namespace Ui {
-    class converter;
+class converter;
 }
 
 //Класс для выбора функции
-class QWidgetFunction : public QWidget
-{
+class QWidgetFunction : public QWidget {
     Q_OBJECT
 public:
     QWidgetFunction();
@@ -90,8 +89,8 @@ private:
     bool SelectDescription(const QStringList & filenames, int description_id);
     bool refreshDescribingAndWidgets(int description_id, QModelDescribing *model);
     void init();
-    int rowId;//   
-    bool countTV;//  
+    int rowId;//
+    bool countTV;//
 
 private slots:
     void on_actionChange_DB_structure_triggered();

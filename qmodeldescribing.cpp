@@ -12,8 +12,8 @@ QModelDescribing::QModelDescribing(QObject *parent):
 QModelDescribing::QModelDescribing(const QModelDescribing &other):
         QStandardItemModel()
 {
-  iListDescribing = other.getListDescribing();
-  isData = other.modelData();
+    iListDescribing = other.getListDescribing();
+    isData = other.modelData();
 }
 
 QVariantList QModelDescribing::getListDescribing() const
@@ -34,29 +34,20 @@ void QModelDescribing::appendToList(const QString &filename)
     qDebug();
     //Open file
     QFile fileSource(filename);
-    if ( fileSource.exists())
-    {
+    if ( fileSource.exists()) {
         qDebug()<<"File found. Try to take list";
-        if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
+        if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical()<<"File "<<filename<<" can not be open.";
-        }
-        else
-        {
+        } else {
             QTextStream fileStream(&fileSource);
-            if ( checkFileStructure(&fileStream) )
-            {
+            if ( checkFileStructure(&fileStream) ) {
                 setStatNameByFile(filename);
                 addingDataToList(&fileStream);
-            }
-            else
-            {
+            } else {
                 qWarning()<<"File structure is incorrect.";
             }
         }
-    }
-    else
-    {
+    } else {
         qCritical()<<"File "<<filename<<" doesn't exist";
     }
 }
@@ -64,12 +55,10 @@ void QModelDescribing::addingDataToList(QTextStream *fileStream)
 {
     qDebug()<<" Start";
     QMap<QString, QVariant> *oneRecord;
-    while (!fileStream->atEnd())
-    {
+    while (!fileStream->atEnd()) {
         QString line = fileStream->readLine();
         oneRecord = process_line(line);
-        if(oneRecord != NULL)
-        {
+        if (oneRecord != NULL) {
             moveOneRecordToList(*oneRecord);
             delete oneRecord;
         }
@@ -88,29 +77,20 @@ void QModelDescribing::loadingData(const QString &filename)
     qDebug();
     //Open file
     QFile fileSource(filename);
-    if ( fileSource.exists())
-    {
+    if ( fileSource.exists()) {
         qDebug()<<"File found. Try to take list";
-        if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
+        if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text)) {
             qCritical()<<"File "<<filename<<" can not be open.";
-        }
-        else
-        {
+        } else {
             QTextStream fileStream(&fileSource);
-            if ( checkFileFileStructureData(&fileStream) )
-            {
+            if ( checkFileFileStructureData(&fileStream) ) {
                 setStatNameByFileData(filename);
                 addingLoadedData(&fileStream);
-            }
-            else
-            {
+            } else {
                 qWarning()<<"File structure is incorrect.";
             }
         }
-    }
-    else
-    {
+    } else {
         qCritical()<<"File "<<filename<<" doesn't exist";
     }
 }
@@ -120,7 +100,7 @@ bool QModelDescribing::createModel()
     qDebug();
     //Заполнить значимые элементы
     fillSignificantList();
-   //Здесь мы заполняем QStandartItemModel
+    //Здесь мы заполняем QStandartItemModel
     QStandardItem *rootItem = new QStandardItem("Model");
     //Fill in list QStandardItem
     setChildItem(iListDescribing,0,0,rootItem);
@@ -131,60 +111,52 @@ bool QModelDescribing::createModel()
 
 void QModelDescribing::setChildItem(const QVariantList &iList,int i,int levels,QStandardItem *parent)
 {
-    if (i >= iList.count())
-    {
+    if (i >= iList.count()) {
         return;
     }
     QStandardItem *child = new QStandardItem(iList[i].toMap().value(name).toString());
     child->setEditable(false);
     child->setData(iList[i],Qt::UserRole + 1);
-    if(isSignificant(iList[i]))
-    {
+    if (isSignificant(iList[i])) {
         QFont font = child->font();
         font.setBold(true);
         child->setFont(font);
     }
     int levelcur = iList[i].toMap().value(level).toInt();
     int diff = levelcur  - levels;
-    switch (diff)
-    {
-        case 0:// Уровень совпадает. Делаем следующий элемент ребёнком родителя parent
-        {
-            i++;
-            parent->parent()->appendRow(child);
-            setChildItem(iList,i,levelcur,child);
+    switch (diff) {
+    case 0: { // Уровень совпадает. Делаем следующий элемент ребёнком родителя parent
+        i++;
+        parent->parent()->appendRow(child);
+        setChildItem(iList,i,levelcur,child);
+    }
+    break;
+    case 1: { //Уровень следующего на 1 больше. Делаем след элемент ребёнком parent
+        i++;
+        parent->appendRow(child);
+        setChildItem(iList,i,levelcur,child);
+    }
+    break;
+    case -1: { //Уровень след на 1 меньше. Делаем след эл ребёнком дедушки parent
+        i++;
+        parent->parent()->parent()->appendRow(child);
+        setChildItem(iList,i,levelcur,child);
+    }
+    break;
+    default: { //Уровень след меньше , чем на 1
+        if (!child) {
+            delete child;
         }
-        break;
-        case 1://Уровень следующего на 1 больше. Делаем след элемент ребёнком parent
-        {
-            i++;
-            parent->appendRow(child);
-            setChildItem(iList,i,levelcur,child);
-        }
-        break;
-        case -1://Уровень след на 1 меньше. Делаем след эл ребёнком дедушки parent
-        {
-            i++;
-            parent->parent()->parent()->appendRow(child);
-            setChildItem(iList,i,levelcur,child);
-        }
-        break;
-        default://Уровень след меньше , чем на 1
-        {
-            if(!child)
-            {
-                delete child;
-            }
-            setChildItem(iList,i,levels - 1,parent->parent());
-        }
-        break;
+        setChildItem(iList,i,levels - 1,parent->parent());
+    }
+    break;
     }
 }
 bool QModelDescribing::isValidString(const QMap<QString,QVariant> &checkMap)
 {
     bool isNull = ((checkMap.value(id)==NULL)||(checkMap.value(level)==NULL)||
                    (checkMap.value(name)==NULL)||(checkMap.value(type)==NULL));
-    if(!isNull)
+    if (!isNull)
         return ((checkMap.value(type).toString() == AV)||(checkMap.value(type).toString() == DV)||(checkMap.value(type).toString() == RM)||
                 (checkMap.value(type).toString() == CB)||(checkMap.value(type).toString() == ED)||(checkMap.value(type).toString() == ET)||
                 (checkMap.value(type).toString() == ME)) ;
@@ -194,12 +166,10 @@ bool QModelDescribing::isValidString(const QMap<QString,QVariant> &checkMap)
 QString QModelDescribing::readElement(const QString &line, int &k)
 {
     QString Element = "";
-    while(line[k] != '\t')
-    {
+    while (line[k] != '\t') {
         Element += line[k];
         k++;
-        if(k >= line.count())
-        {
+        if (k >= line.count()) {
             qWarning()<<"Data out of range!!!";
             return NULL;
         }
@@ -210,14 +180,12 @@ QString QModelDescribing::readElement(const QString &line, int &k)
 bool QModelDescribing::turn(const QString &line, int &k, int cTurn)
 {
     int count = 0;
-    while (count < cTurn)
-    {
-        if(k >= line.count())
-        {
+    while (count < cTurn) {
+        if (k >= line.count()) {
             qWarning()<<"Data out of range!!!";
             return false;
         }
-        if(line[k] == '\t') ++count;
+        if (line[k] == '\t') ++count;
         k++;
     }
     return true;
@@ -237,102 +205,87 @@ bool QModelDescribing::isValidData()
 void QModelDescribing::fillSignificantList()
 {
     int count = iListDescribing.count();
-    for(int i = 0;i<count;i++)
-    {
-        if(isSignificant(iListDescribing[i]))
-        {
+    for (int i = 0; i<count; i++) {
+        if (isSignificant(iListDescribing[i])) {
             iListSignificant.append(iListDescribing[i]);
         }
     }
 }
- bool QModelDescribing::isSignificant(const QVariant &value)
- {
+bool QModelDescribing::isSignificant(const QVariant &value)
+{
     return (value.toMap().value(type).toString() != RM);
- }
+}
 
- QVariant QModelDescribing::findById(const QVariant &uid)
- {
-     for(int i = 0; i < iListSignificant.count() ; i++)
-     {
-         if(iListSignificant[i].toMap().value(id) == uid)
-         {
-             return iListSignificant[i];
-         }
-     }
-     return QVariant();
- }
+QVariant QModelDescribing::findById(const QVariant &uid)
+{
+    for (int i = 0; i < iListSignificant.count() ; i++) {
+        if (iListSignificant[i].toMap().value(id) == uid) {
+            return iListSignificant[i];
+        }
+    }
+    return QVariant();
+}
 
 
 
- void QModelDescribing::setStatNameByFile(const QString &filename)
- {
-     //Move to each class
-     if(filename.endsWith("Sprav1.txt",Qt::CaseSensitive) ||
-        filename.endsWith("sprav_d.txt",Qt::CaseSensitive) ||
-        filename.endsWith("F1.TXT", Qt::CaseSensitive))
-     {
-         statName = generic;
-     }
-     else if(filename.endsWith("Sprav2.txt",Qt::CaseSensitive) ||
-             filename.endsWith("F2.TXT", Qt::CaseSensitive))
-     {
-         statName = figurant;
-     }
-     else if(filename.endsWith("Sprav3.txt",Qt::CaseSensitive) ||
-             filename.endsWith("F5.TXT", Qt::CaseSensitive))
-     {
-         statName = locus;
-     }
-     else if(filename.endsWith("Sprav4.txt",Qt::CaseSensitive) ||
-             filename.endsWith("F12.TXT", Qt::CaseSensitive))
-     {
-         statName = weapon;
-     }
-     else
-     {
-         //Adding by default
-         statName = "";
-     }
- }
+void QModelDescribing::setStatNameByFile(const QString &filename)
+{
+    //Move to each class
+    if (filename.endsWith("Sprav1.txt",Qt::CaseSensitive) ||
+            filename.endsWith("sprav_d.txt",Qt::CaseSensitive) ||
+            filename.endsWith("F1.TXT", Qt::CaseSensitive)) {
+        statName = generic;
+    } else if (filename.endsWith("Sprav2.txt",Qt::CaseSensitive) ||
+               filename.endsWith("F2.TXT", Qt::CaseSensitive)) {
+        statName = figurant;
+    } else if (filename.endsWith("Sprav3.txt",Qt::CaseSensitive) ||
+               filename.endsWith("F5.TXT", Qt::CaseSensitive)) {
+        statName = locus;
+    } else if (filename.endsWith("Sprav4.txt",Qt::CaseSensitive) ||
+               filename.endsWith("F12.TXT", Qt::CaseSensitive)) {
+        statName = weapon;
+    } else {
+        //Adding by default
+        statName = "";
+    }
+}
 
- void QModelDescribing::resetDataList()
- {
-     iListData.clear();
- }
+void QModelDescribing::resetDataList()
+{
+    iListData.clear();
+}
 
- void QModelDescribing::resetSignList()
- {
-     iListSignificant.clear();
- }
+void QModelDescribing::resetSignList()
+{
+    iListSignificant.clear();
+}
 
- void QModelDescribing::resetDescList()
- {
+void QModelDescribing::resetDescList()
+{
     iListDescribing.clear();
- }
+}
 
- void QModelDescribing::resetAllList()
- {
-     this->clear();
-     resetDescList();
-     resetDataList();
-     resetSignList();
- }
+void QModelDescribing::resetAllList()
+{
+    this->clear();
+    resetDescList();
+    resetDataList();
+    resetSignList();
+}
 
- bool QModelDescribing::foundByUId(const QVariant &uid, int &pos)
- {
-     int i = 0;
-     foreach(QVariant oneRec,iListDataTemp)
-     {
-         if(oneRec.toMap().value(id) == uid)
-         {
+bool QModelDescribing::foundByUId(const QVariant &uid, int &pos)
+{
+    int i = 0;
+    foreach(QVariant oneRec,iListDataTemp) {
+        if (oneRec.toMap().value(id) == uid) {
             pos = i;
             return true;
-         }
-         i++;
-     }
+        }
+        i++;
+    }
 
-     return false;
- }
+    return false;
+}
 
 //----------------------------------------------------------------------------
 //-------------------QModelDescribingOld4--------------------------------------
@@ -359,16 +312,14 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString &line)
     retMap->insert(id,statName+readElement(line,k));
     //Берём уровень
     //Сдвиг
-    if(!turn(line,k,1))
-    {
+    if (!turn(line,k,1)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(level,readElement(line,k));
     //try to take m_asType
-    if(!turn(line,k,5))
-    {
+    if (!turn(line,k,5)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
@@ -376,15 +327,13 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString &line)
     retMap->insert(type,readElement(line,k));
     //Line couldn't be added into map. Return NULL
     //Сдвиг для считывания имени
-    if(!turn(line,k,4))
-    {
+    if (!turn(line,k,4)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(name,readElement(line,k));
-    if(!isValidString(*retMap))
-    {
+    if (!isValidString(*retMap)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
@@ -404,23 +353,20 @@ void QModelDescribingOld4::dataPrepare()
     int count = 0;
     int i = 0;
     int pos;
-    while(!iListDataTemp.isEmpty())
-    {
+    while (!iListDataTemp.isEmpty()) {
         oneRec.clear();
         tmpMap = iListDataTemp.takeAt(0).toMap();
         oneRec.append(tmpMap.value(rapid).toList());
         //TODO rework uid
         uid = tmpMap.value(id);
         count = 1;
-        while(foundByUId(uid, pos))
-        {
+        while (foundByUId(uid, pos)) {
             tmpMap = iListDataTemp.takeAt(pos).toMap();
             oneRec.append(tmpMap.value(rapid).toList());
             count++;
         }
         //Если у нас некорректное число файлов
-        if(count != 5)
-        {
+        if (count != 5) {
             qWarning()<<"Data files is not valid";
             continue;
         }
@@ -439,18 +385,15 @@ void QModelDescribingOld4::addingLoadedData(QTextStream *fileStream)
     int i = 0;
     //Инициализируем данные в соответствии с таблицей
     QVariantList dataStructure = initDataStructure();
-    while (!fileStream->atEnd())
-    {
+    while (!fileStream->atEnd()) {
         QString line = fileStream->readLine();
-        if(i<2)
-        {
+        if (i<2) {
             i++;
             continue;
         }
         oneRecord = process_lineData(line,dataStructure);//Тут только сразу весь мап
         //Первые три строки отбрасываем
-        if(!oneRecord.isEmpty())
-        {
+        if (!oneRecord.isEmpty()) {
             oneData.insert(id,getIdByStatName(statName,oneRecord));
             oneData.insert(rapid,oneRecord);
             iListDataTemp.append(oneData);
@@ -463,20 +406,13 @@ void QModelDescribingOld4::addingLoadedData(QTextStream *fileStream)
 int QModelDescribingOld4::setSeekofLine(const QString & statName)
 {
     int offset = 0;
-    if(statName == generic )
-    {
-       offset = 18;
-    }
-    else if(statName == figurant)
-    {
+    if (statName == generic ) {
+        offset = 18;
+    } else if (statName == figurant) {
         offset = 11;
-    }
-    else if(statName == locus)
-    {
+    } else if (statName == locus) {
         offset = 13;
-    }
-    else if(statName == weapon)
-    {
+    } else if (statName == weapon) {
         offset = 6;
     }
 
@@ -491,34 +427,29 @@ QVariantList QModelDescribingOld4::process_lineData(const QString &line, const Q
     QVariantMap oneDataMap;
     QVariantList retVar;
     int j = 0;
-   qDebug()<<" check data structure: a = "<<listofData.count() - offset<<" ; b = "<<DataStructure.count();
-    for(int i = offset; listofData.count();i++)
-    {
+    qDebug()<<" check data structure: a = "<<listofData.count() - offset<<" ; b = "<<DataStructure.count();
+    for (int i = offset; listofData.count(); i++) {
         //TODO check it
-        if(j >= DataStructure.count())
-        {
+        if (j >= DataStructure.count()) {
             qWarning()<<"File string corrupted";
             return retVar;
         }
         oneDataMap = DataStructure[j].toMap();
         oneDataMap.insert(dvalue,listofData[i]);
-        if(isSignificant(DataStructure[j]))
-        {
+        if (isSignificant(DataStructure[j])) {
             retVar.append(oneDataMap);
         }
         j++;
     }
-    if(isValidStringData(retVar))
-    {
+    if (isValidStringData(retVar)) {
         return retVar;
     }
     return QVariantList();
 }
 bool QModelDescribingOld4::isValidStringData(const QVariantList & dataStructure)
 {
-    for(int i = 0; i < dataStructure.count(); i++)
-    {
-        if(!dataStructure[i].toMap().contains(dvalue))
+    for (int i = 0; i < dataStructure.count(); i++) {
+        if (!dataStructure[i].toMap().contains(dvalue))
             return false;
     }
     return true;
@@ -526,10 +457,8 @@ bool QModelDescribingOld4::isValidStringData(const QVariantList & dataStructure)
 QVariantList QModelDescribingOld4::initDataStructure()
 {
     QVariantList retVar;
-    for( int i = 0; i < iListDescribing.count(); i++)
-    {
-        if(iListDescribing[i].toMap().value(id).toString().contains(statName))
-        {
+    for ( int i = 0; i < iListDescribing.count(); i++) {
+        if (iListDescribing[i].toMap().value(id).toString().contains(statName)) {
             retVar.append(iListDescribing[i]);
         }
     }
@@ -538,24 +467,15 @@ QVariantList QModelDescribingOld4::initDataStructure()
 
 void QModelDescribingOld4::setStatNameByFileData(const QString &filename)
 {
-    if(filename.contains("__S.txt"))
-    {
+    if (filename.contains("__S.txt")) {
         statName = generic;
-    }
-    else if(filename.contains("_C_"))
-    {
+    } else if (filename.contains("_C_")) {
         statName = locus;
-    }
-    else if(filename.contains("_FP_"))
-    {
+    } else if (filename.contains("_FP_")) {
         statName = figurant;
-    }
-    else if(filename.contains("_O_"))
-    {
+    } else if (filename.contains("_O_")) {
         statName = weapon;
-    }
-    else if(filename.contains("_FG_"))
-    {
+    } else if (filename.contains("_FG_")) {
         statName = figurant;
     }
 }
@@ -570,20 +490,13 @@ QVariant QModelDescribingOld4::getIdByStatName(const QString &statName,const  QV
     qDebug()<<"get id by statName";
     QVariant retVar;
     int offset = 0;
-    if(statName == generic )
-    {
-       offset = 1;
-    }
-    else if(statName == figurant)
-    {
+    if (statName == generic ) {
+        offset = 1;
+    } else if (statName == figurant) {
         offset = 0;
-    }
-    else if(statName == locus)
-    {
+    } else if (statName == locus) {
         offset = 4;
-    }
-    else if(statName == weapon)
-    {
+    } else if (statName == weapon) {
         offset = 4;
     }
     retVar = oneRecord.at(offset).toMap().value(dvalue);
@@ -605,23 +518,21 @@ QModelDescribingDemo::QModelDescribingDemo(QObject *parent):
 
 QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
 {
-   // qDebug()<<Q_FUNC_INFO<<"::"<<line;
+    // qDebug()<<Q_FUNC_INFO<<"::"<<line;
     int k = 0;
     QMap<QString,QVariant> *retMap = new QMap<QString,QVariant>;
     //Нужно определить ID
     retMap->insert(id,statName+readElement(line,k));
     //Берём уровень
     //Сдвиг
-    if(!turn(line,k,1))
-    {
+    if (!turn(line,k,1)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(level,readElement(line,k));
     //try to take m_asType
-    if(!turn(line,k,5))
-    {
+    if (!turn(line,k,5)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
@@ -629,23 +540,20 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString &line)
     retMap->insert(type,readElement(line,k));
     //Line couldn't be added into map. Return NULL
     //Сдвиг для считывания имени
-    if(!turn(line,k,4))
-    {
+    if (!turn(line,k,4)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(name,readElement(line,k));
     //Сдвиг для считывания дублирующего элемента
-    if(!turn(line,k,3))
-    {
+    if (!turn(line,k,3)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
     }
     retMap->insert(repeat,readElement(line,k));
-    if(!isValidString(*retMap))
-    {
+    if (!isValidString(*retMap)) {
         qWarning()<<"String isn't valid";
         delete retMap;
         return NULL;
@@ -669,7 +577,7 @@ bool QModelDescribingDemo::isValidString(const QMap<QString,QVariant> &checkMap)
     bool isNull = ((checkMap.value(id)==NULL)||(checkMap.value(level)==NULL)||
                    (checkMap.value(name)==NULL)||(checkMap.value(type)==NULL)||
                    (checkMap.value(repeat)==NULL));
-    if(!isNull)
+    if (!isNull)
         return ((checkMap.value(type).toString() == AV)||(checkMap.value(type).toString() == DV)||(checkMap.value(type).toString() == RM)||
                 (checkMap.value(type).toString() == CB)||(checkMap.value(type).toString() == ED)||(checkMap.value(type).toString() == ET)||
                 (checkMap.value(type).toString() == ME)) ;
@@ -684,13 +592,11 @@ void QModelDescribingDemo::addingLoadedData(QTextStream *fileStream)
     int i = 0;
     int count = 0;
     QVariantList dataStructure = initDataStructure();
-    while (!fileStream->atEnd())
-    {
+    while (!fileStream->atEnd()) {
         QString line = fileStream->readLine();
         oneRecord = process_lineData(line,dataStructure);//Тут только сразу весь мап
         //Первые три строки отбрасываем
-        if(!oneRecord.isEmpty() && i >=3 )
-        {
+        if (!oneRecord.isEmpty() && i >=3 ) {
             oneData.insert(numb,count++);
             oneData.insert(rapid,oneRecord);
             iListData.append(oneData);
@@ -706,28 +612,24 @@ QVariantList QModelDescribingDemo::process_lineData(const QString &line, const Q
     int k = 0;
     QVariantList retVar;
     QVariantMap oneDataMap;
-    for(int i = 0; i < DataStructure.count(); i++)
-    {
+    for (int i = 0; i < DataStructure.count(); i++) {
         oneDataMap = DataStructure[i].toMap();
         oneDataMap.insert(dvalue,readElement(line,k));
-        if(!turn(line,k,1))
-        {
+        if (!turn(line,k,1)) {
             qWarning()<<" String isn't valid";
             return QVariantList();
         }
         retVar.append(oneDataMap);
     }
-    if(isValidStringData(retVar))
-    {
+    if (isValidStringData(retVar)) {
         return retVar;
     }
     return QVariantList();
 }
 bool QModelDescribingDemo::isValidStringData(const QVariantList & dataStructure)
 {
-    for(int i = 0; i < dataStructure.count(); i++)
-    {
-        if(!dataStructure[i].toMap().contains(dvalue))
+    for (int i = 0; i < dataStructure.count(); i++) {
+        if (!dataStructure[i].toMap().contains(dvalue))
             return false;
     }
     return true;
@@ -736,8 +638,7 @@ bool QModelDescribingDemo::isValidStringData(const QVariantList & dataStructure)
 QVariantList QModelDescribingDemo::initDataStructure()
 {
     QVariantList retVar;
-    for( int i = 1; i < 97 ; i++)
-    {
+    for ( int i = 1; i < 97 ; i++) {
         retVar.append(findById(statName + QVariant(i).toString()));
     }
     return retVar;
@@ -756,7 +657,7 @@ QVariantList QModelDescribingDemo::initDataStructure()
 QModelDescribingPros::QModelDescribingPros(QObject *parent):
         QModelDescribing(parent)
 {
-   isProcessLine = 1;
+    isProcessLine = 1;
 }
 
 
@@ -776,14 +677,12 @@ QMap<QString, QVariant>* QModelDescribingPros::process_line(const QString &line)
     QMap<QString,QVariant> tempRet;
     QVariantList tempList; // QList [QMap<QString, QVariant>]
     QStringList ids = line.split(';', QString::SkipEmptyParts);
-    if(!ids.isEmpty() && ids.count() > 1 && isProcessLine)
-    {
+    if (!ids.isEmpty() && ids.count() > 1 && isProcessLine) {
         //Complete DESCRIBING LIST
-         int encounter = 0;
-         tempRet.insert(level, QVariant(1));
-         tempRet.insert(type, "");
-        foreach(QString idval, ids)
-        {
+        int encounter = 0;
+        tempRet.insert(level, QVariant(1));
+        tempRet.insert(type, "");
+        foreach(QString idval, ids) {
             idval.remove(" ");
             tempRet.insert(id,statName+encounter);
             tempRet.insert(name, idval);
@@ -801,10 +700,8 @@ void QModelDescribingPros::moveOneRecordToList(QMap<QString, QVariant> & oneRec)
 {
     int i = 0;
     QVariantList tmpList = oneRec.value(prosDesc).toList();
-    if(!tmpList.isEmpty())
-    {
-        foreach(QVariant oneElem, tmpList)
-        {
+    if (!tmpList.isEmpty()) {
+        foreach(QVariant oneElem, tmpList) {
             oneElem.toMap().insert(numb, i++);
             iListDescribing.append(oneElem.toMap());
         }
@@ -821,13 +718,11 @@ void QModelDescribingPros::addingLoadedData(QTextStream *fileStream)
     QVariantMap oneData;
     int i = 0;
     QVariantList dataStructure = initDataStructure();
-    while (!fileStream->atEnd())
-    {
+    while (!fileStream->atEnd()) {
         QString line = fileStream->readLine();
         oneRecord = process_lineData(line,dataStructure);//Тут только сразу весь мап
         //Первые три строки отбрасываем
-        if(!oneRecord.isEmpty() && i >=5 )
-        {
+        if (!oneRecord.isEmpty() && i >=5 ) {
             //getIdByStatName
             oneData.insert(id,getIdByStatName(statName, oneRecord));
             oneData.insert(rapid,oneRecord);
@@ -852,11 +747,9 @@ QVariantList QModelDescribingPros::process_lineData(const QString &line, const Q
     QVariantList retVar;
     int j = 0;
     qDebug()<<" check data structure: a = "<<listofData.count()<<" ; b = "<<DataStructure.count();
-    foreach(QString dataEl, listofData)
-    {
+    foreach(QString dataEl, listofData) {
         //TODO check it
-        if(j >= DataStructure.count())
-        {
+        if (j >= DataStructure.count()) {
             qWarning()<<"File string corrupted";
             return retVar;
         }
@@ -864,15 +757,13 @@ QVariantList QModelDescribingPros::process_lineData(const QString &line, const Q
         QString dataElR = removeSpaces(dataEl);
         oneDataMap = DataStructure[j].toMap();
         oneDataMap.insert(dvalue,dataElR);
-        if(isSignificant(DataStructure[j]))
-        {
+        if (isSignificant(DataStructure[j])) {
             retVar.append(oneDataMap);
         }
         j++;
     }
 
-    if ( !isValidStringData(retVar) )
-    {
+    if ( !isValidStringData(retVar) ) {
         return QVariantList();
     }
     return retVar;
@@ -881,20 +772,13 @@ QVariantList QModelDescribingPros::process_lineData(const QString &line, const Q
 void QModelDescribingPros::setStatNameByFileData(const QString &filename)
 {
     //TODO implement it = REAL=> FAKE names
-    if(filename.endsWith("F1.TXT", Qt::CaseSensitive))
-    {
+    if (filename.endsWith("F1.TXT", Qt::CaseSensitive)) {
         statName = generic;
-    }
-    else if (filename.endsWith("F2.TXT", Qt::CaseSensitive))
-    {
+    } else if (filename.endsWith("F2.TXT", Qt::CaseSensitive)) {
         statName = figurant;
-    }
-    else if( filename.endsWith("F12.TXT", Qt::CaseSensitive))
-    {
+    } else if ( filename.endsWith("F12.TXT", Qt::CaseSensitive)) {
         statName = weapon;
-    }
-    else if( filename.endsWith("F5.TXT", Qt::CaseSensitive))
-    {
+    } else if ( filename.endsWith("F5.TXT", Qt::CaseSensitive)) {
         statName = locus;
     }
 }
@@ -902,10 +786,8 @@ void QModelDescribingPros::setStatNameByFileData(const QString &filename)
 QVariantList QModelDescribingPros::initDataStructure()
 {
     QVariantList retVar;
-    for( int i = 0; i < iListDescribing.count(); i++)
-    {
-        if(iListDescribing[i].toMap().value(id).toString().contains(statName))
-        {
+    for ( int i = 0; i < iListDescribing.count(); i++) {
+        if (iListDescribing[i].toMap().value(id).toString().contains(statName)) {
             retVar.append(iListDescribing[i]);
         }
     }
@@ -917,20 +799,13 @@ QVariant QModelDescribingPros::getIdByStatName(const QString &statName,const  QV
     qDebug()<<"get id by statName";
     QVariant retVar;
     int offset = 0;
-    if(statName == generic )
-    {
-       offset = 3;
-    }
-    else if(statName == figurant)
-    {
-        offset = 4;
-    }
-    else if(statName == locus)
-    {
+    if (statName == generic ) {
         offset = 3;
-    }
-    else if(statName == weapon)
-    {
+    } else if (statName == figurant) {
+        offset = 4;
+    } else if (statName == locus) {
+        offset = 3;
+    } else if (statName == weapon) {
         offset = 3;
     }
     retVar = oneRecord.at(offset).toMap().value(dvalue);
@@ -943,17 +818,13 @@ QString QModelDescribingPros::removeSpaces(const QString &ex)
     QString ret = ex;
     QStringList exList = ret.split(' ', QString::SkipEmptyParts);
     int i = 0;
-    foreach(QString elem, exList)
-    {
-       if(i == 0)
-       {
+    foreach(QString elem, exList) {
+        if (i == 0) {
             ret = elem;
-       }
-       else
-       {
+        } else {
             ret += " " + elem;
-       }
-       i++;
+        }
+        i++;
     }
     return ret;
 }
@@ -970,23 +841,20 @@ void QModelDescribingPros::dataPrepare()
     int count = 0;
     int i = 0;
     int pos;
-    while(!iListDataTemp.isEmpty())
-    {
+    while (!iListDataTemp.isEmpty()) {
         oneRec.clear();
         tmpMap = iListDataTemp.takeAt(0).toMap();
         oneRec.append(tmpMap.value(rapid).toList());
         //TODO rework uid
         uid = tmpMap.value(id);
         count = 1;
-        while(foundByUId(uid, pos))
-        {
+        while (foundByUId(uid, pos)) {
             tmpMap = iListDataTemp.takeAt(pos).toMap();
             oneRec.append(tmpMap.value(rapid).toList());
             count++;
         }
         //Если у нас некорректное число файлов
-        if(count != 4)
-        {
+        if (count != 4) {
             qWarning()<<"Data files is not valid";
             continue;
         }
