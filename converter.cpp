@@ -19,19 +19,12 @@ converter::converter(QWidget *parent) :
     //TODO rework it for more productivity
     //Target files
     model4 = new QModelDescribingOld4();
-    tree4 = new TreeViewModel(this,false);
-    connect(tree4,SIGNAL(doubleClicked(const QModelIndex &)),this,
-            SLOT(ElementTreeTargetActivated(const QModelIndex &)),Qt::QueuedConnection);
+
     //Template files
     modelD = new QModelDescribingDemo();
-    treed = new TreeViewModel(this,true);
-    connect(treed,SIGNAL(doubleClicked(const QModelIndex &)),this,
-            SLOT(ElementTreeTemplateActivated(const QModelIndex &)),Qt::QueuedConnection);
+
     //Target files Pros
     modelP = new QModelDescribingPros();
-    treep = new TreeViewModel(this, false);
-    connect(treep, SIGNAL(doubleClicked(const QModelIndex &)), this,
-            SLOT(ElementTreeTargetActivated(const QModelIndex &)), Qt::QueuedConnection);
 
 
     models = new QModelDescribing*[2];
@@ -39,8 +32,12 @@ converter::converter(QWidget *parent) :
     models[TEMPLATEDESC] = modelD;
 
     trees = new TreeViewModel*[2];
-    trees[TARGETDESC] = treep;
-    trees[TEMPLATEDESC] = treed;
+    trees[TARGETDESC] = new TreeViewModel(this, TARGETDESC);
+    trees[TEMPLATEDESC] = new TreeViewModel(this, TEMPLATEDESC);
+    connect(trees[TARGETDESC],SIGNAL(doubleClicked(const QModelIndex &)),this,
+            SLOT(ElementTreeTargetActivated(const QModelIndex &)),Qt::QueuedConnection);
+    connect(trees[TEMPLATEDESC],SIGNAL(doubleClicked(const QModelIndex &)),this,
+            SLOT(ElementTreeTemplateActivated(const QModelIndex &)),Qt::QueuedConnection);
 
     //Correlation model
     corrModel = new CorrelationModel(this,models[TEMPLATEDESC],models[TARGETDESC]);
@@ -53,12 +50,15 @@ converter::converter(QWidget *parent) :
 
     //Put tree model on widget
     layout  = new QHBoxLayout;
+
     //template
     layout->addWidget(trees[TEMPLATEDESC]);
     //table - corrModel
     layout->addWidget(corrModel);
     //target
     layout->addWidget(trees[TARGETDESC]);
+
+
     this->centralWidget()->setLayout(layout);
     pLabel = new QLabel;
     pLabel->setText("Application started. Please load target and template files to start converting");
@@ -84,25 +84,24 @@ converter::converter(QWidget *parent) :
     //funcWidget->show();
     //Automatic load Загрузить файлы из каталога ресурсы
     init();
-
-
 }
 
 converter::~converter()
 {
     //Delete target
     if(model4) delete model4;
-    if(tree4) delete tree4;
     //Delete template
     if(modelD) delete modelD;
-    if(treed) delete treed;
+
     //Delete template pros
     if(modelP) delete modelP;
-    if(treep) delete treep;
+
 
     //Delete corr model
     if(corrModel) delete corrModel;
     if(models) delete models;
+    if(trees[TARGETDESC]) delete trees[TARGETDESC];
+    if(trees[TEMPLATEDESC]) delete trees[TARGETDESC];
     if(trees) delete trees;
 
     //Delete layout
@@ -141,32 +140,120 @@ void converter::on_actionOpen_triggered()
     QFileDialog dialog(this);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text target files (Sprav?.txt)"));
+    dialog.setNameFilter(tr("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)"));
     dialog.setViewMode(QFileDialog::List);
     if(dialog.exec())
     {
         filenames = dialog.selectedFiles();
     }
     //---------------------
-    if(filenames.count() > 0)
+    //Если мы смогли установить описание: корректные файлы описания
+    if ( SelectDescription(filenames, TARGETDESC) )
     {
         models[TARGETDESC]->resetAllList();
         corrModel->clearTable();
-    }
-    for(int i = 0; i < filenames.count() ;i++)
-    {
-        models[TARGETDESC]->appendToList(filenames[i]);
-    }
-    if(models[TARGETDESC]->getListDescribing().count() > 0)
-    {
-        //TODO попробовать просто отобразить модель
-        models[TARGETDESC]->createModel();
-        trees[TARGETDESC]->loadModel(models[TARGETDESC]);
-        pLabel->setText("Target model was created");
-        emit loadDescComplete();
+        foreach(QString fname, filenames)
+        {
+            models[TARGETDESC]->appendToList(fname);
+        }
+        if(models[TARGETDESC]->getListDescribing().count() > 0)
+        {
+            //TODO попробовать просто отобразить модель
+            models[TARGETDESC]->createModel();
+            trees[TARGETDESC]->loadModel(models[TARGETDESC]);
+            pLabel->setText("Target model was created");
+            emit loadDescComplete();
+        }
     }
 
     //Получить данные из модели
+}
+
+bool converter::refreshDescribingAndWidgets(int description_id, QModelDescribing *model)
+{
+    //Check
+    switch(description_id)
+    {
+    case TARGETDESC:
+        {
+           if(models[TEMPLATEDESC] == model) return false;
+        }
+        break;
+    case TEMPLATEDESC:
+        {
+            if(models[TARGETDESC] == model) return false;
+        }
+        break;
+    default:
+        return false;
+    }
+
+
+    //////REMOVE///////////
+    //template
+    //template
+    layout->removeWidget(trees[TEMPLATEDESC]);
+    //table - corrModel
+    layout->removeWidget(corrModel);
+    //target
+    layout->removeWidget(trees[TARGETDESC]);
+
+    if(corrModel) delete corrModel;
+
+    models[description_id] = model;
+
+   ///////ADDING DATA///////////////
+    corrModel = new CorrelationModel(this,models[TEMPLATEDESC],models[TARGETDESC]);
+    connect(corrModel,SIGNAL(doubleClicked(const QModelIndex &)),this,
+            SLOT(ElementTableActivated(const QModelIndex &)),Qt::QueuedConnection);
+
+    //template
+    layout->addWidget(trees[TEMPLATEDESC]);
+    //table - corrModel
+    layout->addWidget(corrModel);
+    //target
+    layout->addWidget(trees[TARGETDESC]);
+
+    return true;
+
+
+}
+
+bool converter::SelectDescription(const QStringList & filenames, int description_id)
+{
+    // Информация об именах файлов
+    int old4 = 0, demo = 0, pros = 0;
+    if( filenames.count() > 0)
+    {
+         foreach(QString fname, filenames)
+         {
+             if(fname.contains("Sprav",Qt::CaseSensitive))
+             {
+                 old4++;
+             }
+             else if(fname.contains("sprav_d",Qt::CaseSensitive))
+             {
+                 demo++;
+             }
+             else if(fname.contains("F", Qt::CaseSensitive))
+             {
+                 pros++;
+             }
+         }
+         if(old4 == filenames.count())
+         {
+            return refreshDescribingAndWidgets(description_id, model4);
+         }
+         else if(demo == filenames.count())
+         {
+             return refreshDescribingAndWidgets(description_id, modelD);
+         }
+         else if (pros == filenames.count())
+         {
+             return refreshDescribingAndWidgets(description_id, modelP);
+         }
+    }
+    return false;
 }
 
 // TODO: request to rework
@@ -178,29 +265,30 @@ void converter::on_actionOpen_template_triggered()
     QFileDialog dialog(this);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text template files (sprav_d.txt)"));
+    dialog.setNameFilter(tr("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT)"));
     dialog.setViewMode(QFileDialog::List);
     if(dialog.exec())
     {
         filenames = dialog.selectedFiles();
     }
     //---------------------
-    if(filenames.count() > 0)
+    //Если мы смогли установить описание: корректные файлы описания
+    if ( SelectDescription(filenames, TEMPLATEDESC) )
     {
         models[TEMPLATEDESC]->resetAllList();
         corrModel->clearTable();
-    }
-    for(int i = 0; i < filenames.count() ;i++)
-    {
-        models[TEMPLATEDESC]->appendToList(filenames[i]);
-    }
-    if(models[TARGETDESC]->getListDescribing().count() > 0)
-    {
-        //TODO попробовать просто отобразить модель
-        models[TEMPLATEDESC]->createModel();
-        treed->loadModel(models[TEMPLATEDESC]);
-        pLabel->setText("Template model was created");
-        emit loadDescComplete();
+        foreach(QString fname, filenames)
+        {
+            models[TEMPLATEDESC]->appendToList(fname);
+        }
+        if(models[TEMPLATEDESC]->getListDescribing().count() > 0)
+        {
+            //TODO попробовать просто отобразить модель
+            models[TEMPLATEDESC]->createModel();
+            trees[TEMPLATEDESC]->loadModel(models[TEMPLATEDESC]);
+            pLabel->setText("Template model was created");
+            emit loadDescComplete();
+        }
     }
 }
 

@@ -1,4 +1,5 @@
 #include <QStandardItem>
+#include <QHeaderView>
 #include "treeviewmodel.h"
 
 
@@ -9,14 +10,17 @@ TreeViewModel::TreeViewModel(QWidget * parent,bool isT):
 }
 void TreeViewModel::loadModel(QStandardItemModel *model)
 {
+
     if(isTemplate)
     {
-        model->setHorizontalHeaderLabels(QStringList() << "Template file" );
+        model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("КУДА КОНВЕРТИРОВАТЬ") );
     }
     else
     {
-         model->setHorizontalHeaderLabels(QStringList() << "Target file" );
+        model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("ЧТО КОНВЕРТИРОВАТЬ") );
     }
+
+    this->reset();
     this->setModel(model);
     this->expandAll();
     this->show();

@@ -266,7 +266,7 @@ void QModelDescribing::fillSignificantList()
 
  void QModelDescribing::setStatNameByFile(const QString &filename)
  {
-     //Move to class
+     //Move to each class
      if(filename.endsWith("Sprav1.txt",Qt::CaseSensitive) ||
         filename.endsWith("sprav_d.txt",Qt::CaseSensitive) ||
         filename.endsWith("F1.TXT", Qt::CaseSensitive))
@@ -915,7 +915,6 @@ QVariantList QModelDescribingPros::initDataStructure()
 QVariant QModelDescribingPros::getIdByStatName(const QString &statName,const  QVariantList &oneRecord)
 {
     qDebug()<<"get id by statName";
-    // Что делать с повторяющимися записями???
     QVariant retVar;
     int offset = 0;
     if(statName == generic )
@@ -966,48 +965,34 @@ void QModelDescribingPros::dataPrepare()
     qDebug()<<"  ===START===   ";
     QVariantList oneRec;
     QVariantMap oneMap;
-
-    QVariantList genList = QVariantList();
-    QVariantList figList = QVariantList();
-    QVariantList weapList = QVariantList();
-    QVariantList locList = QVariantList();
-
-
     QVariantMap tmpMap;
     QVariant uid;
     int count = 0;
     int i = 0;
     int pos;
-
-    // Мы добавляем все данные,что есть. помечая взятые
     while(!iListDataTemp.isEmpty())
     {
-        // Запис, которую мы добавим
-        //make lists
-        int genCount = genList.count();
-        int figCount = figList.count();
-        int weapCount = weapList.count();
-        int locCount = locList.count();
-        for (int i = 0; i < genCount; ++i)
-            for(int j = 0; j < figCount; ++j)
-                for(int l = 0; l < weapCount; ++l)
-                    for(int k = 0; k < locCount; ++k)
-                    {
-                        oneRec.clear();
-                        oneRec.append( genList[i].toMap().value(rapid).toList() );
-                        oneRec.append( figList[j].toMap().value(rapid).toList() );
-                        oneRec.append( weapList[l].toMap().value(rapid).toList() );
-                        oneRec.append( locList[k].toMap().value(rapid).toList() );
-                        oneMap.insert(numb,i++);
-                        oneMap.insert(rapid,oneRec);
-                        iListData.append(oneMap);
-                    }
-        // Удалить всё
-       for(int i = 0; i < genCount; ++i)
-       {
-            iListDataTemp.removeOne(genList[i]);
-       }
-
+        oneRec.clear();
+        tmpMap = iListDataTemp.takeAt(0).toMap();
+        oneRec.append(tmpMap.value(rapid).toList());
+        //TODO rework uid
+        uid = tmpMap.value(id);
+        count = 1;
+        while(foundByUId(uid, pos))
+        {
+            tmpMap = iListDataTemp.takeAt(pos).toMap();
+            oneRec.append(tmpMap.value(rapid).toList());
+            count++;
+        }
+        //Если у нас некорректное число файлов
+        if(count != 4)
+        {
+            qWarning()<<"Data files is not valid";
+            continue;
+        }
+        oneMap.insert(numb,i++);
+        oneMap.insert(rapid,oneRec);
+        iListData.append(oneMap);
     }
     qDebug()<<"  ===END===   ";
 

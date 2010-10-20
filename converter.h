@@ -42,6 +42,7 @@ protected:
 private:
     Ui::converter *ui;
     QHBoxLayout *layout;
+    QHBoxLayout *layoutCorrModel;
 
     //Function
     QVBoxLayout *fLayout;
@@ -51,10 +52,8 @@ private:
     QRadioButton *a3;
     //Target
     QModelDescribingOld4 *model4;
-    TreeViewModel *tree4;
     //Template
     QModelDescribingDemo *modelD;
-    TreeViewModel *treed;
     //Template proc
     QModelDescribingPros *modelP;
 
@@ -88,6 +87,8 @@ private:
     bool applyTreeClick(int id);
     void setApplyTreeClick(int id);
     void init_load(QModelDescribing *loadedModel, TreeViewModel *tree);
+    bool SelectDescription(const QStringList & filenames, int description_id);
+    bool refreshDescribingAndWidgets(int description_id, QModelDescribing *model);
     void init();
     int rowId;//   
     bool countTV;//  
