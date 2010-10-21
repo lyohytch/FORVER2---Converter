@@ -13,11 +13,11 @@ void TreeViewModel::loadModel(QStandardItemModel* model)
 
     if (isTemplate)
     {
-        model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("КУДА КОНВЕРТИРОВАТЬ"));
+        model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Приёмник: куда конвертировать"));
     }
     else
     {
-        model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("ЧТО КОНВЕРТИРОВАТЬ"));
+        model->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Исходник: что конвертировать"));
     }
 
     this->reset();

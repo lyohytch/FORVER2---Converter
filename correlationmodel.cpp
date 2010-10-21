@@ -17,7 +17,7 @@ CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, Q
     QTableView(parent), iCurrentModel(current) , iTargetModel(target)
 {
     tableModel = new QStandardItemModel;
-    tableModel->setHorizontalHeaderLabels(QStringList() << "Template name" << "Target names" << "Function");
+    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника") << QString::fromUtf8("Функция"));
     tableModel->setColumnCount(3);
     this->setModel(tableModel);
     this->resizeColumnsToContents();
@@ -26,7 +26,7 @@ CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, Q
 CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target, QStandardItemModel* iTableModel):
     QTableView(parent), iCurrentModel(current) , iTargetModel(target), tableModel(iTableModel)
 {
-    tableModel->setHorizontalHeaderLabels(QStringList() << "Template name" << "Target names" << "Function");
+    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника") << QString::fromUtf8("Функция"));
     tableModel->setColumnCount(3);
     this->setModel(tableModel);
     this->resizeColumnsToContents();
@@ -43,8 +43,8 @@ QVariantList CorrelationModel::targetToCurrent()
     //TODO check it
     qDebug() << " Real start convering....";
     QVariantList retData;
-    QVariantList dataList = iTargetModel->getListData();//получить список дел
-    QVariantList currDescrList = iCurrentModel->getListSignificant();//шаблон для записи
+    QVariantList dataList = iTargetModel->getListData();//п©п╬п╩я┐я┤п╦я┌я▄ я│п©п╦я│п╬п╨ п╢п╣п╩
+    QVariantList currDescrList = iCurrentModel->getListSignificant();//я┬п╟п╠п╩п╬п╫ п╢п╩я▐ п╥п╟п©п╦я│п╦
     QVariantList searchTemplates;
     QVariantList dataListItem;
     QVariantMap oneMap;
@@ -61,9 +61,7 @@ QVariantList CorrelationModel::targetToCurrent()
         {
             QVariantMap currAdd = curr.toMap();
             searchTemplates.clear();
-            searchTemplates.append(findItemInTableTemplate(curr, cRow)); //нашли соответстиве
-            //Найти по этим соответвиям элементы из dataListItem типа
-            //Далее нашли id функции
+            searchTemplates.append(findItemInTableTemplate(curr, cRow));
             fID = tableModel->item(cRow, iFunction)->data(Qt::UserRole + 1).toMap().value(function).toInt();
             currAdd.insert(dvalue,
                            switchFunction(fID, foundByUIDsRetValues(dataListItem, searchTemplates)));
@@ -96,7 +94,7 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
     int count = tableModel->rowCount();
     for (int i = 0; i < count; i++)
     {
-        //TODO � І� ѕ� ·� ј� ѕ� ¶� Ѕ� ѕ СЃ� »� µ� ґСѓ� µС�  � ї� ѕ-� ґСЂСѓ� і� ѕ� јСѓ СЃСЂ� °� І� Ѕ� ё� І� °С� СЊ
+        //TODO п п├п я∙п б╥п я≤п я∙п б╤п п┘п я∙ п║п┐п б╩п б╣п р▒п║я⌠п б╣п║Б─  п я≈п я∙-п р▒п║п┌п║я⌠п я√п я∙п я≤п║я⌠ п║п┐п║п┌п б╟п п├п п┘п я▒п п├п б╟п║Б─ п║п┼
         if (tableModel->item(i, iTemplate)->data(Qt::UserRole + 1) == search)
         {
             row = i;
@@ -115,7 +113,7 @@ void CorrelationModel::fillInTable()
 {
     qDebug();
     clearTable();
-    //TODO � ґ� ѕ� ±� °� І� »СЏС� СЊ � ЅСѓ� ¶� Ѕ� ѕ С� � ѕ� »СЊ� є� ѕ � ·� Ѕ� °С‡� ё� јС‹� µ СЌ� »� µ� ј� µ� ЅС� С‹=))))
+    //TODO п р▒п я∙п б╠п б╟п п├п б╩п║п▐п║Б─ п║п┼ п п┘п║я⌠п б╤п п┘п я∙ п║Б─ п я∙п б╩п║п┼п я■п я∙ п б╥п п┘п б╟п║Б─║п я▒п я≤п║Б─╧п б╣ п║п▄п б╩п б╣п я≤п б╣п п┘п║Б─ п║Б─╧=))))
     int iTemplateCount = iCurrentModel->getListSignificant().count();
     int iTargetCount = iTargetModel->getListSignificant().count();
     QString name1, name2;
@@ -158,7 +156,7 @@ void CorrelationModel::fillInTable(QVariantMap mapTable)
     qDebug() << "not implemented yet";
     clearTable();
     //QMap( List(tempList),List(targList),List(funcList))
-    int N = mapTable.value(tempList).toList().count();//���������� ��������� � �������
+    int N = mapTable.value(tempList).toList().count();//йНКХВЕЯРБН ЩКЕЛЕМРНБ Б РЮАКХЖЕ
     QString uname;
     QList<QStandardItem*> itemList;
     int cTempElem = 0;
@@ -195,7 +193,7 @@ void CorrelationModel::fillInTable(QVariantMap mapTable)
         item2->setData(mapTable.value(targList).toList().at(i), Qt::UserRole + 1);
         item2->setEditable(false);
 
-        //Todo ���������� ���
+        //Todo НОПЕДЕКХРЭ ХЛЪ
         uname.clear();
         uname = functionName(mapTable.value(funcList).toList().at(i).toMap().value(function).toInt());
         QStandardItem* item3 = new QStandardItem(uname);
@@ -215,7 +213,7 @@ void CorrelationModel::clearTable()
 {
     this->clearSpans();
     tableModel->clear();
-    tableModel->setHorizontalHeaderLabels(QStringList() << "Template name" << "Target names" << "Function");
+    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника") << QString::fromUtf8("Функция"));
     tableModel->setColumnCount(3);
 }
 
@@ -368,7 +366,7 @@ QVariantMap CorrelationModel::tableModelToMap()
     QVariantList atempList;
     QVariantList atargList;
     QVariantList afuncList;
-    int N = tableModel->rowCount();//� оличество записей - строк
+    int N = tableModel->rowCount();//п п╬п╩п╦я┤п╣я│я┌п╡п╬ п╥п╟п©п╦я│п╣п╧ - я│я┌я─п╬п╨
     for (int i = 0 ; i < N; i++)
     {
         atempList.append(tableModel->item(i, iTemplate)->data(Qt::UserRole + 1));

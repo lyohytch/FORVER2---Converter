@@ -72,12 +72,6 @@ class converter : public QMainWindow
         querymodel* queryModel;
         mssqlquery* mssqlQuery;
 
-        //querymodel *queryModel4;
-        //mssqlquery *mssqlQuery4;
-
-        bool isTargetRow;
-        bool isTemplateRow;
-
         QLabel* pLabel;
 
         QVariantList rowTargetList;
@@ -88,10 +82,16 @@ class converter : public QMainWindow
 
         bool applyTreeClick(int id);
         void setApplyTreeClick(int id);
-        void init_load(QModelDescribing* loadedModel, TreeViewModel* tree);
         bool SelectDescription(const QStringList& filenames, int description_id);
         bool refreshDescribingAndWidgets(int description_id, QModelDescribing* model);
+
+        //Init functions
         void init();
+        void init_load(QModelDescribing* loadedModel, TreeViewModel* tree);
+        void init_setup_main_form();
+        void init_create_factory_objects();
+        void init_setup_desktop_widgets();
+
         int rowId;//
         bool countTV;//
 

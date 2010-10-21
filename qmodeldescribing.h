@@ -163,7 +163,7 @@ class QModelDescribingDemo: public QModelDescribing
     public:
         QModelDescribingDemo(QObject* parent = 0);
         ~QModelDescribingDemo() {};
-        //virtual bool isValid(){qDebug()<<Q_FUNC_INFO<<"Not implemented yet";return true;};
+        virtual bool isValidDataTemp();
 
     protected:
         //GENERAL
@@ -191,6 +191,7 @@ class QModelDescribingPros: public QModelDescribing
     public:
         QModelDescribingPros(QObject* parent = 0);
         ~QModelDescribingPros() {};
+        virtual bool isValidDataTemp();
     protected:
         //GENERAL
         virtual QMap<QString, QVariant>* process_line(const QString& line);

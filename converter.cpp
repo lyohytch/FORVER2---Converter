@@ -12,77 +12,6 @@ converter::converter(QWidget* parent) :
     ui(new Ui::converter)
 {
     ui->setupUi(this);
-    isTargetRow = false;
-    isTemplateRow = false;
-    QDesktopWidget* d = QApplication::desktop();
-    this->setGeometry(100, 100, d->width() / 3, d->height() - 400);
-    //TODO rework it for more productivity
-    //Target files
-    model4 = new QModelDescribingOld4();
-
-    //Template files
-    modelD = new QModelDescribingDemo();
-
-    //Target files Pros
-    modelP = new QModelDescribingPros();
-
-
-    models = new QModelDescribing*[2];
-    models[TARGETDESC] = modelP;
-    models[TEMPLATEDESC] = modelD;
-
-    trees = new TreeViewModel*[2];
-    trees[TARGETDESC] = new TreeViewModel(this, TARGETDESC);
-    trees[TEMPLATEDESC] = new TreeViewModel(this, TEMPLATEDESC);
-    connect(trees[TARGETDESC], SIGNAL(doubleClicked(const QModelIndex&)), this,
-            SLOT(ElementTreeTargetActivated(const QModelIndex&)), Qt::QueuedConnection);
-    connect(trees[TEMPLATEDESC], SIGNAL(doubleClicked(const QModelIndex&)), this,
-            SLOT(ElementTreeTemplateActivated(const QModelIndex&)), Qt::QueuedConnection);
-
-    //Correlation model
-    corrModel = new CorrelationModel(this, models[TEMPLATEDESC], models[TARGETDESC]);
-    connect(corrModel, SIGNAL(doubleClicked(const QModelIndex&)), this,
-            SLOT(ElementTableActivated(const QModelIndex&)), Qt::QueuedConnection);
-
-    connect(this, SIGNAL(loadDescComplete()), this,
-            SLOT(FillTable()), Qt::QueuedConnection);
-
-
-    //Put tree model on widget
-    layout  = new QHBoxLayout;
-
-    //template
-    layout->addWidget(trees[TEMPLATEDESC]);
-    //table - corrModel
-    layout->addWidget(corrModel);
-    //target
-    layout->addWidget(trees[TARGETDESC]);
-
-
-    this->centralWidget()->setLayout(layout);
-    pLabel = new QLabel;
-    pLabel->setText("Application started. Please load target and template files to start converting");
-    this->statusBar()->addWidget(pLabel);
-
-    //Create window to specify function
-    funcWidget = new QWidgetFunction;
-    fLayout = new QVBoxLayout;
-    funcWidget->setGeometry(d->width() / 2, d->height() / 3, 300, 100);
-    a1 = new QRadioButton("AGE", funcWidget);
-    a2 = new QRadioButton("CONCAT", funcWidget);
-    a3 = new QRadioButton("NO FUNCTION", funcWidget);
-    a1->setObjectName("AGE");
-    a2->setObjectName("CONCAT");
-    a3->setObjectName("NONE");
-    a3->setChecked(true);
-    fLayout->addWidget(a1);
-    fLayout->addWidget(a2);
-    fLayout->addWidget(a3);
-    funcWidget->setLayout(fLayout);
-    connect(funcWidget, SIGNAL(FuncWasChecked(int)), this, SLOT(FunctionIsChecked(int)), Qt::QueuedConnection);
-    //tests
-    //funcWidget->show();
-    //Automatic load Загрузить файлы из каталога ресурсы
     init();
 }
 
@@ -132,7 +61,6 @@ void converter::changeEvent(QEvent* e)
     }
 }
 
-//TODO: request to rework Open target files
 void converter::on_actionOpen_triggered()
 {
     //Target file
@@ -172,7 +100,7 @@ void converter::on_actionOpen_triggered()
 
 bool converter::refreshDescribingAndWidgets(int description_id, QModelDescribing* model)
 {
-    //Check
+    //Cannot assign the same model[target] and model[template]
     switch (description_id)
     {
         case TARGETDESC:
@@ -257,7 +185,6 @@ bool converter::SelectDescription(const QStringList& filenames, int description_
     return false;
 }
 
-// TODO: request to rework
 void converter::on_actionOpen_template_triggered()
 {
     //Template file
@@ -405,7 +332,7 @@ void converter::on_actionLoad_Template_Data_triggered()
     QFileDialog dialog(this);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text template data files (data_sprav_d.txt)"));
+    dialog.setNameFilter(tr("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)"));
     dialog.setViewMode(QFileDialog::List);
     if (dialog.exec())
     {
@@ -417,6 +344,15 @@ void converter::on_actionLoad_Template_Data_triggered()
         models[TEMPLATEDESC]->loadingData(fname);
     }
     // TODO make message when error happened
+    if (models[TEMPLATEDESC]->isValidDataTemp())
+    {
+        models[TEMPLATEDESC]->dataPrepare();
+        pLabel->setText("Template data successfully loaded");
+    }
+    else
+    {
+        pLabel->setText("Data didn't load");
+    }
 }
 
 void converter::on_actionLoad_Target_Data_triggered()
@@ -453,7 +389,16 @@ void converter::on_actionLoad_Target_Data_triggered()
         models[TARGETDESC]->dataPrepare();
         pLabel->setText("Target data successfully loaded");
     }
+    else
+    {
+        pLabel->setText("Data didn't load");
+    }
 }
+
+
+
+
+
 
 void converter::on_actionExport_template_data_to_DB_triggered()
 {
@@ -574,8 +519,87 @@ void converter::init()
 {
     //Template
     qDebug();
+    init_setup_main_form();
+    init_create_factory_objects();
+    init_setup_desktop_widgets();
     init_load(models[TEMPLATEDESC], trees[TEMPLATEDESC]);
     init_load(models[TARGETDESC], trees[TARGETDESC]);
+}
+
+void converter::init_setup_main_form()
+{
+    //Setup Main Form position
+    QDesktopWidget* d = QApplication::desktop();
+    this->setGeometry(100, 100, d->width() / 3, d->height() - 400);
+}
+
+void converter::init_create_factory_objects()
+{
+    // TODO: create factory of objects
+    //Multiple case. Old Spravka's files
+    model4 = new QModelDescribingOld4();
+
+    //One to one case. Demo version
+    modelD = new QModelDescribingDemo();
+
+    //Cases from prosecutor's office
+    modelP = new QModelDescribingPros();
+
+
+    models = new QModelDescribing*[2];
+    models[TARGETDESC] = modelP;
+    models[TEMPLATEDESC] = modelD;
+
+    trees = new TreeViewModel*[2];
+    trees[TARGETDESC] = new TreeViewModel(this, TARGETDESC);
+    trees[TEMPLATEDESC] = new TreeViewModel(this, TEMPLATEDESC);
+    connect(trees[TARGETDESC], SIGNAL(doubleClicked(const QModelIndex&)), this,
+            SLOT(ElementTreeTargetActivated(const QModelIndex&)), Qt::QueuedConnection);
+    connect(trees[TEMPLATEDESC], SIGNAL(doubleClicked(const QModelIndex&)), this,
+            SLOT(ElementTreeTemplateActivated(const QModelIndex&)), Qt::QueuedConnection);
+
+    //Correlation model
+    corrModel = new CorrelationModel(this, models[TEMPLATEDESC], models[TARGETDESC]);
+    connect(corrModel, SIGNAL(doubleClicked(const QModelIndex&)), this,
+            SLOT(ElementTableActivated(const QModelIndex&)), Qt::QueuedConnection);
+}
+
+void converter::init_setup_desktop_widgets()
+{
+    //Put tree model on widget
+    layout  = new QHBoxLayout;
+
+    //template
+    layout->addWidget(trees[TEMPLATEDESC]);
+    //table - corrModel
+    layout->addWidget(corrModel);
+    //target
+    layout->addWidget(trees[TARGETDESC]);
+    this->centralWidget()->setLayout(layout);
+
+    pLabel = new QLabel;
+    pLabel->setText("Application started. Please load target and template files to start converting");
+    this->statusBar()->addWidget(pLabel);
+
+    //Create window to specify function
+    funcWidget = new QWidgetFunction;
+    fLayout = new QVBoxLayout;
+    QDesktopWidget* d = QApplication::desktop();
+    funcWidget->setGeometry(d->width() / 2, d->height() / 3, 300, 100);
+    a1 = new QRadioButton("AGE", funcWidget);
+    a2 = new QRadioButton("CONCAT", funcWidget);
+    a3 = new QRadioButton("NO FUNCTION", funcWidget);
+    a1->setObjectName("AGE");
+    a2->setObjectName("CONCAT");
+    a3->setObjectName("NONE");
+    a3->setChecked(true);
+    fLayout->addWidget(a1);
+    fLayout->addWidget(a2);
+    fLayout->addWidget(a3);
+    funcWidget->setLayout(fLayout);
+    connect(funcWidget, SIGNAL(FuncWasChecked(int)), this, SLOT(FunctionIsChecked(int)), Qt::QueuedConnection);
+
+    connect(this, SIGNAL(loadDescComplete()), this, SLOT(FillTable()), Qt::QueuedConnection);
 }
 
 void converter::on_actionSave_correlation_model_triggered()

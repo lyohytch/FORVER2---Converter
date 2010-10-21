@@ -743,6 +743,11 @@ QVariantList QModelDescribingDemo::initDataStructure()
     return retVar;
 }
 
+bool QModelDescribingDemo::isValidDataTemp()
+{
+    return isValidData();
+}
+
 //end----------------------------------------------------------------------------
 //-------------------QModelDescribingDemo--------------------------------------
 
@@ -996,6 +1001,11 @@ void QModelDescribingPros::dataPrepare()
     }
     qDebug() << "  ===END===   ";
 
+}
+
+bool QModelDescribingPros::isValidDataTemp()
+{
+    return (iListDataTemp.count() > 0 );
 }
 
 //-------------------QModelDescribingPros--------------------------------------
