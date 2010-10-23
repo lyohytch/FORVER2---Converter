@@ -46,6 +46,7 @@ class querymodel: public QObject, public QRunnable
             un
         };
         querymodel(CorrelationModel* acorrModel = 0);
+        querymodel(const querymodel &templateQueryModel);
         virtual void run();
         void makeRequest();
         QStringList getRequestDesc() const

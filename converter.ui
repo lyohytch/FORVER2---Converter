@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -63,7 +63,6 @@
     <addaction name="actionExport_template_data_to_DB"/>
     <addaction name="separator"/>
     <addaction name="actionExport_all"/>
-    <addaction name="actionChange_DB_structure"/>
     <addaction name="separator"/>
     <addaction name="actionSave_correlation_model"/>
     <addaction name="actionLoad_correlation_model"/>
@@ -85,6 +84,9 @@
    <property name="text">
     <string>About</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F1</string>
+   </property>
   </action>
   <action name="actionClose">
    <property name="text">
@@ -99,7 +101,7 @@
     <string>FAQ</string>
    </property>
    <property name="shortcut">
-    <string>F11</string>
+    <string>F1</string>
    </property>
   </action>
   <action name="actionOpen">
@@ -107,7 +109,7 @@
     <string>Open target file...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+O</string>
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionOpen_template">
@@ -115,57 +117,71 @@
     <string>Open template...</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+O</string>
-   </property>
-  </action>
-  <action name="actionOpen_files_to_convert">
-   <property name="text">
-    <string>Open files to convert...</string>
+    <string>Ctrl+Shift+T</string>
    </property>
   </action>
   <action name="actionConvert_files">
    <property name="text">
     <string>Convert and export target data to DB </string>
    </property>
-  </action>
-  <action name="actionChange_DB_structure">
-   <property name="text">
-    <string>Change DB structure</string>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionLoad_Template_Data">
    <property name="text">
     <string>Load Template Data from FILE</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+D</string>
+   </property>
   </action>
   <action name="actionLoad_Target_Data">
    <property name="text">
     <string>Load Target Data from FILE</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionExport_template_data_to_DB">
    <property name="text">
     <string>Export template data to DB</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
   </action>
   <action name="actionLoad_Target_Data_from_DB">
    <property name="text">
     <string>Load Target Data from DB</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+B</string>
    </property>
   </action>
   <action name="actionExport_all">
    <property name="text">
     <string>Export all to DB</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
   </action>
   <action name="actionSave_correlation_model">
    <property name="text">
     <string>Save correlation model</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionLoad_correlation_model">
    <property name="text">
     <string>Load correlation model</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
  </widget>

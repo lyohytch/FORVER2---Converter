@@ -43,8 +43,8 @@ QVariantList CorrelationModel::targetToCurrent()
     //TODO check it
     qDebug() << " Real start convering....";
     QVariantList retData;
-    QVariantList dataList = iTargetModel->getListData();//п©п╬п╩я┐я┤п╦я┌я▄ я│п©п╦я│п╬п╨ п╢п╣п╩
-    QVariantList currDescrList = iCurrentModel->getListSignificant();//я┬п╟п╠п╩п╬п╫ п╢п╩я▐ п╥п╟п©п╦я│п╦
+    QVariantList dataList = iTargetModel->getListData();
+    QVariantList currDescrList = iCurrentModel->getListSignificant();
     QVariantList searchTemplates;
     QVariantList dataListItem;
     QVariantMap oneMap;
@@ -94,7 +94,6 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
     int count = tableModel->rowCount();
     for (int i = 0; i < count; i++)
     {
-        //TODO п п├п я∙п б╥п я≤п я∙п б╤п п┘п я∙ п║п┐п б╩п б╣п р▒п║я⌠п б╣п║Б─  п я≈п я∙-п р▒п║п┌п║я⌠п я√п я∙п я≤п║я⌠ п║п┐п║п┌п б╟п п├п п┘п я▒п п├п б╟п║Б─ п║п┼
         if (tableModel->item(i, iTemplate)->data(Qt::UserRole + 1) == search)
         {
             row = i;
@@ -277,7 +276,8 @@ void CorrelationModel::setApplyTreeClick(int id)
     switch (id)
     {
         case iTemplate://Template
-            isTemp = true;
+            //Change template doesn't supported
+            isTemp = false;
             isFunc = false;
             isTarg = false;
             break;

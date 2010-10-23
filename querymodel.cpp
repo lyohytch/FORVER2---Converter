@@ -6,6 +6,19 @@ querymodel::querymodel(CorrelationModel* acorrModel):
     qDebug();
 }
 
+querymodel::querymodel(const querymodel &templateQueryModel):
+        corrModel(templateQueryModel.corrModel),
+        iQueryRequestDesc(templateQueryModel.iQueryRequestDesc),
+        iQueryRequestData(templateQueryModel.iQueryRequestData),
+        iCreateTblRequests(templateQueryModel.iCreateTblRequests),
+        isTarget(templateQueryModel.isTarget),
+        createRequest(templateQueryModel.createRequest),
+        updateRequest(templateQueryModel.updateRequest),
+        insertRequest(templateQueryModel.insertRequest)
+{
+    qDebug();
+}
+
 void querymodel::run()
 {
     this->makeRequest();

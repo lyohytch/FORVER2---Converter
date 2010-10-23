@@ -68,20 +68,5 @@ class CorrelationModel: public QTableView
         bool isFunc;
 
 };
-/*
-class CorrelationModelDemo:public CorrelationModel
-{
-    Q_OBJECT
-public:
-    CorrelationModelDemo(QWidget *parent,QModelDescribing *current, QModelDescribing *target);
-
-    QVariant age(const QVariantList &parameters);
-    QVariant concat(const QVariantList &parameters);
-    QVariant switchFunction(CorrelationModel::EfuncList id,const QVariantList &parameters);
-
-private:
-    QVariant age(const QVariant &startDate,const QVariant &endDate);
-    QString concat(char *arg1 ...);
-};*/
 
 #endif // CORRELATIONMODEL_H

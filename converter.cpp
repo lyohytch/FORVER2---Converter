@@ -457,25 +457,22 @@ void converter::completeAddingToDB(int aError, QString errStr)
 {
     qDebug() << " id = " << aError << " Msg: " << errStr;
     pLabel->setText("Adding data was complete. ErrorMessage: " + errStr);
-
+    // Remove unneeded querymodel
+    if (queryModel)
+    {
+        delete queryModel;
+        queryModel = NULL;
+    }
 }
 
 void converter::makeRequestSlot()
 {
     qDebug();
     //Adding data to DB
-    //MSSQL Query
     mssqlQuery = new mssqlquery(0, queryModel);
-    //mssqlQuery4 = new mssqlquery(0,queryModel4);
-    //TODO make connect to receive signal from object
     connect(mssqlQuery, SIGNAL(complete(int, QString)), this,
             SLOT(completeAddingToDB(int, QString)), Qt::QueuedConnection);
     QThreadPool::globalInstance()->start(mssqlQuery);
-    if (queryModel)
-    {
-        delete queryModel;
-        queryModel = NULL;
-    }
 }
 
 void converter::init_load(QModelDescribing* loadedModel, TreeViewModel* tree)

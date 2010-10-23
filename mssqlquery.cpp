@@ -10,7 +10,7 @@ mssqlquery::mssqlquery(QObject* parent, querymodel* model) :
 }
 void mssqlquery::run()
 {
-    qDebug() << "Count requests = " << queryModel->getRequestList().count();
+    //qDebug() << "Count requests = " << queryModel->getRequestList().count();
     qDebug() << "Requests = " << queryModel->getRequestList();
     iListofRequests.append(queryModel->getRequestList());
     createRequestList = queryModel->getCreateTable();
@@ -45,6 +45,7 @@ void mssqlquery::run()
                 {
                     qDebug() << "Error: " << db.lastError().text();
                     db.rollback();
+                    mutex.unlock();
                     emit complete(1, db.lastError().text());
                     return;
                 }
@@ -56,6 +57,7 @@ void mssqlquery::run()
                 {
                     qDebug() << " err was occured";
                     db.rollback();
+                    mutex.unlock();
                     emit complete(1, e.text());
                     return;
                 }
@@ -72,6 +74,7 @@ void mssqlquery::run()
             {
                 qDebug() << "Error: " << db.lastError().text();
                 db.rollback();
+                mutex.unlock();
                 emit complete(1, db.lastError().text());
                 return;
             }
@@ -83,6 +86,7 @@ void mssqlquery::run()
     else
     {
         qDebug() << db.lastError().text();
+        mutex.unlock();
         emit complete(1, db.lastError().text());
         return;
     }
