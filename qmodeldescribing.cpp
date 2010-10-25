@@ -152,10 +152,10 @@ void QModelDescribing::setChildItem(const QVariantList& iList, int i, int levels
             {
                 i++;
                 parent->parent()->appendRow(child);
-                setChildItem(iList, i, levelcur, child);
+                 setChildItem(iList, i, levelcur, child);
             }
             break;
-        case 1:   //Уровень следующего на 1 больше. Делаем след элемент ребёнком parent
+        case 1:   //Уровень следующего на 1 больше. Делаем след элемент ребёнком pare nt
             {
                 i++;
                 parent->appendRow(child);
@@ -182,7 +182,7 @@ void QModelDescribing::setChildItem(const QVariantList& iList, int i, int levels
 }
 bool QModelDescribing::isValidString(const QMap<QString, QVariant> &checkMap)
 {
-    bool isNull = ((checkMap.value(id) == NULL) || (checkMap.value(level) == NULL) ||
+    bool isNull = ((checkMap.value(id ) == NULL) || (checkMap.value(level) == NULL) ||
                    (checkMap.value(name) == NULL) || (checkMap.value(type) == NULL));
     if (!isNull)
         return ((checkMap.value(type).toString() == AV) || (checkMap.value(type).toString() == DV) || (checkMap.value(type).toString() == RM) ||
@@ -300,7 +300,7 @@ void QModelDescribing::resetDataList()
     iListData.clear();
 }
 
-void QModelDescribing::resetSignList()
+void QModelDescribing::    resetSignList()
 {
     iListSignificant.clear();
 }
@@ -320,26 +320,39 @@ void QModelDescribing::resetAllList()
 
 bool QModelDescribing::foundByUId(const QVariant& uid, int& pos)
 {
-    int i = 0;
+    int i =  0;
     foreach(QVariant oneRec, iListDataTemp)
     {
-        if (oneRec.toMap().value(id) == uid)
+        if (oneRec.toMap( ).value(id) == uid)
         {
             pos = i;
             return true;
-        }
+         }
         i++;
     }
 
     return false;
 }
 
-//----------------------------------------------------------------------------
+QVariantList QModelDescribing::initDataStructure()
+{
+    QVariantList retVar;
+    for (int i = 0; i < iListDescribing.count(); i++)
+    {
+        if (iListDescribing[i].toMap().value(id).toString().contains(statName))
+        {
+            retVar.append(iListDescribing[i]);
+        }
+    }
+    return retVar;
+}
+
+//------------------------------------------------------ ----------------------
 //-------------------QModelDescribingOld4--------------------------------------
 //start-----------------------------------------------------------------------
 QModelDescribingOld4::QModelDescribingOld4(QObject* parent):
     QModelDescribing(parent)
-{
+ {
 
 }
 
@@ -374,12 +387,12 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString& line)
         return NULL;
     }
     retMap->insert(type, readElement(line, k));
-    //Line couldn't be added into map. Return NULL
+    //Line couldn't be adde d into map. Return NULL
     //Сдвиг для считывания имени
     if (!turn(line, k, 4))
     {
         qWarning() << "String isn't valid";
-        delete retMap;
+         delete retMap;
         return NULL;
     }
     retMap->insert(name, readElement(line, k));
@@ -387,7 +400,7 @@ QMap<QString, QVariant>* QModelDescribingOld4::process_line(const QString& line)
     {
         qWarning() << "String isn't valid";
         delete retMap;
-        return NULL;
+         return NULL;
     }
     return retMap;
 }
@@ -402,8 +415,8 @@ void QModelDescribingOld4::dataPrepare()
     QVariantMap tmpMap;
     QVariant uid;
     int count = 0;
-    int i = 0;
-    int pos;
+        int i = 0;
+    int  pos;
     while (!iListDataTemp.isEmpty())
     {
         oneRec.clear();
@@ -425,14 +438,14 @@ void QModelDescribingOld4::dataPrepare()
             continue;
         }
         oneMap.insert(numb, i++);
-        oneMap.insert(rapid, oneRec);
+          oneMap.insert(rapid, oneRec);
         iListData.append(oneMap);
     }
     qDebug() << "  ===END===   ";
 
 }
 void QModelDescribingOld4::addingLoadedData(QTextStream* fileStream)
-{
+    {
     qDebug() << " Start";
     QVariantList oneRecord;
     QVariantMap oneData;
@@ -471,9 +484,9 @@ int QModelDescribingOld4::setSeekofLine(const QString& statName)
     {
         offset = 11;
     }
-    else if (statName == locus)
+     else if (statName == locus)
     {
-        offset = 13;
+         offset = 13;
     }
     else if (statName == weapon)
     {
@@ -506,7 +519,7 @@ QVariantList QModelDescribingOld4::process_lineData(const QString& line, const Q
         {
             retVar.append(oneDataMap);
         }
-        j++;
+            j++;
     }
     if (isValidStringData(retVar))
     {
@@ -522,18 +535,6 @@ bool QModelDescribingOld4::isValidStringData(const QVariantList& dataStructure)
             return false;
     }
     return true;
-}
-QVariantList QModelDescribingOld4::initDataStructure()
-{
-    QVariantList retVar;
-    for (int i = 0; i < iListDescribing.count(); i++)
-    {
-        if (iListDescribing[i].toMap().value(id).toString().contains(statName))
-        {
-            retVar.append(iListDescribing[i]);
-        }
-    }
-    return retVar;
 }
 
 void QModelDescribingOld4::setStatNameByFileData(const QString& filename)
@@ -580,7 +581,7 @@ QVariant QModelDescribingOld4::getIdByStatName(const QString& statName, const  Q
     }
     else if (statName == locus)
     {
-        offset = 4;
+        offset     = 4;
     }
     else if (statName == weapon)
     {
@@ -620,7 +621,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString& line)
     }
     retMap->insert(level, readElement(line, k));
     //try to take m_asType
-    if (!turn(line, k, 5))
+    if (!turn(line,  k, 5))
     {
         qWarning() << "String isn't valid";
         delete retMap;
@@ -640,7 +641,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::process_line(const QString& line)
     if (!turn(line, k, 3))
     {
         qWarning() << "String isn't valid";
-        delete retMap;
+        delete retMap ;
         return NULL;
     }
     retMap->insert(repeat, readElement(line, k));
@@ -668,7 +669,7 @@ bool QModelDescribingDemo::isValidString(const QMap<QString, QVariant> &checkMap
 {
     bool isNull = ((checkMap.value(id) == NULL) || (checkMap.value(level) == NULL) ||
                    (checkMap.value(name) == NULL) || (checkMap.value(type) == NULL) ||
-                   (checkMap.value(repeat) == NULL));
+                    (checkMap.value(repeat) == NULL));
     if (!isNull)
         return ((checkMap.value(type).toString() == AV) || (checkMap.value(type).toString() == DV) || (checkMap.value(type).toString() == RM) ||
                 (checkMap.value(type).toString() == CB) || (checkMap.value(type).toString() == ED) || (checkMap.value(type).toString() == ET) ||
@@ -712,8 +713,8 @@ QVariantList QModelDescribingDemo::process_lineData(const QString& line, const Q
         oneDataMap.insert(dvalue, readElement(line, k));
         if (!turn(line, k, 1))
         {
-            qWarning() << " String isn't valid";
-            return QVariantList();
+            qWarning() << " String         isn't valid";
+             return QVariantList();
         }
         retVar.append(oneDataMap);
     }
@@ -723,7 +724,7 @@ QVariantList QModelDescribingDemo::process_lineData(const QString& line, const Q
     }
     return QVariantList();
 }
-bool QModelDescribingDemo::isValidStringData(const QVariantList& dataStructure)
+bool     QModelDescribingDemo::isValidStringData(const QVariantList& dataStructure)
 {
     for (int i = 0; i < dataStructure.count(); i++)
     {
@@ -757,7 +758,7 @@ bool QModelDescribingDemo::isValidDataTemp()
 
 
 
-//-------------------QModelDescribingPros--------------------------------------
+//----------- --------QModelDescribingPros--------------------------------------
 QModelDescribingPros::QModelDescribingPros(QObject* parent):
     QModelDescribing(parent)
 {
@@ -880,7 +881,7 @@ QVariantList QModelDescribingPros::process_lineData(const QString& line, const Q
     {
         return QVariantList();
     }
-    return retVar;
+     return retVar;
 }
 
 void QModelDescribingPros::setStatNameByFileData(const QString& filename)
@@ -902,19 +903,6 @@ void QModelDescribingPros::setStatNameByFileData(const QString& filename)
     {
         statName = locus;
     }
-}
-
-QVariantList QModelDescribingPros::initDataStructure()
-{
-    QVariantList retVar;
-    for (int i = 0; i < iListDescribing.count(); i++)
-    {
-        if (iListDescribing[i].toMap().value(id).toString().contains(statName))
-        {
-            retVar.append(iListDescribing[i]);
-        }
-    }
-    return retVar;
 }
 
 QVariant QModelDescribingPros::getIdByStatName(const QString& statName, const  QVariantList& oneRecord)
@@ -1008,4 +996,4 @@ bool QModelDescribingPros::isValidDataTemp()
     return (iListDataTemp.count() > 0 );
 }
 
-//-------------------QModelDescribingPros--------------------------------------
+//-------------------QModelDescribingPros--- -----------------------------------

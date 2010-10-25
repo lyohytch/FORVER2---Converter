@@ -19,7 +19,7 @@ class QModelDescribing : public QStandardItemModel
     private:
     protected:
         QString statName;//"generic_","figurant_","locus_delicti_","weapon_"
-        //GENERAL
+        //GENERAL - DESCRIBING MODEL
         void addingDataToList(QTextStream* fileStream);
         //TODO move to protect
         /**
@@ -29,58 +29,57 @@ class QModelDescribing : public QStandardItemModel
         QVariantList iListSignificant;
         QVariantList iListData;// QList<  [[[  QList<QMap<QString, QVariant> > ]]]  >
         /*child*/
-        virtual bool checkFileStructure(QTextStream* fileStream)
+        virtual bool checkFileStructure(QTextStream* /*fileStream*/)
         {
-            qDebug();
-            Q_UNUSED(fileStream);
             return true;
         };
+        //Create tree
         virtual void setChildItem(const QVariantList& iList, int i, int levels, QStandardItem* parent);
         /*child*/
+        //Accept or not string from describing file to describing model
         virtual bool isValidString(const QMap<QString, QVariant> &checkMap);
+
         /*child*/
-        virtual QMap<QString, QVariant>* process_line(const QString& line)
+        //Process line in describing file
+        virtual QMap<QString, QVariant>* process_line(const QString& /*line*/)
         {
-            qDebug();
-            Q_UNUSED(line);
             return NULL;
         };
         virtual void moveOneRecordToList(QMap<QString, QVariant> & oneRec);
-        //TODO implement process_line.<Methods can be overloaded in children objects>
+        // Read one element from describing file
         virtual QString readElement(const QString& line, int& k);
+        // Turn on k symbols
         virtual bool turn(const QString& line, int& k, int cTurn);
+        // Fill significant list in describing model(to be added in DB)
         virtual void fillSignificantList();
+
         //DATA
         /*child*/
-        virtual bool checkFileFileStructureData(QTextStream* fileStream)
+        virtual bool checkFileFileStructureData(QTextStream* /*fileStream*/)
         {
-            qDebug();
-            Q_UNUSED(fileStream);
             return true;
         };
         /*child*/
-        virtual QVariantList process_lineData(const QString& line, const QVariantList &/*DataStructure*/)
+        // Process line from data file
+        virtual QVariantList process_lineData(const QString& /*line*/, const QVariantList &/*DataStructure*/)
         {
-            qDebug() << Q_FUNC_INFO;
-            Q_UNUSED(line);
             return QVariantList();
         };
         /*child*/
         virtual bool isValidStringData(const QVariantList &/*checkMap*/)
         {
-            qDebug();
             return true;
         };
         /*child*/
-        virtual void addingLoadedData(QTextStream* fileStream)
+        // Adding data in model
+        virtual void addingLoadedData(QTextStream* /*fileStream*/)
         {
-            qDebug();
-            Q_UNUSED(fileStream);
         };
         virtual bool foundByUId(const QVariant& uid, int& pos);
         void setStatNameByFile(const QString& filename);
         virtual void setStatNameByFileData(const QString &/*filename*/) {};
         QVariantList iListDataTemp;//ћассив мапов типа (ид, значение), где значение - данные из конкретного файла
+        virtual  QVariantList initDataStructure();
     public:
         /**
          *
@@ -111,7 +110,6 @@ class QModelDescribing : public QStandardItemModel
         /*child*/
         virtual void dataPrepare()
         {
-            qDebug();
         };
         virtual bool isValidData();//isDataLoaded?
         void loadingData(const QString& filename);
@@ -149,9 +147,6 @@ class QModelDescribingOld4: public QModelDescribing
         virtual void setStatNameByFileData(const QString& filename);
         int setSeekofLine(const QString& statName);
         QVariant getIdByStatName(const QString& statName, const  QVariantList& oneRecord);
-
-    private:
-        QVariantList initDataStructure();
 };
 
 
@@ -174,8 +169,7 @@ class QModelDescribingDemo: public QModelDescribing
         virtual void addingLoadedData(QTextStream* fileStream);
         virtual QVariantList process_lineData(const QString& line, const QVariantList& DataStructure);
         virtual bool isValidStringData(const QVariantList& dataStructure);
-    private:
-        QVariantList initDataStructure();
+        virtual QVariantList initDataStructure();
 };
 
 
@@ -206,8 +200,6 @@ class QModelDescribingPros: public QModelDescribing
         virtual void dataPrepare();//iListDataTemp=>iListData
     private:
         bool isProcessLine;
-        // Make this function as virtual
-        QVariantList initDataStructure();
         QString removeSpaces(const QString& ex);
 };
 
