@@ -20,8 +20,8 @@ HEADERS += converter.h \
     treeviewmodel.h
 FORMS += converter.ui
 #CONFIG settings
-CONFIG(debug):DEFINES += DEBUGING
+#CONFIG(debug):DEFINES += DEBUGING
 DEFINES+=PROS
-#CONFIG(release):DEFINES += QT_NO_DEBUG_OUTPUT
-#CONFIG(release):DEFINES += QT_NO_DEBUG
+CONFIG(release):DEFINES += QT_NO_DEBUG_OUTPUT
+CONFIG(release):DEFINES += QT_NO_DEBUG
 

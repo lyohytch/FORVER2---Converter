@@ -103,27 +103,33 @@ const QString prosPathF2("Resources/Description/PROS/F2.TXT");
 const QString prosPathF5("Resources/Description/PROS/F5.TXT");
 const QString prosPathF12("Resources/Description/PROS/F12.TXT");
 #elif defined Q_OS_WIN32 && !defined DEBUGING
-const QString demopath("Resources\\Description\\sprav_d.txt");
-const QString target1path("Resources\\Description\\Sprav1.txt");
-const QString target2path("Resources\\Description\\Sprav2.txt");
-const QString target3path("Resources\\Description\\Sprav3.txt");
-const QString target4path("Resources\\Description\\Sprav4.txt");
+const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
+const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");
+const QString target2path("..\\Resources\\Description\\4Views\\Sprav2.txt");
+const QString target3path("..\\Resources\\Description\\4Views\\Sprav3.txt");
+const QString target4path("..\\Resources\\Description\\4Views\\Sprav4.txt");
+const QString prosPathF1("..\\Resources\\Description\\PROS\\F1.TXT");
+const QString prosPathF2("..\\Resources\\Description\\PROS\\F2.TXT");
+const QString prosPathF5("..\\Resources\\Description\\PROS\\F5.TXT");
+const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
 #else
 const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
 const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");
 const QString target2path("..\\Resources\\Description\\4Views\\Sprav2.txt");
 const QString target3path("..\\Resources\\Description\\4Views\\Sprav3.txt");
 const QString target4path("..\\Resources\\Description\\4Views\\Sprav4.txt");
-const QString prosPathF1("..\\Resources\\Description\\PROS\F1.TXT");
-const QString prosPathF2("..\\Resources\\Description\\PROS\F2.TXT");
-const QString prosPathF5("..\\Resources\\Description\\PROS\F5.TXT");
-const QString prosPathF12("..\\Resources\\Description\\PROS\F12.TXT");
+const QString prosPathF1("..\\Resources\\Description\\PROS\\F1.TXT");
+const QString prosPathF2("..\\Resources\\Description\\PROS\\F2.TXT");
+const QString prosPathF5("..\\Resources\\Description\\PROS\\F5.TXT");
+const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
 #endif
 
+#ifdef DEBUGING
 //Helpful qDebug defines
 #define qDebug()            qDebug()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
 #define qWarning()          qWarning()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
 #define qCritical()         qCritical()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
 #define qFatal()            qFatal()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
+#endif
 
 #endif // CONSTANTS_H

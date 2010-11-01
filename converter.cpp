@@ -457,6 +457,9 @@ void converter::completeAddingToDB(int aError, QString errStr)
 {
     qDebug() << " id = " << aError << " Msg: " << errStr;
     pLabel->setText("Adding data was complete. ErrorMessage: " + errStr);
+    //Clear Data.
+    models[TARGETDESC]->resetDataList();
+    models[TEMPLATEDESC]->resetDataList();
     // Remove unneeded querymodel
     if (queryModel)
     {
