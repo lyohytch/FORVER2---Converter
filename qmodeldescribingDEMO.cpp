@@ -1,0 +1,163 @@
+#include "qmodeldescribingDEMO.h"
+
+//------------------------------------------------------------------------------
+//-------------------QModelDescribingDemo--------------------------------------
+//start----------------------------------------------------------------------------
+QModelDescribingDemo::QModelDescribingDemo(QObject* parent):
+    QModelDescribing(parent)
+{
+
+}
+
+QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(const QString& line)
+{
+    // qDebug()<<Q_FUNC_INFO<<"::"<<line;
+    int k = 0;
+    QMap<QString, QVariant> *retMap = new QMap<QString, QVariant>;
+    //Нужно определить ID
+    retMap->insert(id, elementName + readSymbolFromString(line, k));
+    //Берём уровень
+    //Сдвиг
+    if (!turn(line, k, 1))
+    {
+        qWarning() << "String isn't valid";
+        delete retMap;
+        return NULL;
+    }
+    retMap->insert(level, readSymbolFromString(line, k));
+    //try to take m_asType
+    if (!turn(line,  k, 5))
+    {
+        qWarning() << "String isn't valid";
+        delete retMap;
+        return NULL;
+    }
+    retMap->insert(type, readSymbolFromString(line, k));
+    //Line couldn't be added into map. Return NULL
+    //Сдвиг для считывания имени
+    if (!turn(line, k, 4))
+    {
+        qWarning() << "String isn't valid";
+        delete retMap;
+        return NULL;
+    }
+    retMap->insert(name, readSymbolFromString(line, k));
+    //Сдвиг для считывания дублирующего элемента
+    if (!turn(line, k, 3))
+    {
+        qWarning() << "String isn't valid";
+        delete retMap ;
+        return NULL;
+    }
+    retMap->insert(repeat, readSymbolFromString(line, k));
+    if (!isValidStringInDescriptionFileToAdd(*retMap))
+    {
+        qWarning() << "String isn't valid";
+        delete retMap;
+        return NULL;
+    }
+
+
+    return retMap;
+}
+
+bool QModelDescribingDemo::checkFileStructure(QTextStream* fileStream)
+{
+    qDebug() << "Not implemented yet. Accept all files";
+    Q_UNUSED(fileStream);
+    bool accept = true;
+
+    return accept;
+}
+
+bool QModelDescribingDemo::isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap)
+{
+    bool isNull = ((checkMap.value(id) == NULL) || (checkMap.value(level) == NULL) ||
+                   (checkMap.value(name) == NULL) || (checkMap.value(type) == NULL) ||
+                    (checkMap.value(repeat) == NULL));
+    if (!isNull)
+        return ((checkMap.value(type).toString() == AV) || (checkMap.value(type).toString() == DV) || (checkMap.value(type).toString() == RM) ||
+                (checkMap.value(type).toString() == CB) || (checkMap.value(type).toString() == ED) || (checkMap.value(type).toString() == ET) ||
+                (checkMap.value(type).toString() == ME)) ;
+    return false;
+}
+
+void QModelDescribingDemo::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)
+{
+    qDebug() << " Start";
+    QVariantList oneRecord;
+    QVariantMap oneData;
+    int i = 0;
+    int count = 0;
+    QVariantList dataStructure = initDataStructure();
+    while (!fileStream->atEnd())
+    {
+        QString line = fileStream->readLine();
+        oneRecord = processLineInDataFile(line, dataStructure); //Тут только сразу весь мап
+        //Первые три строки отбрасываем
+        if (!oneRecord.isEmpty() && i >= 3)
+        {
+            oneData.insert(numb, count++);
+            oneData.insert(rapid, oneRecord);
+            VisibleElementWithData.append(oneData);
+        }
+        i++;
+    }
+    //iListData Element
+    //QMap = number, value Value и будет записываться в базу данных
+    qDebug() << " End. iListData count" << VisibleElementWithData.count();
+}
+QVariantList QModelDescribingDemo::processLineInDataFile(const QString& line, const QVariantList& DataStructure)
+{
+    int k = 0;
+    QVariantList retVar;
+    QVariantMap oneDataMap;
+    for (int i = 0; i < DataStructure.count(); i++)
+    {
+        oneDataMap = DataStructure[i].toMap();
+        oneDataMap.insert(dvalue, readSymbolFromString(line, k));
+        if (!turn(line, k, 1))
+        {
+            qWarning() << " String         isn't valid";
+             return QVariantList();
+        }
+        retVar.append(oneDataMap);
+    }
+    if (isValidStringInDataFileToAdd(retVar))
+    {
+        return retVar;
+    }
+    return QVariantList();
+}
+bool     QModelDescribingDemo::isValidStringInDataFileToAdd(const QVariantList& dataStructure)
+{
+    for (int i = 0; i < dataStructure.count(); i++)
+    {
+        if (!dataStructure[i].toMap().contains(dvalue))
+            return false;
+    }
+    return true;
+}
+
+QVariantList QModelDescribingDemo::initDataStructure()
+{
+    QVariantList retVar;
+    for (int i = 1; i < 97 ; i++)
+    {
+        retVar.append(findByIdInVisibleElements(elementName + QVariant(i).toString()));
+    }
+    return retVar;
+}
+
+bool QModelDescribingDemo::isValidElementsWithDataForParticularFile()
+{
+    return isValidElementsWithData();
+}
+
+bool QModelDescribingDemo::checkFileFileStructureData(QTextStream* /*fileStream*/)
+{
+    return true;
+}
+
+//end----------------------------------------------------------------------------
+//-------------------QModelDescribingDemo--------------------------------------

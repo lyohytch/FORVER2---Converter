@@ -43,8 +43,8 @@ QVariantList CorrelationModel::targetToCurrent()
     //TODO check it
     qDebug() << " Real start convering....";
     QVariantList retData;
-    QVariantList dataList = iTargetModel->getListData();
-    QVariantList currDescrList = iCurrentModel->getListSignificant();
+    QVariantList dataList = iTargetModel->getElementsWithData();
+    QVariantList currDescrList = iCurrentModel->getVisibleElements();
     QVariantList searchTemplates;
     QVariantList dataListItem;
     QVariantMap oneMap;
@@ -53,7 +53,7 @@ QVariantList CorrelationModel::targetToCurrent()
     int fID;
     for (int i = 0; i < dataList.count(); i++)
     {
-        currDescrList = iCurrentModel->getListSignificant();
+        currDescrList = iCurrentModel->getVisibleElements();
         dataListItem = dataList[i].toMap().value(rapid).toList();
         oneMap.insert(id, i);
         appData.clear();
@@ -113,8 +113,8 @@ void CorrelationModel::fillInTable()
     qDebug();
     clearTable();
     //TODO п р▒п я∙п б╠п б╟п п├п б╩п║п▐п║Б─ п║п┼ п п┘п║я⌠п б╤п п┘п я∙ п║Б─ п я∙п б╩п║п┼п я■п я∙ п б╥п п┘п б╟п║Б─║п я▒п я≤п║Б─╧п б╣ п║п▄п б╩п б╣п я≤п б╣п п┘п║Б─ п║Б─╧=))))
-    int iTemplateCount = iCurrentModel->getListSignificant().count();
-    int iTargetCount = iTargetModel->getListSignificant().count();
+    int iTemplateCount = iCurrentModel->getVisibleElements().count();
+    int iTargetCount = iTargetModel->getVisibleElements().count();
     QString name1, name2;
     QList<QStandardItem*> itemList;
     QVariantMap mapFunc;
@@ -123,15 +123,15 @@ void CorrelationModel::fillInTable()
     for (; i < iTemplateCount; i++)
     {
         itemList.clear();
-        name1 = iCurrentModel->getListSignificant()[i].toMap().value(name).toString();
+        name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
         QStandardItem* item1 = new QStandardItem(name1);
-        item1->setData(iCurrentModel->getListSignificant()[i], Qt::UserRole + 1);
+        item1->setData(iCurrentModel->getVisibleElements()[i], Qt::UserRole + 1);
         QStandardItem* item2;
         if (i < iTargetCount)
         {
-            name2 = iTargetModel->getListSignificant()[i].toMap().value(name).toString();
+            name2 = iTargetModel->getVisibleElements()[i].toMap().value(name).toString();
             item2 = new QStandardItem(name2);
-            item2->setData(iTargetModel->getListSignificant()[i], Qt::UserRole + 1);
+            item2->setData(iTargetModel->getVisibleElements()[i], Qt::UserRole + 1);
             item2->setEditable(false);
         }
         else

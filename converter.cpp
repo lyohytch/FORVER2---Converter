@@ -79,16 +79,16 @@ void converter::on_actionOpen_triggered()
     //Если мы смогли установить описание: корректные файлы описания
     if (SelectDescription(filenames, TARGETDESC))
     {
-        models[TARGETDESC]->resetAllList();
+        models[TARGETDESC]->clearAllElements();
         corrModel->clearTable();
         foreach(QString fname, filenames)
         {
             models[TARGETDESC]->appendToList(fname);
         }
-        if (models[TARGETDESC]->getListDescribing().count() > 0)
+        if (models[TARGETDESC]->getElementsWithoutData().count() > 0)
         {
             //TODO попробовать просто отобразить модель
-            models[TARGETDESC]->createModel();
+            models[TARGETDESC]->createTreeForViewing();
             trees[TARGETDESC]->loadModel(models[TARGETDESC]);
             pLabel->setText("Target model was created");
             emit loadDescComplete();
@@ -203,16 +203,16 @@ void converter::on_actionOpen_template_triggered()
     //Если мы смогли установить описание: корректные файлы описания
     if (SelectDescription(filenames, TEMPLATEDESC))
     {
-        models[TEMPLATEDESC]->resetAllList();
+        models[TEMPLATEDESC]->clearAllElements();
         corrModel->clearTable();
         foreach(QString fname, filenames)
         {
             models[TEMPLATEDESC]->appendToList(fname);
         }
-        if (models[TEMPLATEDESC]->getListDescribing().count() > 0)
+        if (models[TEMPLATEDESC]->getElementsWithoutData().count() > 0)
         {
             //TODO попробовать просто отобразить модель
-            models[TEMPLATEDESC]->createModel();
+            models[TEMPLATEDESC]->createTreeForViewing();
             trees[TEMPLATEDESC]->loadModel(models[TEMPLATEDESC]);
             pLabel->setText("Template model was created");
             emit loadDescComplete();
@@ -225,7 +225,7 @@ void converter::ElementTreeTargetActivated(const QModelIndex& index)
 {
     qDebug() << "index = " << index.data(Qt::UserRole + 1);
     qDebug() << "index.row() = " << index.row();
-    if (corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isSignificant(index.data(Qt::UserRole + 1)))
+    if (corrModel->applyTreeClick(iTarget) && models[TARGETDESC]->isVisibleElement(index.data(Qt::UserRole + 1)))
     {
         //TODO как-то нужно это добавить в таблицу
         corrModel->changeTargetValue(iTarget, rowId, index.data(Qt::UserRole + 1), countTV);
@@ -242,7 +242,7 @@ void converter::ElementTreeTemplateActivated(const QModelIndex& index)
 {
     qDebug() << "index = " << index.data(Qt::UserRole + 1);
     qDebug() << "index.row() = " << rowId;
-    if (corrModel->applyTreeClick(iTemplate) && models[TEMPLATEDESC]->isSignificant(index.data(Qt::UserRole + 1)))
+    if (corrModel->applyTreeClick(iTemplate) && models[TEMPLATEDESC]->isVisibleElement(index.data(Qt::UserRole + 1)))
     {
         //Нужен только один элемент Лучше использовать QVariant ?
         corrModel->changeTemplateValue(iTemplate, rowId, index.data(Qt::UserRole + 1));
@@ -308,7 +308,7 @@ void converter::FunctionIsChecked(int id)
 void converter::FillTable()
 {
     qDebug() << " fill in table if it need";
-    if (models[TARGETDESC]->isValid() && models[TARGETDESC]->isValid())
+    if (models[TARGETDESC]->isValidElementsWithoutData() && models[TARGETDESC]->isValidElementsWithoutData())
     {
         //TODO do something
         corrModel->fillInTable();
@@ -323,7 +323,7 @@ void converter::on_actionLoad_Template_Data_triggered()
 {
     qDebug();
     //Create file dialog
-    if (!models[TEMPLATEDESC]->isValid())
+    if (!models[TEMPLATEDESC]->isValidElementsWithoutData())
     {
         qWarning() << " Description wasn't loaded";
         this->statusBar()->showMessage("Template Description wasn't loaded", 5000);
@@ -341,12 +341,12 @@ void converter::on_actionLoad_Template_Data_triggered()
     //Append data
     foreach(QString fname, filenames)
     {
-        models[TEMPLATEDESC]->loadingData(fname);
+        models[TEMPLATEDESC]->loadingDataElementsFromFile(fname);
     }
     // TODO make message when error happened
-    if (models[TEMPLATEDESC]->isValidDataTemp())
+    if (models[TEMPLATEDESC]->isValidElementsWithDataForParticularFile())
     {
-        models[TEMPLATEDESC]->dataPrepare();
+        models[TEMPLATEDESC]->preparingDataStructureBeforeFilling();
         pLabel->setText("Template data successfully loaded");
     }
     else
@@ -359,7 +359,7 @@ void converter::on_actionLoad_Target_Data_triggered()
 {
     qDebug();
     //Create file dialog
-    if (!models[TARGETDESC]->isValid())
+    if (!models[TARGETDESC]->isValidElementsWithoutData())
     {
         qWarning() << " Description wasn't loaded";
         this->statusBar()->showMessage("Target Description wasn't loaded", 5000);
@@ -381,12 +381,12 @@ void converter::on_actionLoad_Target_Data_triggered()
 
     foreach(QString fname, filenames)
     {
-        models[TARGETDESC]->loadingData(fname);
+        models[TARGETDESC]->loadingDataElementsFromFile(fname);
     }
     //Попытаться убрать это или добавить в функцию выше
-    if (models[TARGETDESC]->isValidDataTemp())
+    if (models[TARGETDESC]->isValidElementsWithDataForParticularFile())
     {
-        models[TARGETDESC]->dataPrepare();
+        models[TARGETDESC]->preparingDataStructureBeforeFilling();
         pLabel->setText("Target data successfully loaded");
     }
     else
@@ -403,7 +403,7 @@ void converter::on_actionLoad_Target_Data_triggered()
 void converter::on_actionExport_template_data_to_DB_triggered()
 {
     qDebug();
-    if (models[TEMPLATEDESC]->isValidData())
+    if (models[TEMPLATEDESC]->isValidElementsWithData())
     {
         //Make string request
         qDebug() << "=======Start Loading Template======";
@@ -428,7 +428,7 @@ void converter::on_actionConvert_files_triggered()
 {
     qDebug();
     //У нас должны быть загружены данные и модель демо версии
-    if (models[TARGETDESC]->isValidData() && models[TEMPLATEDESC]->isValid())
+    if (models[TARGETDESC]->isValidElementsWithData() && models[TEMPLATEDESC]->isValidElementsWithoutData())
     {
         //Make string request
         qDebug() << "=======Start Converting======";
@@ -458,8 +458,8 @@ void converter::completeAddingToDB(int aError, QString errStr)
     qDebug() << " id = " << aError << " Msg: " << errStr;
     pLabel->setText("Adding data was complete. ErrorMessage: " + errStr);
     //Clear Data.
-    models[TARGETDESC]->resetDataList();
-    models[TEMPLATEDESC]->resetDataList();
+    models[TARGETDESC]->clearElementsWithData();
+    models[TEMPLATEDESC]->clearElementsWithData();
     // Remove unneeded querymodel
     if (queryModel)
     {
@@ -505,10 +505,10 @@ void converter::init_load(QModelDescribing* loadedModel, TreeViewModel* tree)
     {
         loadedModel->appendToList(fname);
     }
-    if (loadedModel->getListDescribing().count() > 0)
+    if (loadedModel->getElementsWithoutData().count() > 0)
     {
         //TODO попробовать просто отобразить модель
-        loadedModel->createModel();
+        loadedModel->createTreeForViewing();
         tree->loadModel(loadedModel);
         pLabel->setText("Model was loaded");
         emit loadDescComplete();
@@ -622,20 +622,20 @@ void converter::on_actionSave_correlation_model_triggered()
         QVariantMap tableRecord;
         QVariantMap oneRecord;
         //target
-        QVariantList iList = corrModel->getTargetModel()->getListSignificant();
+        QVariantList iList = corrModel->getTargetModel()->getVisibleElements();
 
         oneRecord.insert(TargetSign, iList);
-        iList = corrModel->getTargetModel()->getListData();
+        iList = corrModel->getTargetModel()->getElementsWithData();
         oneRecord.insert(TargetData, iList);
-        iList = corrModel->getTargetModel()->getListDescribing();
+        iList = corrModel->getTargetModel()->getElementsWithoutData();
         oneRecord.insert(TargetDesc, iList);
 
         //template
-        iList = corrModel->getCurrentModel()->getListSignificant();
+        iList = corrModel->getCurrentModel()->getVisibleElements();
         oneRecord.insert(TemplateSign, iList);
-        iList = corrModel->getCurrentModel()->getListData();
+        iList = corrModel->getCurrentModel()->getElementsWithData();
         oneRecord.insert(TemplateData, iList);
-        iList = corrModel->getCurrentModel()->getListDescribing();
+        iList = corrModel->getCurrentModel()->getElementsWithoutData();
         oneRecord.insert(TemplateDesc, iList);
 
         //table

@@ -7,7 +7,10 @@
 #include <QLabel>
 #include <QRadioButton>
 
-#include "qmodeldescribing.h"
+#include "qmodeldescribingOLD4.h"
+#include "qmodeldescribingDEMO.h"
+#include "qmodeldescribingPROS.h"
+
 #include "treeviewmodel.h"
 #include "correlationmodel.h"
 #include "querymodel.h"
