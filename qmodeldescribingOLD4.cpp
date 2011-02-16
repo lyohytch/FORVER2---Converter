@@ -59,6 +59,12 @@ QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(cons
     return retMap;
 }
 
+QVariantList QModelDescribingOld4::getElementsFromText(QTextStream* fileStream)
+{
+    qDebug()<< "Not implemented";
+    return QVariantList();
+}
+
 void QModelDescribingOld4::preparingDataStructureBeforeFilling()
 {
 

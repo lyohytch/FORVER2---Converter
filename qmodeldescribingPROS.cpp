@@ -59,6 +59,11 @@ void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRe
     }
 }
 
+QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
+{
+    qDebug()<< "Not implemented";
+    return QVariantList();
+}
 
 void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)
 {

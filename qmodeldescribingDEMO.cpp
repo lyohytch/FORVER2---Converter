@@ -66,7 +66,20 @@ QVariantList QModelDescribingDemo::getElementsFromText(QTextStream* fileStream)
     QVariantList elements;
     QString text = fileStream->readAll();
     qDebug()<<" Text => "<<text;
-    QRegExp search("");
+    QRegExp search
+("^([\\c]+)\\t([\\c]+)[\\t[\\c]+]{4}\\t([\\c]+)[\\t[\\c]+]{3}\\t([\\c]+)[\\t[\\c]+]{2}\\t([\\c]+)[\\t\\r\\n]");
+    if(search.indexIn(text) != -1)
+    {
+        qDebug()<<" ID     => "<< search.cap(1);
+        qDebug()<<" Level  => "<< search.cap(2);
+        qDebug()<<" Type   => "<< search.cap(3);
+        qDebug()<<" Name   => "<< search.cap(4);
+        qDebug()<<" Repeat => "<< search.cap(5);
+    }
+    else
+    {
+        qDebug()<<" Template not found";
+    }
     return elements;
 }
 
