@@ -45,7 +45,7 @@ QMap<QString, QVariant>* QModelDescribingPros::processLineInDescriptionFile(cons
     return NULL;
 }
 
-void QModelDescribingPros::addNextElementToList(QMap<QString, QVariant> & oneRec)
+void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRec)
 {
     int i = 0;
     QVariantList tmpList = oneRec.value(prosDesc).toList();

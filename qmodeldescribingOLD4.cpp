@@ -20,8 +20,10 @@ QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(cons
 {
     int k = 0;
     QMap<QString, QVariant> *retMap = new QMap<QString, QVariant>;
+
+    //TODO: make regular expression
     //Нужно определить ID
-    retMap->insert(id, elementName + readSymbolFromString(line, k));
+    retMap->insert(id, elementName + readSymbolsFromString(line, k));
     //Берём уровень
     //Сдвиг
     if (!turn(line, k, 1))
@@ -30,7 +32,7 @@ QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(cons
         delete retMap;
         return NULL;
     }
-    retMap->insert(level, readSymbolFromString(line, k));
+    retMap->insert(level, readSymbolsFromString(line, k));
     //try to take m_asType
     if (!turn(line, k, 5))
     {
@@ -38,7 +40,7 @@ QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(cons
         delete retMap;
         return NULL;
     }
-    retMap->insert(type, readSymbolFromString(line, k));
+    retMap->insert(type, readSymbolsFromString(line, k));
     //Line couldn't be adde d into map. Return NULL
     //Сдвиг для считывания имени
     if (!turn(line, k, 4))
@@ -47,7 +49,7 @@ QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(cons
          delete retMap;
         return NULL;
     }
-    retMap->insert(name, readSymbolFromString(line, k));
+    retMap->insert(name, readSymbolsFromString(line, k));
     if (!isValidStringInDescriptionFileToAdd(*retMap))
     {
         qWarning() << "String isn't valid";

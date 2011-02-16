@@ -83,7 +83,7 @@ void converter::on_actionOpen_triggered()
         corrModel->clearTable();
         foreach(QString fname, filenames)
         {
-            models[TARGETDESC]->appendToList(fname);
+            models[TARGETDESC]->appendFromDataFilesToDataElements(fname);
         }
         if (models[TARGETDESC]->getElementsWithoutData().count() > 0)
         {
@@ -207,7 +207,7 @@ void converter::on_actionOpen_template_triggered()
         corrModel->clearTable();
         foreach(QString fname, filenames)
         {
-            models[TEMPLATEDESC]->appendToList(fname);
+            models[TEMPLATEDESC]->appendFromDataFilesToDataElements(fname);
         }
         if (models[TEMPLATEDESC]->getElementsWithoutData().count() > 0)
         {
@@ -503,7 +503,7 @@ void converter::init_load(QModelDescribing* loadedModel, TreeViewModel* tree)
 
     foreach(QString fname, filenames)
     {
-        loadedModel->appendToList(fname);
+        loadedModel->appendFromDataFilesToDataElements(fname);
     }
     if (loadedModel->getElementsWithoutData().count() > 0)
     {

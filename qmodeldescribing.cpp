@@ -16,9 +16,15 @@ QModelDescribing::QModelDescribing(const QModelDescribing& other):
     isElementWithData = other.checkElementWithDataOrNot();
 }
 
+
 QVariantList QModelDescribing::getElementsWithoutData() const
 {
     return ElementsFromDescriptionFiles;
+}
+
+bool QModelDescribing::checkElementWithDataOrNot() const
+{
+    return isElementWithData;
 }
 
 QVariantList QModelDescribing::getVisibleElements() const
@@ -30,7 +36,7 @@ QVariantList QModelDescribing::getElementsWithData() const
 {
     return VisibleElementWithData;
 }
-void QModelDescribing::appendToList(const QString& filename)
+void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename)
 {
     qDebug();
     //Open file
@@ -64,6 +70,10 @@ void QModelDescribing::appendToList(const QString& filename)
 void QModelDescribing::addingDataToBlankElements(QTextStream* fileStream)
 {
     qDebug() << " Start";
+    //TODO: use regexp
+    QVariantList addingElements = getElementsFromText(fileStream);
+    addNextElementsToList(addingElements);
+   /*
     QMap<QString, QVariant> *oneRecord;
     while (!fileStream->atEnd())
     {
@@ -71,17 +81,23 @@ void QModelDescribing::addingDataToBlankElements(QTextStream* fileStream)
         oneRecord = processLineInDescriptionFile(line);
         if (oneRecord != NULL)
         {
-            addNextElementToList(*oneRecord);
+            addNextElementsToList(*oneRecord);
             delete oneRecord;
         }
     }
+    */
+
     qDebug() << " End";
 }
 
-void QModelDescribing::addNextElementToList(QMap<QString, QVariant> & oneRec)
+
+void QModelDescribing::addNextElementsToList(const QVariantList & oneRec)
 {
-    oneRec.insert(numb, ElementsFromDescriptionFiles.count());
-    ElementsFromDescriptionFiles.append(oneRec);
+    foreach(QVariant ElementFromList, oneRec)
+    {
+        ElementFromList.toMap().insert(numb, ElementsFromDescriptionFiles.count());
+        ElementsFromDescriptionFiles.append(ElementFromList);
+    }
 }
 
 void QModelDescribing::loadingDataElementsFromFile(const QString& filename)
@@ -153,7 +169,7 @@ void QModelDescribing::createTreeFromElements(const QVariantList& iList, int i, 
             {
                 i++;
                 parent->parent()->appendRow(child);
-                 createTreeFromElements(iList, i, levelcur, child);
+                createTreeFromElements(iList, i, levelcur, child);
             }
             break;
         case 1:   //Уровень следующего на 1 больше. Делаем след элемент ребёнком pare nt
@@ -181,6 +197,7 @@ void QModelDescribing::createTreeFromElements(const QVariantList& iList, int i, 
             break;
     }
 }
+
 bool QModelDescribing::isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap)
 {
     bool isNull = ((checkMap.value(id ) == NULL) || (checkMap.value(level) == NULL) ||
@@ -192,16 +209,16 @@ bool QModelDescribing::isValidStringInDescriptionFileToAdd(const QMap<QString, Q
     return false;
 }
 
-QString QModelDescribing::readSymbolFromString(const QString& line, int& k)
+QString QModelDescribing::readSymbolsFromString(const QString& line, int& k)
 {
     QString Element = "";
+    int bound = line.count();
     while (line[k] != '\t')
     {
         Element += line[k];
         k++;
-        if (k >= line.count())
+        if (k >= bound)
         {
-            qWarning() << "Data out of range!!!";
             return NULL;
         }
     }
@@ -211,11 +228,11 @@ QString QModelDescribing::readSymbolFromString(const QString& line, int& k)
 bool QModelDescribing::turn(const QString& line, int& k, int cTurn)
 {
     int count = 0;
+    int bound = line.count();
     while (count < cTurn)
     {
-        if (k >= line.count())
+        if (k >= bound)
         {
-            qWarning() << "Data out of range!!!";
             return false;
         }
         if (line[k] == '\t') ++count;
@@ -237,12 +254,11 @@ bool QModelDescribing::isValidElementsWithData()
 //Заполнить лист значимых элементов
 void QModelDescribing::createListofVisibleElements()
 {
-    int count = ElementsFromDescriptionFiles.count();
-    for (int i = 0; i < count; i++)
+    foreach (QVariant ElementFromList, ElementsFromDescriptionFiles)
     {
-        if (isVisibleElement(ElementsFromDescriptionFiles[i]))
+        if (isVisibleElement(ElementFromList))
         {
-            VisibleElementsFromDescriptionFiles.append(ElementsFromDescriptionFiles[i]);
+            VisibleElementsFromDescriptionFiles.append(ElementFromList);
         }
     }
 }
@@ -253,11 +269,11 @@ bool QModelDescribing::isVisibleElement(const QVariant& value)
 
 QVariant QModelDescribing::findByIdInVisibleElements(const QVariant& uid)
 {
-    for (int i = 0; i < VisibleElementsFromDescriptionFiles.count() ; i++)
+    foreach(QVariant ElementFromList, VisibleElementsFromDescriptionFiles)
     {
-        if (VisibleElementsFromDescriptionFiles[i].toMap().value(id) == uid)
+        if (ElementFromList.toMap().value(id) == uid)
         {
-            return VisibleElementsFromDescriptionFiles[i];
+            return ElementFromList;
         }
     }
     return QVariant();
@@ -268,6 +284,7 @@ QVariant QModelDescribing::findByIdInVisibleElements(const QVariant& uid)
 void QModelDescribing::setElementNameByFile(const QString& filename)
 {
     //Move to each class
+    // TODO: reqork it
     if (filename.endsWith("Sprav1.txt", Qt::CaseSensitive) ||
         filename.endsWith("sprav_d.txt", Qt::CaseSensitive) ||
         filename.endsWith("F1.TXT", Qt::CaseSensitive))
@@ -301,7 +318,7 @@ void QModelDescribing::clearElementsWithData()
     VisibleElementWithData.clear();
 }
 
-void QModelDescribing::    clearVisibleElements()
+void QModelDescribing::clearVisibleElements()
 {
     VisibleElementsFromDescriptionFiles.clear();
 }
@@ -322,9 +339,9 @@ void QModelDescribing::clearAllElements()
 bool QModelDescribing::findByUIdInVisibleElements(const QVariant& uid, int& pos)
 {
     int i =  0;
-    foreach(QVariant oneRec, VisibleElementsWithDataForParticularFile)
+    foreach(QVariant ElementFromList, VisibleElementsWithDataForParticularFile)
     {
-        if (oneRec.toMap( ).value(id) == uid)
+        if (ElementFromList.toMap( ).value(id) == uid)
         {
             pos = i;
             return true;
@@ -338,11 +355,11 @@ bool QModelDescribing::findByUIdInVisibleElements(const QVariant& uid, int& pos)
 QVariantList QModelDescribing::initDataStructure()
 {
     QVariantList retVar;
-    for (int i = 0; i < ElementsFromDescriptionFiles.count(); i++)
+    foreach (QVariant ElementFromList, ElementsFromDescriptionFiles)
     {
-        if (ElementsFromDescriptionFiles[i].toMap().value(id).toString().contains(elementName))
+        if (ElementFromList.toMap().value(id).toString().contains(elementName))
         {
-            retVar.append(ElementsFromDescriptionFiles[i]);
+            retVar.append(ElementFromList);
         }
     }
     return retVar;

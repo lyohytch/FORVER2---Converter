@@ -15,7 +15,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
     int k = 0;
     QMap<QString, QVariant> *retMap = new QMap<QString, QVariant>;
     //Нужно определить ID
-    retMap->insert(id, elementName + readSymbolFromString(line, k));
+    retMap->insert(id, elementName + readSymbolsFromString(line, k));
     //Берём уровень
     //Сдвиг
     if (!turn(line, k, 1))
@@ -24,7 +24,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
         delete retMap;
         return NULL;
     }
-    retMap->insert(level, readSymbolFromString(line, k));
+    retMap->insert(level, readSymbolsFromString(line, k));
     //try to take m_asType
     if (!turn(line,  k, 5))
     {
@@ -32,7 +32,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
         delete retMap;
         return NULL;
     }
-    retMap->insert(type, readSymbolFromString(line, k));
+    retMap->insert(type, readSymbolsFromString(line, k));
     //Line couldn't be added into map. Return NULL
     //Сдвиг для считывания имени
     if (!turn(line, k, 4))
@@ -41,7 +41,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
         delete retMap;
         return NULL;
     }
-    retMap->insert(name, readSymbolFromString(line, k));
+    retMap->insert(name, readSymbolsFromString(line, k));
     //Сдвиг для считывания дублирующего элемента
     if (!turn(line, k, 3))
     {
@@ -49,7 +49,7 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
         delete retMap ;
         return NULL;
     }
-    retMap->insert(repeat, readSymbolFromString(line, k));
+    retMap->insert(repeat, readSymbolsFromString(line, k));
     if (!isValidStringInDescriptionFileToAdd(*retMap))
     {
         qWarning() << "String isn't valid";
@@ -59,6 +59,15 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
 
 
     return retMap;
+}
+
+QVariantList QModelDescribingDemo::getElementsFromText(QTextStream* fileStream)
+{
+    QVariantList elements;
+    QString text = fileStream->readAll();
+    qDebug()<<" Text => "<<text;
+    QRegExp search("");
+    return elements;
 }
 
 bool QModelDescribingDemo::checkFileStructure(QTextStream* fileStream)
@@ -115,7 +124,7 @@ QVariantList QModelDescribingDemo::processLineInDataFile(const QString& line, co
     for (int i = 0; i < DataStructure.count(); i++)
     {
         oneDataMap = DataStructure[i].toMap();
-        oneDataMap.insert(dvalue, readSymbolFromString(line, k));
+        oneDataMap.insert(dvalue, readSymbolsFromString(line, k));
         if (!turn(line, k, 1))
         {
             qWarning() << " String         isn't valid";

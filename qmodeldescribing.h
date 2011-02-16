@@ -34,15 +34,17 @@ class QModelDescribing : public QStandardItemModel
 
         virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& /*line*/) = 0;
 
+        virtual QVariantList getElementsFromText(QTextStream* fileStream) = 0;
+
         void addingDataToBlankElements(QTextStream* fileStream);
 
         void createTreeFromElements(const QVariantList& iList, int i, int levels, QStandardItem* parent);
 
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
 
-        virtual void addNextElementToList(QMap<QString, QVariant> & oneRec);
+        virtual void addNextElementsToList(const QVariantList & oneRec);
 
-        virtual QString readSymbolFromString(const QString& line, int& k);
+        virtual QString readSymbolsFromString(const QString& line, int& k);
 
         virtual bool turn(const QString& line, int& k, int cTurn);
 
@@ -84,16 +86,13 @@ class QModelDescribing : public QStandardItemModel
 
         QVariantList getElementsWithData() const;
 
-        void appendToList(const QString& filename);
+        void appendFromDataFilesToDataElements(const QString& filename);
 
         QVariant findByIdInVisibleElements(const QVariant& id);
 
         bool createTreeForViewing();
 
-        bool checkElementWithDataOrNot() const
-        {
-            return isElementWithData;
-        };
+        bool checkElementWithDataOrNot() const;
 
         //Operations with elements with data
         virtual bool isValidElementsWithDataForParticularFile() = 0;
