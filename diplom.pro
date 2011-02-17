@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     treeviewmodel.cpp \
     qmodeldescribingOLD4.cpp \
     qmodeldescribingDEMO.cpp \
-    qmodeldescribingPROS.cpp
+    qmodeldescribingPROS.cpp \
+    qmodeldescribingfromjura.cpp
 HEADERS += converter.h \
     qmodeldescribing.h \
     mssqlquery.h \
@@ -24,11 +25,10 @@ HEADERS += converter.h \
     treeviewmodel.h \
     qmodeldescribingOLD4.h \
     qmodeldescribingDEMO.h \
-    qmodeldescribingPROS.h
+    qmodeldescribingPROS.h \
+    qmodeldescribingfromjura.h
 FORMS += converter.ui
 
 # CONFIG settings
 CONFIG(debug):DEFINES += DEBUGING
 DEFINES += PROS
-#CONFIG(release):DEFINES += QT_NO_DEBUG_OUTPUT
-#CONFIG(release):DEFINES += QT_NO_DEBUG

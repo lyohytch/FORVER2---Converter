@@ -12,10 +12,10 @@ class QModelDescribingDemo: public QModelDescribing
 
     protected:
         //GENERAL
-        virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& line);
+        //virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& line);
         virtual  bool checkFileStructure(QTextStream* fileStream);
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
-        virtual QVariantList getElementsFromText(QTextStream* fileStream);
+        virtual QVariantMap fillOneElement(const QStringList & capturedText);
         //DATA
         virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream);
         virtual QVariantList processLineInDataFile(const QString& line, const QVariantList& DataStructure);

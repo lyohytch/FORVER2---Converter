@@ -16,7 +16,7 @@ bool QModelDescribingPros::checkFileStructure(QTextStream* fileStream)
     isProcessLine = 1;
     return accept;
 }
-
+/*
 QMap<QString, QVariant>* QModelDescribingPros::processLineInDescriptionFile(const QString& line)
 {
     qDebug();
@@ -44,7 +44,7 @@ QMap<QString, QVariant>* QModelDescribingPros::processLineInDescriptionFile(cons
     }
     return NULL;
 }
-
+*/
 void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRec)
 {
     int i = 0;
@@ -57,12 +57,6 @@ void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRe
             ElementsFromDescriptionFiles.append(oneElem.toMap());
         }
     }
-}
-
-QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
-{
-    qDebug()<< "Not implemented";
-    return QVariantList();
 }
 
 void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)

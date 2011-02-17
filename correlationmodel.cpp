@@ -112,7 +112,6 @@ void CorrelationModel::fillInTable()
 {
     qDebug();
     clearTable();
-    //TODO п р▒п я∙п б╠п б╟п п├п б╩п║п▐п║Б─ п║п┼ п п┘п║я⌠п б╤п п┘п я∙ п║Б─ п я∙п б╩п║п┼п я■п я∙ п б╥п п┘п б╟п║Б─║п я▒п я≤п║Б─╧п б╣ п║п▄п б╩п б╣п я≤п б╣п п┘п║Б─ п║Б─╧=))))
     int iTemplateCount = iCurrentModel->getVisibleElements().count();
     int iTargetCount = iTargetModel->getVisibleElements().count();
     QString name1, name2;
@@ -192,7 +191,6 @@ void CorrelationModel::fillInTable(QVariantMap mapTable)
         item2->setData(mapTable.value(targList).toList().at(i), Qt::UserRole + 1);
         item2->setEditable(false);
 
-        //Todo НОПЕДЕКХРЭ ХЛЪ
         uname.clear();
         uname = functionName(mapTable.value(funcList).toList().at(i).toMap().value(function).toInt());
         QStandardItem* item3 = new QStandardItem(uname);

@@ -8,7 +8,7 @@ QModelDescribingDemo::QModelDescribingDemo(QObject* parent):
 {
 
 }
-
+/*
 QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(const QString& line)
 {
     // qDebug()<<Q_FUNC_INFO<<"::"<<line;
@@ -60,27 +60,17 @@ QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(cons
 
     return retMap;
 }
+*/
 
-QVariantList QModelDescribingDemo::getElementsFromText(QTextStream* fileStream)
+QVariantMap QModelDescribingDemo::fillOneElement(const QStringList & capturedText)
 {
-    QVariantList elements;
-    QString text = fileStream->readAll();
-    qDebug()<<" Text => "<<text;
-    QRegExp search
-("^([\\c]+)\\t([\\c]+)[\\t[\\c]+]{4}\\t([\\c]+)[\\t[\\c]+]{3}\\t([\\c]+)[\\t[\\c]+]{2}\\t([\\c]+)[\\t\\r\\n]");
-    if(search.indexIn(text) != -1)
-    {
-        qDebug()<<" ID     => "<< search.cap(1);
-        qDebug()<<" Level  => "<< search.cap(2);
-        qDebug()<<" Type   => "<< search.cap(3);
-        qDebug()<<" Name   => "<< search.cap(4);
-        qDebug()<<" Repeat => "<< search.cap(5);
-    }
-    else
-    {
-        qDebug()<<" Template not found";
-    }
-    return elements;
+   QVariantMap element;
+   element.insert(id, elementName + capturedText.at(1));
+   element.insert(level, capturedText.at(2));
+   element.insert(type, capturedText.at(3));
+   element.insert(name, capturedText.at(5));
+   element.insert(repeat, capturedText.at(6));
+   return element;
 }
 
 bool QModelDescribingDemo::checkFileStructure(QTextStream* fileStream)

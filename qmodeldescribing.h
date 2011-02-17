@@ -32,9 +32,11 @@ class QModelDescribing : public QStandardItemModel
         //Operations with elements without data
         virtual bool checkFileStructure(QTextStream* /*fileStream*/) = 0;
 
-        virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& /*line*/) = 0;
+        virtual QVariantMap fillOneElement(const QStringList & capturedText) = 0;
 
-        virtual QVariantList getElementsFromText(QTextStream* fileStream) = 0;
+        //virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& /*line*/) = 0;
+
+        virtual QVariantList getElementsFromText(QTextStream* fileStream);      
 
         void addingDataToBlankElements(QTextStream* fileStream);
 

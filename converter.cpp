@@ -547,7 +547,7 @@ void converter::init_create_factory_objects()
 
 
     models = new QModelDescribing*[2];
-    models[TARGETDESC] = modelP;
+    models[TARGETDESC] = model4;
     models[TEMPLATEDESC] = modelD;
 
     trees = new TreeViewModel*[2];

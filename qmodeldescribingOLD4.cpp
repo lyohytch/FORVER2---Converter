@@ -59,10 +59,14 @@ QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(cons
     return retMap;
 }
 
-QVariantList QModelDescribingOld4::getElementsFromText(QTextStream* fileStream)
+QVariantMap QModelDescribingOld4::fillOneElement(const QStringList & capturedText)
 {
-    qDebug()<< "Not implemented";
-    return QVariantList();
+   QVariantMap element;
+   element.insert(id, elementName + capturedText.at(1));
+   element.insert(level, capturedText.at(2));
+   element.insert(type, capturedText.at(3));
+   element.insert(name, capturedText.at(5));
+   return element;
 }
 
 void QModelDescribingOld4::preparingDataStructureBeforeFilling()

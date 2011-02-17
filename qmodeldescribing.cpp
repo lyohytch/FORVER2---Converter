@@ -2,8 +2,6 @@
 
 #include "qmodeldescribing.h"
 
-
-
 QModelDescribing::QModelDescribing(QObject* parent):
     QStandardItemModel(parent)
 {
@@ -36,6 +34,7 @@ QVariantList QModelDescribing::getElementsWithData() const
 {
     return VisibleElementWithData;
 }
+
 void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename)
 {
     qDebug();
@@ -67,27 +66,74 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
         qCritical() << "File " << filename << " doesn't exist";
     }
 }
+
+void QModelDescribing::setElementNameByFile(const QString& filename)
+{
+    //Move to each class
+    // TODO: reqork it
+    if (filename.endsWith("Sprav1.txt", Qt::CaseSensitive) ||
+        filename.endsWith("sprav_d.txt", Qt::CaseSensitive) ||
+        filename.endsWith("F1.TXT", Qt::CaseSensitive))
+    {
+        elementName = generic;
+    }
+    else if (filename.endsWith("Sprav2.txt", Qt::CaseSensitive) ||
+             filename.endsWith("F2.TXT", Qt::CaseSensitive))
+    {
+        elementName = figurant;
+    }
+    else if (filename.endsWith("Sprav3.txt", Qt::CaseSensitive) ||
+             filename.endsWith("F5.TXT", Qt::CaseSensitive))
+    {
+        elementName = locus;
+    }
+    else if (filename.endsWith("Sprav4.txt", Qt::CaseSensitive) ||
+             filename.endsWith("F12.TXT", Qt::CaseSensitive))
+    {
+        elementName = weapon;
+    }
+    else
+    {
+        //Adding by default
+        elementName = "";
+    }
+}
+
 void QModelDescribing::addingDataToBlankElements(QTextStream* fileStream)
 {
     qDebug() << " Start";
-    //TODO: use regexp
     QVariantList addingElements = getElementsFromText(fileStream);
     addNextElementsToList(addingElements);
-   /*
-    QMap<QString, QVariant> *oneRecord;
-    while (!fileStream->atEnd())
-    {
-        QString line = fileStream->readLine();
-        oneRecord = processLineInDescriptionFile(line);
-        if (oneRecord != NULL)
-        {
-            addNextElementsToList(*oneRecord);
-            delete oneRecord;
-        }
-    }
-    */
-
     qDebug() << " End";
+}
+
+QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
+{
+    QVariantList elements;
+    //NOTE: some text should be read from UTF8(QString::fromUtf8(char *) )
+    QStringList textSplitted = (fileStream->readAll()).split(QRegExp("\\n"));
+    QStringList capturedText;
+    /**
+      ([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)"
+      It' s regular expression for strings like
+      "244	5					ed		1		ФИО:	888888888888888888888888	ФИО:	27		221		"
+    */
+    QRegExp search("([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)");
+    foreach(QString textLine, textSplitted)
+    {
+         if(search.indexIn(textLine) != -1)
+         {
+            capturedText = search.capturedTexts();
+            elements.append(fillOneElement(capturedText));
+         }
+         else
+         {
+             //TODO: to file
+            qWarning()<<" Line in Description file is incorrect => "<< textLine;
+         }
+    }
+    qDebug()<< "end. Elements =>"<< elements;
+    return elements;
 }
 
 
@@ -134,7 +180,10 @@ void QModelDescribing::loadingDataElementsFromFile(const QString& filename)
 
 bool QModelDescribing::createTreeForViewing()
 {
-    qDebug();
+    foreach(QVariant el, ElementsFromDescriptionFiles)
+    {
+        qDebug() << "Id >> "<<el.toMap().value(id) << "level>> "<<el.toMap().value(level);
+    }
     //Заполнить значимые элементы
     createListofVisibleElements();
     //Здесь мы заполняем QStandartItemModel
@@ -144,6 +193,22 @@ bool QModelDescribing::createTreeForViewing()
     //Append children of rootItem
     this->appendRow(rootItem);
     return true;
+}
+
+void QModelDescribing::createListofVisibleElements()
+{
+    foreach (QVariant ElementFromList, ElementsFromDescriptionFiles)
+    {
+        if (isVisibleElement(ElementFromList))
+        {
+            VisibleElementsFromDescriptionFiles.append(ElementFromList);
+        }
+    }
+}
+
+bool QModelDescribing::isVisibleElement(const QVariant& value)
+{
+    return (value.toMap().value(type).toString() != RM);
 }
 
 void QModelDescribing::createTreeFromElements(const QVariantList& iList, int i, int levels, QStandardItem* parent)
@@ -209,6 +274,7 @@ bool QModelDescribing::isValidStringInDescriptionFileToAdd(const QMap<QString, Q
     return false;
 }
 
+//TODO: remove unnecessary methods
 QString QModelDescribing::readSymbolsFromString(const QString& line, int& k)
 {
     QString Element = "";
@@ -240,6 +306,7 @@ bool QModelDescribing::turn(const QString& line, int& k, int cTurn)
     }
     return true;
 }
+//TODO: remove unnecessary methods
 
 bool QModelDescribing::isValidElementsWithoutData()
 {
@@ -251,21 +318,6 @@ bool QModelDescribing::isValidElementsWithData()
     return VisibleElementWithData.count() > 0;
 }
 
-//Заполнить лист значимых элементов
-void QModelDescribing::createListofVisibleElements()
-{
-    foreach (QVariant ElementFromList, ElementsFromDescriptionFiles)
-    {
-        if (isVisibleElement(ElementFromList))
-        {
-            VisibleElementsFromDescriptionFiles.append(ElementFromList);
-        }
-    }
-}
-bool QModelDescribing::isVisibleElement(const QVariant& value)
-{
-    return (value.toMap().value(type).toString() != RM);
-}
 
 QVariant QModelDescribing::findByIdInVisibleElements(const QVariant& uid)
 {
@@ -279,38 +331,12 @@ QVariant QModelDescribing::findByIdInVisibleElements(const QVariant& uid)
     return QVariant();
 }
 
-
-
-void QModelDescribing::setElementNameByFile(const QString& filename)
+void QModelDescribing::clearAllElements()
 {
-    //Move to each class
-    // TODO: reqork it
-    if (filename.endsWith("Sprav1.txt", Qt::CaseSensitive) ||
-        filename.endsWith("sprav_d.txt", Qt::CaseSensitive) ||
-        filename.endsWith("F1.TXT", Qt::CaseSensitive))
-    {
-        elementName = generic;
-    }
-    else if (filename.endsWith("Sprav2.txt", Qt::CaseSensitive) ||
-             filename.endsWith("F2.TXT", Qt::CaseSensitive))
-    {
-        elementName = figurant;
-    }
-    else if (filename.endsWith("Sprav3.txt", Qt::CaseSensitive) ||
-             filename.endsWith("F5.TXT", Qt::CaseSensitive))
-    {
-        elementName = locus;
-    }
-    else if (filename.endsWith("Sprav4.txt", Qt::CaseSensitive) ||
-             filename.endsWith("F12.TXT", Qt::CaseSensitive))
-    {
-        elementName = weapon;
-    }
-    else
-    {
-        //Adding by default
-        elementName = "";
-    }
+    this->clear();
+    clearElementsWithoutData();
+    clearElementsWithData();
+    clearVisibleElements();
 }
 
 void QModelDescribing::clearElementsWithData()
@@ -326,14 +352,6 @@ void QModelDescribing::clearVisibleElements()
 void QModelDescribing::clearElementsWithoutData()
 {
     ElementsFromDescriptionFiles.clear();
-}
-
-void QModelDescribing::clearAllElements()
-{
-    this->clear();
-    clearElementsWithoutData();
-    clearElementsWithData();
-    clearVisibleElements();
 }
 
 bool QModelDescribing::findByUIdInVisibleElements(const QVariant& uid, int& pos)
