@@ -9,7 +9,7 @@ class QModelDescribingOld4: public QModelDescribing
 
         //Operations with elements without data
         QModelDescribingOld4(QObject* parent = 0);
-        ~QModelDescribingOld4() {};
+        ~QModelDescribingOld4() {}
 
         //Operations with elements with data
         virtual void preparingDataStructureBeforeFilling();//iListDataTemp ->iListData

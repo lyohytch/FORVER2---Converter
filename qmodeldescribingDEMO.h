@@ -7,16 +7,16 @@ class QModelDescribingDemo: public QModelDescribing
 {
     public:
         QModelDescribingDemo(QObject* parent = 0);
-        ~QModelDescribingDemo() {};
+        ~QModelDescribingDemo() {}
         virtual bool isValidElementsWithDataForParticularFile();
 
     protected:
-        //GENERAL
+        //Operations with elements without data
         //virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& line);
         virtual  bool checkFileStructure(QTextStream* fileStream);
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
         virtual QVariantMap fillOneElement(const QStringList & capturedText);
-        //DATA
+        //Operations with elements with data
         virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream);
         virtual QVariantList processLineInDataFile(const QString& line, const QVariantList& DataStructure);
         virtual bool isValidStringInDataFileToAdd(const QVariantList& dataStructure);
