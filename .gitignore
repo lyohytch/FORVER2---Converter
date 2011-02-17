@@ -1,7 +1,9 @@
 diplom.pro.user
-Makefile
+Makefile*
 *.o
 ui_converter.h
 moc_*
 Demo.Converter
 *.cmf
+debug/
+object_script.*

@@ -30,7 +30,7 @@ converter::~converter()
     if (corrModel) delete corrModel;
     if (models) delete models;
     if (trees[TARGETDESC]) delete trees[TARGETDESC];
-    if (trees[TEMPLATEDESC]) delete trees[TARGETDESC];
+    if (trees[TEMPLATEDESC]) delete trees[TEMPLATEDESC];
     if (trees) delete trees;
 
     //Delete layout
