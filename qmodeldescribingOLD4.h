@@ -19,7 +19,6 @@ class QModelDescribingOld4: public QModelDescribing
 
         //Operations with elements without data
         virtual  bool checkFileStructure(QTextStream* fileStream);
-        virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& line);
         virtual QVariantMap fillOneElement(const QStringList & capturedText);
         //Operations with elements with data
         virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream);

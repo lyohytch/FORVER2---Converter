@@ -16,48 +16,6 @@ bool QModelDescribingOld4::checkFileStructure(QTextStream* fileStream)
 
     return accept;
 }
-QMap<QString, QVariant>* QModelDescribingOld4::processLineInDescriptionFile(const QString& line)
-{
-    int k = 0;
-    QMap<QString, QVariant> *retMap = new QMap<QString, QVariant>;
-
-    //TODO: make regular expression
-    //Нужно определить ID
-    retMap->insert(id, elementName + readSymbolsFromString(line, k));
-    //Берём уровень
-    //Сдвиг
-    if (!turn(line, k, 1))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-        return NULL;
-    }
-    retMap->insert(level, readSymbolsFromString(line, k));
-    //try to take m_asType
-    if (!turn(line, k, 5))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-        return NULL;
-    }
-    retMap->insert(type, readSymbolsFromString(line, k));
-    //Line couldn't be adde d into map. Return NULL
-    //Сдвиг для считывания имени
-    if (!turn(line, k, 4))
-    {
-        qWarning() << "String isn't valid";
-         delete retMap;
-        return NULL;
-    }
-    retMap->insert(name, readSymbolsFromString(line, k));
-    if (!isValidStringInDescriptionFileToAdd(*retMap))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-         return NULL;
-    }
-    return retMap;
-}
 
 QVariantMap QModelDescribingOld4::fillOneElement(const QStringList & capturedText)
 {

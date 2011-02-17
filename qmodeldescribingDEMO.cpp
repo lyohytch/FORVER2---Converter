@@ -8,59 +8,6 @@ QModelDescribingDemo::QModelDescribingDemo(QObject* parent):
 {
 
 }
-/*
-QMap<QString, QVariant>* QModelDescribingDemo::processLineInDescriptionFile(const QString& line)
-{
-    // qDebug()<<Q_FUNC_INFO<<"::"<<line;
-    int k = 0;
-    QMap<QString, QVariant> *retMap = new QMap<QString, QVariant>;
-    //Нужно определить ID
-    retMap->insert(id, elementName + readSymbolsFromString(line, k));
-    //Берём уровень
-    //Сдвиг
-    if (!turn(line, k, 1))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-        return NULL;
-    }
-    retMap->insert(level, readSymbolsFromString(line, k));
-    //try to take m_asType
-    if (!turn(line,  k, 5))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-        return NULL;
-    }
-    retMap->insert(type, readSymbolsFromString(line, k));
-    //Line couldn't be added into map. Return NULL
-    //Сдвиг для считывания имени
-    if (!turn(line, k, 4))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-        return NULL;
-    }
-    retMap->insert(name, readSymbolsFromString(line, k));
-    //Сдвиг для считывания дублирующего элемента
-    if (!turn(line, k, 3))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap ;
-        return NULL;
-    }
-    retMap->insert(repeat, readSymbolsFromString(line, k));
-    if (!isValidStringInDescriptionFileToAdd(*retMap))
-    {
-        qWarning() << "String isn't valid";
-        delete retMap;
-        return NULL;
-    }
-
-
-    return retMap;
-}
-*/
 
 QVariantMap QModelDescribingDemo::fillOneElement(const QStringList & capturedText)
 {
