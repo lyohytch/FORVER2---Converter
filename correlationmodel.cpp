@@ -16,7 +16,6 @@ const QString value("value");*/
 CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target):
     QTableView(parent), iCurrentModel(current) , iTargetModel(target)
 {
-    qDebug()<<"parent";
     tableModel = new QStandardItemModel;
     createTableModel(tableModel);
     this->setModel(tableModel);
@@ -34,7 +33,6 @@ CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, Q
 
 void CorrelationModel::createTableModel(QStandardItemModel* tableModel)
 {
-   qDebug();
    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
    tableModel->setColumnCount(2);
 }
@@ -303,16 +301,3 @@ QVariantMap CorrelationModel::tableModelToMap()
     retMap.insert(targList, atargList);
     return retMap;
 }
-
-
-
-
-
-//----------------------------CorrelationModelDemo-----------------------
-/*
-CorrelationModelDemo::CorrelationModelDemo(QWidget *parent,QModelDescribing *current, QModelDescribing *target):
-   CorrelationModel(parent,current, target)
-{
-
-}*/
-

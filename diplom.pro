@@ -17,7 +17,9 @@ SOURCES += main.cpp \
     qmodeldescribingPROS.cpp \
     qmodeldescribingfromjura.cpp \
     correlationmodelnofunction.cpp \
-    correlationmodelfunction.cpp
+    correlationmodelfunction.cpp \
+    presenter.cpp \
+    presenterforfunctionui.cpp
 HEADERS += converter.h \
     qmodeldescribing.h \
     mssqlquery.h \
@@ -30,7 +32,10 @@ HEADERS += converter.h \
     qmodeldescribingPROS.h \
     qmodeldescribingfromjura.h \
     correlationmodelnofunction.h \
-    correlationmodelfunction.h
+    correlationmodelfunction.h \
+    iview.h \
+    presenter.h \
+    presenterforfunctionui.h
 FORMS += converter.ui
 
 # CONFIG settings

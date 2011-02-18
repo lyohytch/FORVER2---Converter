@@ -80,7 +80,7 @@ class QModelDescribing : public QStandardItemModel
 
         QModelDescribing(const QModelDescribing& other);
 
-        ~QModelDescribing() {}
+        virtual ~QModelDescribing() {}
 
         QVariantList getElementsWithoutData() const;
 

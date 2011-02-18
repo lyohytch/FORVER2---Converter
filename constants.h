@@ -132,4 +132,10 @@ const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
 #define qFatal()            qFatal()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
 #endif
 
+#define CORR_MODEL ((CorrelationModel *)(Presenters::_view->corrModel))
+#define QUERY_MODEL ((querymodel *)(_view->queryModel))
+#define MSSQL_QUERY ((mssqlquery *)(_view->mssqlQuery))
+#define MODELS(i) ((QModelDescribing *)(_view->models[i]))
+#define TREES(i) ((TreeViewModel *)(_view->trees[i]))
+
 #endif // CONSTANTS_H
