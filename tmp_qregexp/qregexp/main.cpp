@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QRegExp>
 #include <QStringList>
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +15,14 @@ int main(int argc, char *argv[])
         qWarning()<<" Error opening file";
         return -1;
     }
-    QString text = QString::fromUtf8(filein.readAll());
+
+    QTextCodec *codec = QTextCodec::codecForName("Windows-1251");
+
+    //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("Windows-1251"));
+    QTextCodec::setCodecForCStrings(codec);
+
+    QString text = filein.readAll();
+    qDebug() << "Can encode : "<<codec->canEncode(text);// False if cracozyabry
     qDebug()<< " Text => "<< text;
     QStringList textSplitted = text.split(QRegExp("\\n"));
     QStringList capturedText;
