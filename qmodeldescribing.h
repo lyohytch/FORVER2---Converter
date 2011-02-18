@@ -34,13 +34,13 @@ class QModelDescribing : public QStandardItemModel
 
         virtual QVariantMap fillOneElement(const QStringList & capturedText) = 0;
 
-        //virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& /*line*/) = 0;
-
         virtual QVariantList getElementsFromText(QTextStream* fileStream);      
 
         void addingDataToBlankElements(QTextStream* fileStream);
 
         void createTreeFromElements(const QVariantList& iList, int i, int levels, QStandardItem* parent);
+
+        void setFileEncodingByContain(const QString & text);
 
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
 
@@ -80,7 +80,7 @@ class QModelDescribing : public QStandardItemModel
 
         QModelDescribing(const QModelDescribing& other);
 
-        ~QModelDescribing() {};
+        ~QModelDescribing() {}
 
         QVariantList getElementsWithoutData() const;
 

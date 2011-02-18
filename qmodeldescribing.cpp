@@ -1,4 +1,5 @@
 #include <QFile>
+#include <QTextCodec>
 
 #include "qmodeldescribing.h"
 
@@ -111,7 +112,9 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
 {
     QVariantList elements;
     //NOTE: some text should be read from UTF8(QString::fromUtf8(char *) )
-    QStringList textSplitted = (fileStream->readAll()).split(QRegExp("\\n"));
+    QString text = fileStream->readAll();
+    setFileEncodingByContain(text);
+    QStringList textSplitted = text.split(QRegExp("\\n"));
     QStringList capturedText;
     /**
       ([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)"
@@ -136,6 +139,26 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
     return elements;
 }
 
+void QModelDescribing::setFileEncodingByContain(const QString & text)
+{
+    QTextCodec *textCodec = QTextCodec::codecForName("Windows-1251");
+    if( textCodec->canEncode(text) )
+    {
+        QTextCodec::setCodecForCStrings(textCodec);
+    }
+    else
+    {
+        textCodec = QTextCodec::codecForName("UTF-8");
+        if ( textCodec->canEncode(text))
+        {
+            QTextCodec::setCodecForCStrings(textCodec);
+        }
+        else
+        {
+            qWarning()<<"Unknown encoding";
+        }
+    }
+}
 
 void QModelDescribing::addNextElementsToList(const QVariantList & oneRec)
 {
@@ -180,10 +203,6 @@ void QModelDescribing::loadingDataElementsFromFile(const QString& filename)
 
 bool QModelDescribing::createTreeForViewing()
 {
-    foreach(QVariant el, ElementsFromDescriptionFiles)
-    {
-        qDebug() << "Id >> "<<el.toMap().value(id) << "level>> "<<el.toMap().value(level);
-    }
     //Заполнить значимые элементы
     createListofVisibleElements();
     //Здесь мы заполняем QStandartItemModel
@@ -213,6 +232,7 @@ bool QModelDescribing::isVisibleElement(const QVariant& value)
 
 void QModelDescribing::createTreeFromElements(const QVariantList& iList, int i, int levels, QStandardItem* parent)
 {
+    //TODO: check for errors
     if (i >= iList.count())
     {
         return;
