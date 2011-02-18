@@ -6,6 +6,7 @@
 #include "converter.h"
 #include "ui_converter.h"
 #include "constants.h"
+#include "correlationmodelfunction.h"
 
 converter::converter(QWidget* parent) :
     QMainWindow(parent),
@@ -80,7 +81,7 @@ void converter::on_actionOpen_triggered()
     if (SelectDescription(filenames, TARGETDESC))
     {
         models[TARGETDESC]->clearAllElements();
-        corrModel->clearTable();
+        corrModel->clearCorrelationTable();
         foreach(QString fname, filenames)
         {
             models[TARGETDESC]->appendFromDataFilesToDataElements(fname);
@@ -132,7 +133,7 @@ bool converter::refreshDescribingAndWidgets(int description_id, QModelDescribing
     models[description_id] = model;
 
     ///////ADDING DATA///////////////
-    corrModel = new CorrelationModel(this, models[TEMPLATEDESC], models[TARGETDESC]);
+    corrModel = new CorrelationModelFunction(this, models[TEMPLATEDESC], models[TARGETDESC]);
     connect(corrModel, SIGNAL(doubleClicked(const QModelIndex&)), this,
             SLOT(ElementTableActivated(const QModelIndex&)), Qt::QueuedConnection);
 
@@ -204,7 +205,7 @@ void converter::on_actionOpen_template_triggered()
     if (SelectDescription(filenames, TEMPLATEDESC))
     {
         models[TEMPLATEDESC]->clearAllElements();
-        corrModel->clearTable();
+        corrModel->clearCorrelationTable();
         foreach(QString fname, filenames)
         {
             models[TEMPLATEDESC]->appendFromDataFilesToDataElements(fname);
@@ -559,7 +560,7 @@ void converter::init_create_factory_objects()
             SLOT(ElementTreeTemplateActivated(const QModelIndex&)), Qt::QueuedConnection);
 
     //Correlation model
-    corrModel = new CorrelationModel(this, models[TEMPLATEDESC], models[TARGETDESC]);
+    corrModel = new CorrelationModelFunction(this, models[TEMPLATEDESC], models[TARGETDESC]);
     connect(corrModel, SIGNAL(doubleClicked(const QModelIndex&)), this,
             SLOT(ElementTableActivated(const QModelIndex&)), Qt::QueuedConnection);
 }
@@ -691,7 +692,7 @@ void converter::on_actionChange_DB_structure_triggered()
     qDebug();
     if (corrModel)
     {
-        corrModel->clearTable();
+        corrModel->clearCorrelationTable();
         this->statusBar()->showMessage("Correlation table was cleared. Please load table", 3000);
     }
 }

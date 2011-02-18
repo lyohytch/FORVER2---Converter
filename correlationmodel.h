@@ -14,16 +14,20 @@ typedef QVariant(*ConverterFunction)(QVariantList);
 class CorrelationModel: public QTableView
 {
         Q_OBJECT
+
     public:
-        enum EfuncList
-        {
-            age_func = 0, //QVariant age(QVariant startDate, QVariant endDate);
-            concat_func,//QString concat(char *arg1 ...);
-            undef_func
-        };
+
         CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target);
         CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target, QStandardItemModel* iTableModel);
         ~CorrelationModel();
+
+        virtual void fillInTable() = 0;
+        virtual void fillInTable(QVariantMap mapTable);
+        virtual QVariantMap tableModelToMap();
+        virtual QVariantList targetToCurrent();
+        virtual void setApplyTreeClick(int id);
+        virtual bool applyTreeClick(int id);
+
         QModelDescribing* getCurrentModel()
         {
             return iCurrentModel;
@@ -31,33 +35,27 @@ class CorrelationModel: public QTableView
         QModelDescribing* getTargetModel()
         {
             return iTargetModel;
-        };
+        };        
         QStandardItemModel* getTableModel()
         {
             return tableModel;
         };
-        QVariantMap tableModelToMap();
-        void fillInTable();
-        void fillInTable(QVariantMap mapTable);
-        void clearTable();
+
+        void clearCorrelationTable();
         //TODO rework this function
-        QVariantList targetToCurrent();
-        QVariant findItemInTableTemplate(const QVariant& search, int& row);
-        QVariant age(const QVariant& startDate, const QVariant& endDate);
-        QVariant concat(const QVariantList& parameters);
-        QVariant age(const QVariantList& parameters);
-        QVariant switchFunction(int id, const QVariantList& parameters);
-        void showCorrelationMap();
-        void appendTableRow(const QVariantList& rowList); //Perhaps public slot
-        void setApplyTreeClick(int id);
-        bool applyTreeClick(int id);
-        QString functionName(int id);
-        QVariantList foundByUIDsRetValues(const QVariantList& dataListItem, const QVariantList& searchTemplates);
+        void showCorrelationMap(); // Not used
 
         //Change table
-        void changeFunctionValue(int col, int row, int funcId);
         void changeTemplateValue(int col, int row, QVariant data);
         void changeTargetValue(int col, int row, QVariant data, bool first);
+        virtual void changeFunctionValue(int /*col*/, int /*row*/, int /*funcId*/) {}
+    protected:
+        virtual void createTableModel(QStandardItemModel* tableModel);
+        virtual void setupTableModel(QStandardItemModel* tableModel);
+        virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) { return QVariant();}
+        QVariant findItemInTableTemplate(const QVariant& search, int& row);
+        QVariantList foundByUIDsRetValues(const QVariantList& dataListItem, const QVariantList& searchTemplates);
+
     private:
         QModelDescribing* iCurrentModel;
         QModelDescribing* iTargetModel;
@@ -65,8 +63,6 @@ class CorrelationModel: public QTableView
         QStandardItemModel* tableModel;
         bool isTemp;
         bool isTarg;
-        bool isFunc;
-
 };
 
 #endif // CORRELATIONMODEL_H

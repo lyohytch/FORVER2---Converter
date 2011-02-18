@@ -1,6 +1,5 @@
 #include <QVariantList>
 #include <QMap>
-#include <QDateTime>
 #include <QString>
 
 #include "correlationmodel.h"
@@ -13,30 +12,47 @@ const QString type("type");
 const QString level("level");
 const QString value("value");*/
 
+// TODO: make corr model
 CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target):
     QTableView(parent), iCurrentModel(current) , iTargetModel(target)
 {
+    qDebug()<<"parent";
     tableModel = new QStandardItemModel;
-    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника") << QString::fromUtf8("Функция"));
-    tableModel->setColumnCount(3);
+    createTableModel(tableModel);
     this->setModel(tableModel);
     this->resizeColumnsToContents();
-    isFunc = isTemp = isTarg = false;
+    isTemp = isTarg = false;
 }
 CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target, QStandardItemModel* iTableModel):
     QTableView(parent), iCurrentModel(current) , iTargetModel(target), tableModel(iTableModel)
 {
-    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника") << QString::fromUtf8("Функция"));
-    tableModel->setColumnCount(3);
+    setupTableModel(tableModel);
     this->setModel(tableModel);
     this->resizeColumnsToContents();
-    isFunc = isTemp = isTarg = false;
+    isTemp = isTarg = false;
+}
+
+void CorrelationModel::createTableModel(QStandardItemModel* tableModel)
+{
+   qDebug();
+   tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+   tableModel->setColumnCount(2);
+}
+
+void CorrelationModel::setupTableModel(QStandardItemModel* tableModel)
+{
+    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+    tableModel->setColumnCount(2);
 }
 
 CorrelationModel::~CorrelationModel()
 {
     if (tableModel) delete tableModel;
 }
+
+
+
+
 //Rework it to iListData
 QVariantList CorrelationModel::targetToCurrent()
 {
@@ -73,6 +89,7 @@ QVariantList CorrelationModel::targetToCurrent()
     }
     return retData;
 }
+
 QVariantList CorrelationModel::foundByUIDsRetValues(const QVariantList& dataListItem, const QVariantList& searchTemplates)
 {
     QVariantList retList;
@@ -108,16 +125,18 @@ void CorrelationModel::showCorrelationMap()
     qDebug() << " Not implemented yet";
 }
 
-void CorrelationModel::fillInTable()
+
+//TODO: будет переделываться.. сейчас соответсвие тупое
+/*void CorrelationModel::fillInTable()
 {
     qDebug();
-    clearTable();
+    clearCorrelationTable();
     int iTemplateCount = iCurrentModel->getVisibleElements().count();
     int iTargetCount = iTargetModel->getVisibleElements().count();
     QString name1, name2;
     QList<QStandardItem*> itemList;
     QVariantMap mapFunc;
-    mapFunc.insert(function, CorrelationModel::undef_func);
+    mapFunc.insert(function, CorrelationModelFunction::undef_func);
     int i = 0;
     for (; i < iTemplateCount; i++)
     {
@@ -137,24 +156,20 @@ void CorrelationModel::fillInTable()
         {
             item2 = NULL;
         }
-        QStandardItem* item3 = new QStandardItem("NOT FUNCTION");
-        item3->setData(mapFunc, Qt::UserRole + 1);
+
         itemList.append(item1);
         itemList.append(item2);
-        itemList.append(item3);
         tableModel->appendRow(itemList);
         item1->setEditable(false);
-        item3->setEditable(false);
     }
     this->resizeColumnsToContents();
 }
-
+*/
 void CorrelationModel::fillInTable(QVariantMap mapTable)
 {
-    qDebug() << "not implemented yet";
-    clearTable();
+    clearCorrelationTable();
     //QMap( List(tempList),List(targList),List(funcList))
-    int N = mapTable.value(tempList).toList().count();//йНКХВЕЯРБН ЩКЕЛЕМРНБ Б РЮАКХЖЕ
+    int N = mapTable.value(tempList).toList().count();
     QString uname;
     QList<QStandardItem*> itemList;
     int cTempElem = 0;
@@ -191,70 +206,20 @@ void CorrelationModel::fillInTable(QVariantMap mapTable)
         item2->setData(mapTable.value(targList).toList().at(i), Qt::UserRole + 1);
         item2->setEditable(false);
 
-        uname.clear();
-        uname = functionName(mapTable.value(funcList).toList().at(i).toMap().value(function).toInt());
-        QStandardItem* item3 = new QStandardItem(uname);
-        item3->setData(mapTable.value(funcList).toList().at(i), Qt::UserRole + 1);
-        item3->setEditable(false);
-
         itemList.append(item1);
         itemList.append(item2);
-        itemList.append(item3);
         tableModel->appendRow(itemList);
 
     }
     this->resizeColumnsToContents();
 }
 
-void CorrelationModel::clearTable()
+void CorrelationModel::clearCorrelationTable()
 {
     this->clearSpans();
     tableModel->clear();
-    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника") << QString::fromUtf8("Функция"));
-    tableModel->setColumnCount(3);
+    setupTableModel(tableModel);
 }
-
-//UNUSED function
-//TODO rework this function
-void CorrelationModel::appendTableRow(const QVariantList& rowList)
-{
-    //Don't check. Data is correct already
-    //Implement without function
-    qDebug();
-    int i;
-    int cRow = rowList.count();
-    QVariantMap mapFunc;
-    mapFunc.insert(function, CorrelationModel::undef_func);
-    QVariantList itemsData;
-    QString name1 = rowList[0].toMap().value(name).toString();//template
-    QString name2 = rowList[1].toMap().value(name).toString();//start target name
-
-    QList<QStandardItem*> itemList;
-    QStandardItem* item1 = new QStandardItem(name1);
-    QStandardItem* item2 = new QStandardItem(name2);
-    QStandardItem* item3 = new QStandardItem("Not function");
-    item1->setEditable(false);
-    item2->setEditable(false);
-    item3->setEditable(false);
-
-    for (i = 2; i < cRow; i++)
-    {
-        name2 += comma + space + rowList[i].toMap().value(name).toString();
-        itemsData.append(rowList[i]);
-    }
-    item1->setData(rowList[0], Qt::UserRole + 1);
-    item2->setText(name2);
-    item2->setData(itemsData, Qt::UserRole + 1);
-    item3->setData(mapFunc, Qt::UserRole + 1);
-
-    itemList.append(item1);
-    itemList.append(item2);
-    itemList.append(item3);
-    tableModel->appendRow(itemList);
-    this->resizeColumnsToContents();
-
-}
-
 
 bool CorrelationModel::applyTreeClick(int id)
 {
@@ -265,7 +230,7 @@ bool CorrelationModel::applyTreeClick(int id)
         case iTarget:
             return isTarg;
         default:
-            return isFunc;
+            return isTemp;
     }
 }
 
@@ -276,32 +241,15 @@ void CorrelationModel::setApplyTreeClick(int id)
         case iTemplate://Template
             //Change template doesn't supported
             isTemp = false;
-            isFunc = false;
             isTarg = false;
             break;
         case iTarget://Target
             isTemp = false;
-            isFunc = false;
             isTarg = true;
             break;
-        default://Function
-            isTemp = false;
-            isFunc = true;
-            isTarg = false;
+        default:
             break;
     }
-}
-
-void CorrelationModel::changeFunctionValue(int col, int row, int funcId)
-{
-    qDebug();
-    QStandardItem* item = new QStandardItem(functionName(funcId));
-    QVariantMap mapFunc;
-    mapFunc.insert(function, CorrelationModel::EfuncList(funcId));
-    item->setData(mapFunc, Qt::UserRole + 1);
-    item->setEditable(false);
-    tableModel->setItem(row, col, item);
-    this->resizeColumnsToContents();
 }
 
 void CorrelationModel::changeTemplateValue(int col, int row, QVariant data)
@@ -340,40 +288,19 @@ void CorrelationModel::changeTargetValue(int col, int row, QVariant data, bool f
     this->resizeColumnsToContents();
 }
 
-QString CorrelationModel::functionName(int id)
-{
-    QString retStr;
-    switch (id)
-    {
-        case agef:
-            retStr = "AGE";
-            break;
-        case concatf:
-            retStr = "CONCAT";
-            break;
-        default:
-            retStr = "NO FUNCTION";
-    }
-    return retStr;
-}
-
 QVariantMap CorrelationModel::tableModelToMap()
 {
-    qDebug();
     QVariantMap retMap;
     QVariantList atempList;
     QVariantList atargList;
-    QVariantList afuncList;
-    int N = tableModel->rowCount();//п п╬п╩п╦я┤п╣я│я┌п╡п╬ п╥п╟п©п╦я│п╣п╧ - я│я┌я─п╬п╨
+    int N = tableModel->rowCount();
     for (int i = 0 ; i < N; i++)
     {
         atempList.append(tableModel->item(i, iTemplate)->data(Qt::UserRole + 1));
         atargList.append(tableModel->item(i, iTarget)->data(Qt::UserRole + 1));
-        afuncList.append(tableModel->item(i, iFunction)->data(Qt::UserRole + 1));
     }
     retMap.insert(tempList, atempList);
     retMap.insert(targList, atargList);
-    retMap.insert(funcList, afuncList);
     return retMap;
 }
 
@@ -389,76 +316,3 @@ CorrelationModelDemo::CorrelationModelDemo(QWidget *parent,QModelDescribing *cur
 
 }*/
 
-QVariant CorrelationModel::age(const QVariant& startDate, const QVariant& endDate)
-{
-    //All checks are done in age function
-    return endDate.toDateTime().date().year() - startDate.toDateTime().date().year();
-}
-QVariant CorrelationModel::age(const QVariantList& parameters)
-{
-    if (parameters.count() == 2)
-    {
-        if ((!parameters[0].isNull() && parameters[0].type() == QVariant::DateTime) &&
-            (!parameters[1].isNull() && parameters[1].type() == QVariant::DateTime))
-        {
-            return age(parameters[0], parameters[1]);
-        }
-    }
-    return QVariant();
-}
-
-//-----UNUSED--
-/*
-QString CorrelationModelDemo::concat(char* arg1 ...)
-{
-    QString retStr = "";
-    va_list ap;
-    va_start(ap,arg1);
-    for(;;)
-    {
-        char *p = va_arg(ap, char*);
-        if (p == NULL)
-        {
-            break;
-        }
-        retStr += QString::fromUtf8(p) + space;
-    }
-    va_end(ap);
-    return retStr;
-}
-*/
-//------UNUSED--
-
-QVariant CorrelationModel::concat(const QVariantList& parameters)
-{
-    //TODO check it
-    QString retVar;
-    for (int i = 0; i < parameters.count(); i++)
-    {
-        retVar += parameters[i].toString() + space;
-    }
-    return (QVariant)retVar;
-}
-
-QVariant CorrelationModel::switchFunction(int id, const QVariantList& parameters)
-{
-    QVariant retVar;
-    switch (id)
-    {
-        case CorrelationModel::age_func:
-            {
-                retVar = age(parameters);
-            }
-            break;
-        case CorrelationModel::concat_func:
-            {
-                retVar = concat(parameters);
-            }
-            break;
-        default:
-            {
-            }
-            break;
-    }
-    return parameters.at(0);
-}
