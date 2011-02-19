@@ -17,8 +17,8 @@ class QModelDescribingPros: public QModelDescribing
         //virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& line);
         virtual bool checkFileStructure(QTextStream* fileStream);
         virtual void addNextElementsToList(QMap<QString, QVariant> & oneRec);
-        virtual QVariantList getElementsFromText(QTextStream* fileStream) { return QVariantList();};
-        virtual QVariantMap fillOneElement(const QStringList & capturedText) {return QVariantMap();};
+        virtual QVariantList getElementsFromText(QTextStream* /*fileStream*/) { return QVariantList();};
+        virtual QVariantMap fillOneElement(const QStringList & /*capturedText*/) {return QVariantMap();};
         //DATA
         virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream);
         virtual QVariantList processLineInDataFile(const QString& line, const QVariantList& DataStructure);

@@ -6,40 +6,25 @@
 #include <QProgressBar>
 #include <QLabel>
 #include <QRadioButton>
+#include <QVariantList>
 
-#include "qmodeldescribingOLD4.h"
-#include "qmodeldescribingDEMO.h"
-#include "qmodeldescribingPROS.h"
-
-#include "treeviewmodel.h"
-#include "correlationmodel.h"
-#include "querymodel.h"
-#include "mssqlquery.h"
+#include "iview.h"
 
 namespace Ui
 {
     class converter;
 }
 
-//Класс для выбора функции
-class QWidgetFunction : public QWidget
+class converter : public IView
 {
         Q_OBJECT
-    public:
-        QWidgetFunction();
-        ~QWidgetFunction() {};
-    protected:
-        virtual void closeEvent(QCloseEvent */*clEvent*/);
-    signals:
-        void FuncWasChecked(int id);
-};
 
-class converter : public QMainWindow
-{
-        Q_OBJECT
     public:
         converter(QWidget* parent = 0);
         ~converter();
+
+        virtual void removeWidgets();
+        virtual void addWidgets();
 
     protected:
         void changeEvent(QEvent* e);
@@ -49,57 +34,22 @@ class converter : public QMainWindow
         QHBoxLayout* layout;
         QHBoxLayout* layoutCorrModel;
 
-        //Function
-        QVBoxLayout* fLayout;
-        QWidgetFunction* funcWidget;
-        QRadioButton* a1;
-        QRadioButton* a2;
-        QRadioButton* a3;
-        //Target
-        QModelDescribingOld4* model4;
-        //Template
-        QModelDescribingDemo* modelD;
-        //Template proc
-        QModelDescribingPros* modelP;
 
-        //Describing template
-        QModelDescribing** models;
-        TreeViewModel** trees;
 
-        TreeViewModel* treep;
-
-        //General Correlation Model
-        CorrelationModel* corrModel;
-
-        //QueryModel QModelDescring->StringList
-        querymodel* queryModel;
-        mssqlquery* mssqlQuery;
-
-        QLabel* pLabel;
+        //QLabel* pLabel;
 
         QVariantList rowTargetList;
         QVariantList rowTemplateList;
         QVariantList rowFunctionList;
 
 
-
-        bool applyTreeClick(int id);
-        void setApplyTreeClick(int id);
-        bool SelectDescription(const QStringList& filenames, int description_id);
-        bool refreshDescribingAndWidgets(int description_id, QModelDescribing* model);
-
         //Init functions
         void init();
-        void init_load(QModelDescribing* loadedModel, TreeViewModel* tree);
         void init_setup_main_form();
-        void init_create_factory_objects();
         void init_setup_desktop_widgets();
 
-        int rowId;//
-        bool countTV;//
-
     private slots:
-        void on_actionChange_DB_structure_triggered();
+        //void on_actionChange_DB_structure_triggered();
         void on_actionLoad_correlation_model_triggered();
         void on_actionSave_correlation_model_triggered();
         void on_actionExport_all_triggered();
@@ -109,16 +59,9 @@ class converter : public QMainWindow
         void on_actionLoad_Template_Data_triggered();
         void on_actionOpen_template_triggered();
         void on_actionOpen_triggered();
-        void ElementTreeTargetActivated(const QModelIndex& index);
-        void ElementTreeTemplateActivated(const QModelIndex& index);
-        void ElementTableActivated(const QModelIndex& index);
-        void FunctionIsChecked(int id);
-        void FillTable();
-        void completeAddingToDB(int aError, QString errStr);
-        void makeRequestSlot();
     signals:
         void loadDataComplete();
-        void loadDescComplete();
+
 };
 
 #endif // CONVERTER_H

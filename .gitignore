@@ -7,3 +7,4 @@ Demo.Converter
 *.cmf
 debug/
 object_script.*
+*.pro.user
