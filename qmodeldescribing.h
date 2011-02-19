@@ -5,6 +5,7 @@
 #include <QString>
 #include <QTextStream>
 #include <QStandardItemModel>
+#include <QFile>
 
 #include "constants.h"
 
@@ -40,7 +41,7 @@ class QModelDescribing : public QStandardItemModel
 
         void createTreeFromElements(const QVariantList& iList, int i, int levels, QStandardItem* parent);
 
-        void setFileEncodingByContain(const QString & text);
+        QTextCodec* setFileEncodingByContain(QFile *filesource);
 
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
 

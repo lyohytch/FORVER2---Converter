@@ -6,7 +6,7 @@ class IView: public QMainWindow
     Q_OBJECT
 
 public:
-    virtual ~IView() {};
+    virtual ~IView() {}
 
     IView (QWidget *parent) : QMainWindow(parent) {}
 

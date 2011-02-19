@@ -50,7 +50,13 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
         }
         else
         {
+            QTextCodec *txtCodec = setFileEncodingByContain(&fileSource);
+
+            fileSource.close();
+            fileSource.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream fileStream(&fileSource);
+            fileStream.setCodec(txtCodec);
+
             if (checkFileStructure(&fileStream))
             {
                 setElementNameByFile(filename);
@@ -113,7 +119,6 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
     QVariantList elements;
     //NOTE: some text should be read from UTF8(QString::fromUtf8(char *) )
     QString text = fileStream->readAll();
-    setFileEncodingByContain(text);
     QStringList textSplitted = text.split(QRegExp("\\n"));
     QStringList capturedText;
     /**
@@ -139,25 +144,30 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
     return elements;
 }
 
-void QModelDescribing::setFileEncodingByContain(const QString & text)
+/** Read all lines in file. Need to close and open again file after using function
+  */
+QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
 {
     QTextCodec *textCodec = QTextCodec::codecForName("Windows-1251");
+    QTextStream outStream(filesource);
+    QString text = outStream.readAll();
     if( textCodec->canEncode(text) )
     {
-        QTextCodec::setCodecForCStrings(textCodec);
+        return textCodec;
     }
     else
     {
         textCodec = QTextCodec::codecForName("UTF-8");
         if ( textCodec->canEncode(text))
         {
-            QTextCodec::setCodecForCStrings(textCodec);
+            return textCodec;
         }
         else
         {
             qWarning()<<"Unknown encoding";
         }
     }
+    return textCodec;
 }
 
 void QModelDescribing::addNextElementsToList(const QVariantList & oneRec)
