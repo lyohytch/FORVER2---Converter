@@ -5,12 +5,14 @@
 CorrelationModelFunction::CorrelationModelFunction(QWidget* parent, QModelDescribing* current, QModelDescribing* target):
         CorrelationModel(parent, current, target)
 {
+    createTableModel(getTableModel());
     isFunc = false;
 }
 
 CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescribing *current, QModelDescribing *target, QStandardItemModel *iTableModel):
         CorrelationModel(parent, current, target, iTableModel)
 {
+    setupTableModel(getTableModel());
     isFunc = false;
 }
 

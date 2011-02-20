@@ -31,16 +31,15 @@ class CorrelationModel: public QTableView
         QModelDescribing* getCurrentModel()
         {
             return iCurrentModel;
-        };
+        }
         QModelDescribing* getTargetModel()
         {
             return iTargetModel;
-        };        
+        }
         QStandardItemModel* getTableModel()
         {
             return tableModel;
-        };
-
+        }
         void clearCorrelationTable();
         //TODO rework this function
         void showCorrelationMap(); // Not used
@@ -50,9 +49,9 @@ class CorrelationModel: public QTableView
         void changeTargetValue(int col, int row, QVariant data, bool first);
         virtual void changeFunctionValue(int /*col*/, int /*row*/, int /*funcId*/) {}
     protected:
-        virtual void createTableModel(QStandardItemModel* tableModel);
-        virtual void setupTableModel(QStandardItemModel* tableModel);
-        virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) { return QVariant();}
+        virtual void createTableModel(QStandardItemModel* tableModel) = 0;
+        virtual void setupTableModel(QStandardItemModel* tableModel) = 0;
+        virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) = 0;// { return QVariant();}
         QVariant findItemInTableTemplate(const QVariant& search, int& row);
         QVariantList foundByUIDsRetValues(const QVariantList& dataListItem, const QVariantList& searchTemplates);
 

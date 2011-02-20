@@ -77,7 +77,7 @@ QVariantList QModelDescribingDemo::processLineInDataFile(const QString& line, co
         oneDataMap.insert(dvalue, readSymbolsFromString(line, k));
         if (!turn(line, k, 1))
         {
-            qWarning() << " String         isn't valid";
+            qWarning() << " String isn't valid";
              return QVariantList();
         }
         retVar.append(oneDataMap);

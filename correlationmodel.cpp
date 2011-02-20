@@ -17,7 +17,6 @@ CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, Q
     QTableView(parent), iCurrentModel(current) , iTargetModel(target)
 {
     tableModel = new QStandardItemModel;
-    createTableModel(tableModel);
     this->setModel(tableModel);
     this->resizeColumnsToContents();
     isTemp = isTarg = false;
@@ -25,23 +24,23 @@ CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, Q
 CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target, QStandardItemModel* iTableModel):
     QTableView(parent), iCurrentModel(current) , iTargetModel(target), tableModel(iTableModel)
 {
-    setupTableModel(tableModel);
+
     this->setModel(tableModel);
     this->resizeColumnsToContents();
     isTemp = isTarg = false;
 }
 
-void CorrelationModel::createTableModel(QStandardItemModel* tableModel)
-{
-   tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
-   tableModel->setColumnCount(2);
-}
+//void CorrelationModel::createTableModel(QStandardItemModel* tableModel)
+//{
+//   tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+//   tableModel->setColumnCount(2);
+//}
 
-void CorrelationModel::setupTableModel(QStandardItemModel* tableModel)
-{
-    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
-    tableModel->setColumnCount(2);
-}
+//void CorrelationModel::setupTableModel(QStandardItemModel* tableModel)
+//{
+//    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+//    tableModel->setColumnCount(2);
+//}
 
 CorrelationModel::~CorrelationModel()
 {
@@ -52,6 +51,7 @@ CorrelationModel::~CorrelationModel()
 
 
 //Rework it to iListData
+
 QVariantList CorrelationModel::targetToCurrent()
 {
     //TODO check it
@@ -163,6 +163,7 @@ void CorrelationModel::showCorrelationMap()
     this->resizeColumnsToContents();
 }
 */
+
 void CorrelationModel::fillInTable(QVariantMap mapTable)
 {
     clearCorrelationTable();
@@ -301,3 +302,4 @@ QVariantMap CorrelationModel::tableModelToMap()
     retMap.insert(targList, atargList);
     return retMap;
 }
+

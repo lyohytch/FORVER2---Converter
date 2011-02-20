@@ -11,7 +11,7 @@ class QWidgetFunction : public QWidget
         Q_OBJECT
     public:
         QWidgetFunction();
-        ~QWidgetFunction() {};
+        ~QWidgetFunction() {}
     protected:
         virtual void closeEvent(QCloseEvent */*clEvent*/);
     signals:

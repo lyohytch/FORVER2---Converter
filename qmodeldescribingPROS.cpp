@@ -12,10 +12,38 @@ bool QModelDescribingPros::checkFileStructure(QTextStream* fileStream)
 {
     qDebug() << "Not implemented yet. Accept all files";
     Q_UNUSED(fileStream);
+    //Strange actions
     bool accept = true;
     isProcessLine = 1;
     return accept;
 }
+
+QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
+{
+    qDebug();
+    QVariantList elements;
+    QString text = fileStream->readAll();
+    QStringList textSplitted = text.split(QRegExp("\\n"));
+    /**
+      F5.TXT
+         Р '  В '     Г '       N '   Np '      NPOT '  9 '      10 '  Соц '  Должн. '   14 '   14 '   15 '  16 '   18 '  18.1 '  18.2 '  19 '  19 '   20 '   20 '   20 '   20 '  Фамилия             '   Имя           '  Отчество            ' Дата рожд
+      */
+    QString lineFromFile = textSplitted.at(2);//you see line above
+    QStringList lineSplitted = (lineFromFile.remove(" ")).split('\'', QString::SkipEmptyParts);
+    QVariantMap elementForAdding;
+    elementForAdding.insert(level, QVariant(1));
+    elementForAdding.insert(type, "");
+    int count = 0;
+    foreach(QString nameKey, lineSplitted)
+    {
+        elementForAdding.insert(id, elementName + count);
+        elementForAdding.insert(name, nameKey);
+        elements.append(elementForAdding);
+        count++;
+    }
+    return elements;
+}
+
 /*
 QMap<QString, QVariant>* QModelDescribingPros::processLineInDescriptionFile(const QString& line)
 {
@@ -45,6 +73,7 @@ QMap<QString, QVariant>* QModelDescribingPros::processLineInDescriptionFile(cons
     return NULL;
 }
 */
+/*
 void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRec)
 {
     int i = 0;
@@ -58,7 +87,7 @@ void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRe
         }
     }
 }
-
+*/
 void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)
 {
     qDebug() << " Start";

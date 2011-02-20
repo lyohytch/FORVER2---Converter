@@ -42,6 +42,7 @@ void converter::changeEvent(QEvent* e)
 
 void converter::on_actionOpen_triggered()
 {
+    //TODO: fix problem when download
     //Target file
     emit OnOpenTargetFiles();
     //Получить данные из модели
@@ -49,28 +50,36 @@ void converter::on_actionOpen_triggered()
 
 void converter::removeWidgets()
 {
-    //////REMOVE///////////
-    //template
+    qDebug()<<layout->count();
     //template
     layout->removeWidget((QTreeView *)trees[TEMPLATEDESC]);
     //table - corrModel
     layout->removeWidget((QTableView *)corrModel);
     //target
     layout->removeWidget((QTreeView *)trees[TARGETDESC]);
+    qDebug()<<layout->count();
+
 }
 
 void converter::addWidgets()
 {
+   // if (layout) delete layout;
     //template
+    qDebug()<<layout->count();
+    layout->update();
     layout->addWidget((QTreeView *)trees[TEMPLATEDESC]);
     //table - corrModel
     layout->addWidget((QTableView *)corrModel);
     //target
     layout->addWidget((QTreeView *)trees[TARGETDESC]);
+    layout->update();
+    qDebug()<<layout->count();
+
 }
 
 void converter::on_actionOpen_template_triggered()
 {
+    //TODO: fix problem when download
     emit OnOpenTemplateFiles();
 }
 
@@ -126,12 +135,9 @@ void converter::init_setup_main_form()
 void converter::init_setup_desktop_widgets()
 {
     //Put tree model on widget
-    layout  = new QHBoxLayout;
-
+    layout = new QHBoxLayout;
     addWidgets();
-
     this->centralWidget()->setLayout(layout);
-
 //    pLabel = new QLabel;
 //    pLabel->setText("Application started. Please load target and template files to start converting");
 //    this->statusBar()->addWidget(pLabel);

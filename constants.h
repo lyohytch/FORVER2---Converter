@@ -52,6 +52,8 @@ const QString numb("number");//Номер по порядку
 const QString repeat("repeat");//дублируюший элемент
 const QString rapid("rapid");
 const QString prosDesc("prosDesc");//вспомогательный контейнер для обработки описаний от прокуратуры
+const QString target("target");//соответствие между исходным и конвертируемым(ид)
+const QString targetDataForConvert("dataforconvert");//дополнительные данные для раскодирования
 
 //Data model fields
 const QString generic("generic_");
@@ -113,15 +115,15 @@ const QString prosPathF2("..\\Resources\\Description\\PROS\\F2.TXT");
 const QString prosPathF5("..\\Resources\\Description\\PROS\\F5.TXT");
 const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
 #else
-const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
-const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");
-const QString target2path("..\\Resources\\Description\\4Views\\Sprav2.txt");
-const QString target3path("..\\Resources\\Description\\4Views\\Sprav3.txt");
-const QString target4path("..\\Resources\\Description\\4Views\\Sprav4.txt");
-const QString prosPathF1("..\\Resources\\Description\\PROS\\F1.TXT");
-const QString prosPathF2("..\\Resources\\Description\\PROS\\F2.TXT");
-const QString prosPathF5("..\\Resources\\Description\\PROS\\F5.TXT");
-const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
+const QString demopath("Resources\\Description\\Demo\\sprav_d.txt");
+const QString target1path("Resources\\Description\\4Views\\Sprav1.txt");
+const QString target2path("Resources\\Description\\4Views\\Sprav2.txt");
+const QString target3path("Resources\\Description\\4Views\\Sprav3.txt");
+const QString target4path("Resources\\Description\\4Views\\Sprav4.txt");
+const QString prosPathF1("Resources\\Description\\PROS\\F1.TXT");
+const QString prosPathF2("Resources\\Description\\PROS\\F2.TXT");
+const QString prosPathF5("Resources\\Description\\PROS\\F5.TXT");
+const QString prosPathF12("Resources\\Description\\PROS\\F12.TXT");
 #endif
 
 #ifdef DEBUGING
@@ -132,10 +134,10 @@ const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
 #define qFatal()            qFatal()<<__FILE__<<"("<<__LINE__<<")"<<"=="<<__FUNCTION__<<"=="
 #endif
 
-#define CORR_MODEL ((CorrelationModel *)(Presenters::_view->corrModel))
-#define QUERY_MODEL ((querymodel *)(Presenters::_view->queryModel))
-#define MSSQL_QUERY ((mssqlquery *)(Presenters::_view->mssqlQuery))
-#define MODELS(i) ((QModelDescribing *)(Presenters::_view->models[i]))
-#define TREES(i) ((TreeViewModel *)(Presenters::_view->trees[i]))
+#define CORR_MODEL ((CorrelationModel *)(_view->corrModel))
+#define QUERY_MODEL ((querymodel *)(_view->queryModel))
+#define MSSQL_QUERY ((mssqlquery *)(_view->mssqlQuery))
+#define MODELS(i) ((QModelDescribing *)(_view->models[i]))
+#define TREES(i) ((TreeViewModel *)(_view->trees[i]))
 
 #endif // CONSTANTS_H

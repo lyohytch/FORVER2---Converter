@@ -46,6 +46,7 @@ void PresenterForFunctionUI::freeObjects()
 
 void PresenterForFunctionUI::allocateCorrelationModel()
 {
+
     _view->corrModel = new CorrelationModelFunction((QWidget *)_view,
                                                     MODELS(TEMPLATEDESC),
                                                     MODELS(TARGETDESC));

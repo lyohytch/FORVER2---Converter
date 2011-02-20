@@ -15,7 +15,10 @@ class QModelDescribingFromJura: public QModelDescribing
 {
 public:
     QModelDescribingFromJura(QObject* parent = 0);
-    ~QModelDescribingFromJura() {};
+    ~QModelDescribingFromJura() {}
+    //Add new field
+protected:
+
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H

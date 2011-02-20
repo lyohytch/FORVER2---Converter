@@ -291,7 +291,7 @@ void Presenters::allocateMemoryForObjects()
 
     _view->models = new QObject*[2];
 
-    _view->models[TARGETDESC] = _view->model4;
+    _view->models[TARGETDESC] = _view->modelP;
     _view->models[TEMPLATEDESC] = _view->modelD;
 
     _view->trees = new QObject*[2];
@@ -463,6 +463,7 @@ bool Presenters::selectDescription(const QStringList& filenames, int description
                 pros++;
             }
         }
+
         if (old4 == filenames.count())
         {
             return refreshDescribingLists(description_id, _view->model4);
@@ -497,9 +498,7 @@ bool Presenters::refreshDescribingLists(int descriptionId, QObject * model)
             return false;
     }
     _view->models[descriptionId] = model;
-
     _view->removeWidgets();
-
     allocateCorrelationModel();
     _view->addWidgets();
     return true;
