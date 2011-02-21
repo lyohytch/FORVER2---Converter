@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     correlationmodelnofunction.cpp \
     correlationmodelfunction.cpp \
     presenter.cpp \
-    presenterforfunctionui.cpp
+    presenterforfunctionui.cpp \
+    presenterfornonfunctionui.cpp
 HEADERS += converter.h \
     qmodeldescribing.h \
     mssqlquery.h \
@@ -35,7 +36,8 @@ HEADERS += converter.h \
     correlationmodelfunction.h \
     iview.h \
     presenter.h \
-    presenterforfunctionui.h
+    presenterforfunctionui.h \
+    presenterfornonfunctionui.h
 FORMS += converter.ui
 
 # CONFIG settings

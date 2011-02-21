@@ -27,7 +27,7 @@ void CorrelationModelNoFunction::fillInTable()
 {
     qDebug();
     clearCorrelationTable();
-    int iTemplateCount = iCurrentModel->getVisibleElements().count();
+    int iTemplateCount = getCurrentModel()->getVisibleElements().count();
 
     QString nameCurrent, nameTarget;
     QList<QStandardItem*> itemList;
@@ -38,7 +38,7 @@ void CorrelationModelNoFunction::fillInTable()
         itemList.clear();
         //name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
         //Если есть соответсвие, если нет, то элемент следующий смотрим
-        QString targetValue = iCurrentModel->getVisibleElements()[i].toMap().value(target).toString();
+        QString targetValue = getCurrentModel()->getVisibleElements()[i].toMap().value(target).toString();
         QStandardItem *itemCurrent;
         QStandardItem *itemTarget;
         if( !targetValue.isEmpty() )
@@ -46,25 +46,25 @@ void CorrelationModelNoFunction::fillInTable()
            int index = findTargetIndexByTargetValue(targetValue);
            if (index != -1)
            {
-                nameCurrent = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
+                nameCurrent = getCurrentModel()->getVisibleElements()[i].toMap().value(name).toString();
                 itemCurrent =  new QStandardItem(nameCurrent);
-                itemCurrent->setData(iCurrentModel->getVisibleElements()[i], Qt::UserRole + 1);
+                itemCurrent->setData(getCurrentModel()->getVisibleElements()[i], Qt::UserRole + 1);
                 itemCurrent->setEditable(false);
 
-                nameTarget = iTargetModel->getVisibleElements()[index].toMap().value(name).toString();
+                nameTarget = getTargetModel()->getVisibleElements()[index].toMap().value(name).toString();
                 itemTarget = new QStandardItem(nameTarget);
-                itemTarget->setData(iTargetModel->getVisibleElements()[index], Qt::UserRole + 1);
+                itemTarget->setData(getTargetModel()->getVisibleElements()[index], Qt::UserRole + 1);
                 itemTarget->setEditable(false);
            }
            else
            {
-               qWarning("Incorrect correlation. Please check description file");
-               itemCurrent = null;
-               itemTarget = null;
+               qWarning()<<"Incorrect correlation. Please check description file";
+               itemCurrent = NULL;
+               itemTarget = NULL;
            }
            itemList.append(itemCurrent);
            itemList.append(itemTarget);
-           tableModel->appendRow(itemList);
+           getTableModel()->appendRow(itemList);
         }
     }
     resizeColumnsToContents();
@@ -72,10 +72,10 @@ void CorrelationModelNoFunction::fillInTable()
 
 int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targetString)
 {
-    int targetCount = iTargetModel->getVisibleElements().count();
+    int targetCount = getTargetModel()->getVisibleElements().count();
     for (int i = 0; i< targetCount; i++)
     {
-        if(iTargetModel->getVisibleElements()[i].toMap().value(name).toString() == targetString)
+        if(getTargetModel()->getVisibleElements()[i].toMap().value(name).toString() == targetString)
             return i;
     }
     return -1;

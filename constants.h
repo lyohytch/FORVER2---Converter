@@ -53,7 +53,16 @@ const QString repeat("repeat");//дублируюший элемент
 const QString rapid("rapid");
 const QString prosDesc("prosDesc");//вспомогательный контейнер для обработки описаний от прокуратуры
 const QString target("target");//соответствие между исходным и конвертируемым(ид)
-const QString targetDataForConvert("dataforconvert");//дополнительные данные для раскодирования
+/**
+  List of QMap<QString, QString> where each element is
+  0001 <-> compactxx45x - for compact data
+  0001 <-> code12345 - for simple encoded data
+  0001 <-> "" (Empty string) for entire value
+  */
+const QString targetDataForConvert("dataforconvert");//дополнительные данные для раскодирования QList<QMap<QString, QString> >   0001 <-> xx45x
+const QString dependFields("dependFields"); //List of depend fields
+const QString codingRules("codingRules"); // Encoding rules as described above
+
 
 //Data model fields
 const QString generic("generic_");

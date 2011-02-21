@@ -10,7 +10,7 @@ public:
 
     IView (QWidget *parent) : QMainWindow(parent) {}
 
-    QObject *model4, *modelP, *modelD;
+    QObject *model4, *modelP, *modelD, *modelJURA;
     QObject **models;
 
     QObject **trees;

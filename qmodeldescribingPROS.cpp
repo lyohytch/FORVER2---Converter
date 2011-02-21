@@ -44,50 +44,6 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
     return elements;
 }
 
-/*
-QMap<QString, QVariant>* QModelDescribingPros::processLineInDescriptionFile(const QString& line)
-{
-    qDebug();
-    QMap<QString, QVariant> *retMap = new QMap<QString, QVariant>; //QMap["prosDesc", tempList]
-    QMap<QString, QVariant> tempRet;
-    QVariantList tempList; // QList [QMap<QString, QVariant>]
-    QStringList ids = line.split(';', QString::SkipEmptyParts);
-    if (!ids.isEmpty() && ids.count() > 1 && isProcessLine)
-    {
-        //Complete DESCRIBING LIST
-        int encounter = 0;
-        tempRet.insert(level, QVariant(1));
-        tempRet.insert(type, "");
-        foreach(QString idval, ids)
-        {
-            idval.remove(" ");
-            tempRet.insert(id, elementName + encounter);
-            tempRet.insert(name, idval);
-            tempList.append(tempRet);
-            encounter++;
-        }
-        retMap->insert(prosDesc, tempList);
-        isProcessLine = 0;
-        return retMap;
-    }
-    return NULL;
-}
-*/
-/*
-void QModelDescribingPros::addNextElementsToList(QMap<QString, QVariant> & oneRec)
-{
-    int i = 0;
-    QVariantList tmpList = oneRec.value(prosDesc).toList();
-    if (!tmpList.isEmpty())
-    {
-        foreach(QVariant oneElem, tmpList)
-        {
-            oneElem.toMap().insert(numb, i++);
-            ElementsFromDescriptionFiles.append(oneElem.toMap());
-        }
-    }
-}
-*/
 void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)
 {
     qDebug() << " Start";

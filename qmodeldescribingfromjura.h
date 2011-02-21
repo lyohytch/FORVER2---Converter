@@ -18,7 +18,10 @@ public:
     ~QModelDescribingFromJura() {}
     //Add new field
 protected:
-
+    virtual  bool checkFileStructure(QTextStream* fileStream);
+    virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
+    virtual QVariantMap fillOneElement(const QStringList & capturedText);
+    virtual QVariantList getElementsFromText(QTextStream* fileStream);
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H
