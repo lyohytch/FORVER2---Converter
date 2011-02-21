@@ -372,34 +372,33 @@ void Presenters::ElementTreeTargetActivated(const QModelIndex& index)
     }
 }
 
-//TODO: refactor this
+
 void Presenters::onOpenTargetFiles()
 {
-    QFileDialog dialog((QWidget *)_view);
-    QStringList filenames;
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    //TODO: remove char*
-    dialog.setNameFilter(tr("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)"));
-    dialog.setViewMode(QFileDialog::List);
-    if (dialog.exec())
+    QStringList filenames = openFilesByAnyNameFilter(setNameFilterForTargetFiles());
+    loadDescriptionModelFromFiles(filenames, TARGETDESC);
+}
+
+QString Presenters::setNameFilterForTargetFiles()
+{
+    return QString("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)");
+}
+
+void Presenters::loadDescriptionModelFromFiles(const QStringList &filenames, int descriptionId)
+{
+    if (selectDescription(filenames, descriptionId))
     {
-        filenames = dialog.selectedFiles();
-    }
-    //---------------------
-    //Если мы смогли установить описание: корректные файлы описания
-    if (selectDescription(filenames, TARGETDESC))
-    {
-        MODELS(TARGETDESC)->clearAllElements();
+        MODELS(descriptionId)->clearAllElements();
         CORR_MODEL->clearCorrelationTable();
         foreach(QString fname, filenames)
         {
-            MODELS(TARGETDESC)->appendFromDataFilesToDataElements(fname);
+            MODELS(descriptionId)->appendFromDataFilesToDataElements(fname);
         }
-        if ( MODELS(TARGETDESC)->getElementsWithoutData().count() > 0)
+        if ( MODELS(descriptionId)->isExistElementsWithoutData())
         {
             //TODO попробовать просто отобразить модель
-            MODELS(TARGETDESC)->createTreeForViewing();
-            TREES(TARGETDESC)->loadModel(MODELS(TARGETDESC));
+            MODELS(descriptionId)->createTreeForViewing();
+            TREES(descriptionId)->loadModel(MODELS(descriptionId));
             //pLabel->setText("Target model was created");
             emit loadDescComplete();
         }
@@ -408,39 +407,29 @@ void Presenters::onOpenTargetFiles()
 
 void Presenters::onOpenTemplateFiles()
 {
-    //Template file
-    qDebug();
-    //Create file dialog
+    QStringList filenames = openFilesByAnyNameFilter(setNameFilterForTemplateFiles());
+    loadDescriptionModelFromFiles(filenames, TEMPLATEDESC);
+}
+
+QString Presenters::setNameFilterForTemplateFiles()
+{
+    return QString("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT)");
+}
+
+QStringList Presenters::openFilesByAnyNameFilter(const QString &nameFilter)
+{
     QFileDialog dialog((QWidget *)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT)"));
+    dialog.setNameFilter(tr(nameFilter));
     dialog.setViewMode(QFileDialog::List);
     if (dialog.exec())
     {
         filenames = dialog.selectedFiles();
     }
-    //---------------------
-    //Если мы смогли установить описание: корректные файлы описания
-    if (selectDescription(filenames, TEMPLATEDESC))
-    {
-        MODELS(TEMPLATEDESC)->clearAllElements();
-        CORR_MODEL->clearCorrelationTable();
-        foreach(QString fname, filenames)
-        {
-            MODELS(TEMPLATEDESC)->appendFromDataFilesToDataElements(fname);
-        }
-        if (MODELS(TEMPLATEDESC)->getElementsWithoutData().count() > 0)
-        {
-            //TODO попробовать просто отобразить модель
-            MODELS(TEMPLATEDESC)->createTreeForViewing();
-            TREES(TEMPLATEDESC)->loadModel(MODELS(TEMPLATEDESC));
-            //pLabel->setText("Template model was created");
-            emit loadDescComplete();
-        }
-    }
+    return filenames;
 }
-//TODO: refactor this
+
 
 bool Presenters::selectDescription(const QStringList& filenames, int description_id)
 {
@@ -504,41 +493,55 @@ bool Presenters::refreshDescribingLists(int descriptionId, QObject * model)
     return true;
 }
 
-//TODO: refactor this
 void Presenters::onLoadTemplateData()
 {
     qDebug();
-    //Create file dialog
     if (!MODELS(TEMPLATEDESC)->isValidElementsWithoutData())
     {
         qWarning() << " Description wasn't loaded";
       //  this->statusBar()->showMessage("Template Description wasn't loaded", 5000);
         return;
     }
-    QFileDialog dialog((QWidget *)_view);
-    QStringList filenames;
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)"));
-    dialog.setViewMode(QFileDialog::List);
-    if (dialog.exec())
-    {
-        filenames = dialog.selectedFiles();
-    }
+    QStringList filenames = openDataFilesByAnyNameFilter(setNameFilterForDataTemplateFiles());
+    loadDataFromFilesWithData(filenames, TEMPLATEDESC);
+}
+
+void Presenters::loadDataFromFilesWithData(const QStringList &filenames, int descriptionId)
+{
     //Append data
     foreach(QString fname, filenames)
     {
-        MODELS(TEMPLATEDESC)->loadingDataElementsFromFile(fname);
+        MODELS(descriptionId)->loadingDataElementsFromFile(fname);
     }
     // TODO make message when error happened
-    if (MODELS(TEMPLATEDESC)->isValidElementsWithDataForParticularFile())
+    if (MODELS(descriptionId)->isValidElementsWithDataForParticularFile())
     {
-        MODELS(TEMPLATEDESC)->preparingDataStructureBeforeFilling();
+        MODELS(descriptionId)->preparingDataStructureBeforeFilling();
        // pLabel->setText("Template data successfully loaded");
     }
     else
     {
         //pLabel->setText("Data didn't load");
     }
+}
+
+QString Presenters::setNameFilterForDataTemplateFiles()
+{
+    return QString("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)");
+}
+
+QStringList Presenters::openDataFilesByAnyNameFilter(const QString &nameFilter)
+{
+    QFileDialog dialog((QWidget *)_view);
+    QStringList filenames;
+    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setNameFilter(tr(nameFilter));
+    dialog.setViewMode(QFileDialog::List);
+    if (dialog.exec())
+    {
+        filenames = dialog.selectedFiles();
+    }
+    return filenames;
 }
 
 void Presenters::onLoadTargetData()
@@ -551,33 +554,11 @@ void Presenters::onLoadTargetData()
        // this->statusBar()->showMessage("Target Description wasn't loaded", 5000);
         return;
     }
-    QFileDialog dialog((QWidget *)_view);
-    QStringList filenames;
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)"));
-    dialog.setViewMode(QFileDialog::List);
-    if (dialog.exec())
-    {
-        filenames = dialog.selectedFiles();
-    }
-
-    //---------------------
-    //Нужно добавлять только данные - Сделать кнопку резет
-
-
-    foreach(QString fname, filenames)
-    {
-        MODELS(TARGETDESC)->loadingDataElementsFromFile(fname);
-    }
-    //Попытаться убрать это или добавить в функцию выше
-    if (MODELS(TARGETDESC)->isValidElementsWithDataForParticularFile())
-    {
-        MODELS(TARGETDESC)->preparingDataStructureBeforeFilling();
-        //pLabel->setText("Target data successfully loaded");
-    }
-    else
-    {
-        //pLabel->setText("Data didn't load");
-    }
+    QStringList filenames = openDataFilesByAnyNameFilter(setNameFilterForDataTargetFiles());
+    loadDataFromFilesWithData(filenames, TARGETDESC);
 }
-//TODO: refactor this
+
+QString Presenters::setNameFilterForDataTargetFiles()
+{
+    return QString("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)");
+}

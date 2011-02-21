@@ -32,16 +32,6 @@ class converter : public IView
     private:
         Ui::converter* ui;
         QHBoxLayout* layout;
-        QHBoxLayout* layoutCorrModel;
-
-
-
-        //QLabel* pLabel;
-
-        QVariantList rowTargetList;
-        QVariantList rowTemplateList;
-        QVariantList rowFunctionList;
-
 
         //Init functions
         void init();

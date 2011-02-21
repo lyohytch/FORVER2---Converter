@@ -343,6 +343,11 @@ bool QModelDescribing::isValidElementsWithoutData()
     return VisibleElementsFromDescriptionFiles.count() > 0;
 }
 
+bool QModelDescribing::isExistElementsWithoutData()
+{
+    return ElementsFromDescriptionFiles.count() > 0;
+}
+
 bool QModelDescribing::isValidElementsWithData()
 {
     return VisibleElementWithData.count() > 0;

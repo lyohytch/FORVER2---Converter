@@ -74,6 +74,7 @@ class QModelDescribing : public QStandardItemModel
 
         //Operations with elements without data
         virtual bool isValidElementsWithoutData();
+        virtual bool isExistElementsWithoutData();
 
         virtual bool isVisibleElement(const QVariant& value);
 

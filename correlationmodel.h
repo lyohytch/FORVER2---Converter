@@ -41,9 +41,6 @@ class CorrelationModel: public QTableView
             return tableModel;
         }
         void clearCorrelationTable();
-        //TODO rework this function
-        void showCorrelationMap(); // Not used
-
         //Change table
         void changeTemplateValue(int col, int row, QVariant data);
         void changeTargetValue(int col, int row, QVariant data, bool first);
@@ -58,7 +55,6 @@ class CorrelationModel: public QTableView
     private:
         QModelDescribing* iCurrentModel;
         QModelDescribing* iTargetModel;
-        QList<QList<int> > correlationMap;//(Отношение между моделями)
         QStandardItemModel* tableModel;
         bool isTemp;
         bool isTarg;

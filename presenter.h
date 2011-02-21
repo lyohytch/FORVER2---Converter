@@ -18,6 +18,14 @@ protected:
     bool refreshDescribingLists(int descriptionId, QObject * model);
     void allocateMemoryForObjects();
     virtual void allocateCorrelationModel() = 0;
+    void loadDescriptionModelFromFiles(const QStringList &filenames, int descriptionId);
+    void loadDataFromFilesWithData(const QStringList &filenames, int descriptionId);
+    virtual QString setNameFilterForTargetFiles();
+    virtual QString setNameFilterForTemplateFiles();
+    virtual QString setNameFilterForDataTemplateFiles();
+    virtual QString setNameFilterForDataTargetFiles();
+    QStringList openFilesByAnyNameFilter(const QString &nameFilter);
+    QStringList openDataFilesByAnyNameFilter(const QString &nameFilter);
 protected slots:
     void onOpenTargetFiles();
     void onOpenTemplateFiles();

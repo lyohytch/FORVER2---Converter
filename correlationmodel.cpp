@@ -30,25 +30,10 @@ CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, Q
     isTemp = isTarg = false;
 }
 
-//void CorrelationModel::createTableModel(QStandardItemModel* tableModel)
-//{
-//   tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
-//   tableModel->setColumnCount(2);
-//}
-
-//void CorrelationModel::setupTableModel(QStandardItemModel* tableModel)
-//{
-//    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
-//    tableModel->setColumnCount(2);
-//}
-
 CorrelationModel::~CorrelationModel()
 {
     if (tableModel) delete tableModel;
 }
-
-
-
 
 //Rework it to iListData
 
@@ -117,52 +102,6 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
     }
     return NULL;
 }
-
-void CorrelationModel::showCorrelationMap()
-{
-    qDebug() << " Not implemented yet";
-}
-
-
-//TODO: будет переделываться.. сейчас соответсвие тупое
-/*void CorrelationModel::fillInTable()
-{
-    qDebug();
-    clearCorrelationTable();
-    int iTemplateCount = iCurrentModel->getVisibleElements().count();
-    int iTargetCount = iTargetModel->getVisibleElements().count();
-    QString name1, name2;
-    QList<QStandardItem*> itemList;
-    QVariantMap mapFunc;
-    mapFunc.insert(function, CorrelationModelFunction::undef_func);
-    int i = 0;
-    for (; i < iTemplateCount; i++)
-    {
-        itemList.clear();
-        name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
-        QStandardItem* item1 = new QStandardItem(name1);
-        item1->setData(iCurrentModel->getVisibleElements()[i], Qt::UserRole + 1);
-        QStandardItem* item2;
-        if (i < iTargetCount)
-        {
-            name2 = iTargetModel->getVisibleElements()[i].toMap().value(name).toString();
-            item2 = new QStandardItem(name2);
-            item2->setData(iTargetModel->getVisibleElements()[i], Qt::UserRole + 1);
-            item2->setEditable(false);
-        }
-        else
-        {
-            item2 = NULL;
-        }
-
-        itemList.append(item1);
-        itemList.append(item2);
-        tableModel->appendRow(itemList);
-        item1->setEditable(false);
-    }
-    this->resizeColumnsToContents();
-}
-*/
 
 void CorrelationModel::fillInTable(QVariantMap mapTable)
 {

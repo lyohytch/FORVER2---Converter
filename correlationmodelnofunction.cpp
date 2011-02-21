@@ -23,6 +23,8 @@ CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDe
      tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
      tableModel->setColumnCount(2);
  }
+
+ //TODO: work on this problem
 void CorrelationModelNoFunction::fillInTable()
 {
     qDebug();
