@@ -16,6 +16,8 @@ public:
     virtual void fillInTable();
 private:
     int findTargetIndexByTargetValue(const QString &targetString);
+protected:
+    virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/)  {return QVariant();}
 
 };
 

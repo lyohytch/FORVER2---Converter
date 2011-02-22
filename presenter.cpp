@@ -421,7 +421,7 @@ QStringList Presenters::openFilesByAnyNameFilter(const QString &nameFilter)
     QFileDialog dialog((QWidget *)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr(nameFilter));
+    dialog.setNameFilter(tr(nameFilter.toAscii()));
     dialog.setViewMode(QFileDialog::List);
     if (dialog.exec())
     {
@@ -535,7 +535,7 @@ QStringList Presenters::openDataFilesByAnyNameFilter(const QString &nameFilter)
     QFileDialog dialog((QWidget *)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr(nameFilter));
+    dialog.setNameFilter(tr(nameFilter.toAscii()));
     dialog.setViewMode(QFileDialog::List);
     if (dialog.exec())
     {

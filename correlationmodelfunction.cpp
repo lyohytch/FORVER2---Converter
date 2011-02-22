@@ -16,6 +16,7 @@ CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescri
     isFunc = false;
 }
 
+//TODO: remove creaTTableModel
  void CorrelationModelFunction::createTableModel(QStandardItemModel* tableModel)
 {
     qDebug();

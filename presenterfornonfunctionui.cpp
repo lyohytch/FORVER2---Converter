@@ -38,7 +38,7 @@ void PresenterForNonFunctionUI::createObjects()
     _view->models = new QObject*[2];
 
     _view->models[TARGETDESC] = _view->modelP;
-    _view->models[TEMPLATEDESC] = _view->modelJURA;
+    _view->models[TEMPLATEDESC] = _view->modelD;
 
     _view->trees = new QObject*[2];
     _view->trees[TARGETDESC] = new TreeViewModel((QWidget *)_view, TARGETDESC);
@@ -53,6 +53,8 @@ void PresenterForNonFunctionUI::createObjects()
     connect(this, SIGNAL(loadDescComplete()), this, SLOT(FillTable()), Qt::QueuedConnection);
     //Correlation model
     allocateCorrelationModel();
+    loadingModels(MODELS(TEMPLATEDESC), TREES(TEMPLATEDESC));
+    loadingModels(MODELS(TARGETDESC), TREES(TARGETDESC));
 }
 
 void PresenterForNonFunctionUI::freeObjects()

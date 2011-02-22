@@ -13,12 +13,17 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
     QStringList capturedText;
     // TODO: rework regexp
     /**
-      ([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)"
-      It' s regular expression for strings like
-      "244	5					ed		1		ФИО:	888888888888888888888888	ФИО:	27		221		"
+      It's regular expression for strings like
+      "101	2					ed				Год возбуждения		Ф5	3	Г	знач"
     */
-    QRegExp search("([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)");
-    QRegExp searchDependFields("\\t{7}([^\\t]+)");
+    //               id          level          type        dop        Mask      Config     Comment    Short Name  Form       Position    Name        Encoding data
+    QRegExp search("([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)");
+    /**
+      It's regular expression for strings like
+      "							120			Водный	водный				30000	"
+    */
+    //                                  dop           Comment   Short name     Encoding data
+    QRegExp searchDependFields("\\t{7}([^\\t]*)\\t{3}([^\\t]*)\\t([^\\t]*)\\t{4}([^\\t]*)");
     int count = 0;
     foreach(QString textLine, textSplitted)
     {

@@ -14,13 +14,13 @@ CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDe
 
  void CorrelationModelNoFunction::createTableModel(QStandardItemModel* tableModel)
 {
-    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Ïîëÿ ïðè¸ìíèêà") << QString::fromUtf8("Ïîëÿ èñòî÷íèêà"));
+   tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("ÐŸÐ¾Ð»Ñ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð½Ð¸ÐºÐ°") << QString::fromUtf8("ÐŸÐ¾Ð»Ñ Ð¸ÑÑ‚Ð¾Ñ‡Ð½Ð¸ÐºÐ°"));
     tableModel->setColumnCount(2);
 }
 
  void CorrelationModelNoFunction::setupTableModel(QStandardItemModel* tableModel)
  {
-     tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Ïîëÿ ïðè¸ìíèêà") << QString::fromUtf8("Ïîëÿ èñòî÷íèêà"));
+     tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("ÐŸÐ¾Ð»Ñ Ð¿Ñ€Ð¸Ñ‘Ð¼Ð½Ð¸ÐºÐ°") << QString::fromUtf8("ÐŸÐ¾Ð»Ñ Ð¸ÑÑ‚Ð¾Ñ‡Ð½Ð¸ÐºÐ°"));
      tableModel->setColumnCount(2);
  }
 
@@ -39,7 +39,7 @@ void CorrelationModelNoFunction::fillInTable()
     {
         itemList.clear();
         //name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
-        //Åñëè åñòü ñîîòâåòñâèå, åñëè íåò, òî ýëåìåíò ñëåäóþùèé ñìîòðèì
+        //Ð“â€¦Ð“Â±Ð“Â«Ð“Ð Ð“ÒÐ“Â±Ð“Ð†Ð“Ñ˜ Ð“Â±Ð“Â®Ð“Â®Ð“Ð†Ð“ÑžÐ“ÒÐ“Ð†Ð“Â±Ð“ÑžÐ“ÐÐ“Ò, Ð“ÒÐ“Â±Ð“Â«Ð“Ð Ð“Â­Ð“ÒÐ“Ð†, Ð“Ð†Ð“Â® Ð“Ð…Ð“Â«Ð“ÒÐ“Â¬Ð“ÒÐ“Â­Ð“Ð† Ð“Â±Ð“Â«Ð“ÒÐ“Â¤Ð“Ñ–Ð“Ñ•Ð“â„–Ð“ÐÐ“Â© Ð“Â±Ð“Â¬Ð“Â®Ð“Ð†Ð“Â°Ð“ÐÐ“Â¬
         QString targetValue = getCurrentModel()->getVisibleElements()[i].toMap().value(target).toString();
         QStandardItem *itemCurrent;
         QStandardItem *itemTarget;

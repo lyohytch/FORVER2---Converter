@@ -19,9 +19,20 @@ public:
     //Add new field
 protected:
     virtual  bool checkFileStructure(QTextStream* fileStream);
-    virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
+    virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap) {return true;}
     virtual QVariantMap fillOneElement(const QStringList & capturedText);
     virtual QVariantList getElementsFromText(QTextStream* fileStream);
+
+
+    //Operation with data. Not needed. I have to move basic class
+    // I want create one basic class and two children. They are _data_ and _describing_
+    virtual bool checkFileFileStructureData(QTextStream* /*fileStream*/) {return true;}
+    virtual QVariantList processLineInDataFile(const QString& /*line*/, const QVariantList &/*DataStructure*/) {return QVariantList();}
+    virtual bool isValidStringInDataFileToAdd(const QVariantList &/*checkMap*/) {return true;}
+    virtual void preparingDataStructureBeforeFilling() {}
+    virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* /*fileStream*/) {}
+    virtual void setElementNameByDataFile(const QString &/*filename*/) {}
+    virtual bool isValidElementsWithDataForParticularFile() {return true;}
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H

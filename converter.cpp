@@ -6,7 +6,7 @@
 #include "ui_converter.h"
 #include "constants.h"
 
-#include "presenterforfunctionui.h"
+#include "presenterfornonfunctionui.h"
 
 converter::converter(QWidget* parent) :
     IView(parent),
@@ -117,7 +117,8 @@ void converter::init()
     //Template
     qDebug();
 
-    new PresenterForFunctionUI(this);
+    //new PresenterForFunctionUI(this);
+    new PresenterForNonFunctionUI(this);
     emit CreateObjects();
 
     init_setup_main_form();
