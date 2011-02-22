@@ -11,8 +11,9 @@ public:
 protected:
     virtual void allocateCorrelationModel();
     virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) { return QVariantList(); }
+    virtual void allocateMemory();
+    virtual void setModelsAndTreesObjects();
 protected slots:
-    virtual void createObjects();
     virtual void freeObjects();
 };
 

@@ -19,42 +19,24 @@ void PresenterForNonFunctionUI::allocateCorrelationModel()
             SLOT(ElementTableActivated(const QModelIndex&)), Qt::QueuedConnection);
 }
 
-void PresenterForNonFunctionUI::createObjects()
+void PresenterForNonFunctionUI::allocateMemory()
 {
-    // TODO: create factory of objects
-    //Multiple case. Old Spravka's files//DEPRECATED
-    _view->model4 = new QModelDescribingOld4();
-
-    //One to one case. Demo version // DEPRECATED
-    _view->modelD = new QModelDescribingDemo();
-
-    //Cases from prosecutor's office
-    _view->modelP = new QModelDescribingPros();
-
-
+    Presenters::allocateMemory();
     //New Spravka's files.
     _view->modelJURA = new QModelDescribingFromJura();
+}
 
-    _view->models = new QObject*[2];
+void PresenterForNonFunctionUI::setModelsAndTreesObjects()
+{
+     _view->models[TARGETDESC] = _view->modelP;
+     _view->models[TEMPLATEDESC] = _view->modelJURA;
 
-    _view->models[TARGETDESC] = _view->modelP;
-    _view->models[TEMPLATEDESC] = _view->modelD;
+//    _view->models[TARGETDESC] = _view->modelP;
+//    _view->models[TEMPLATEDESC] = _view->modelD;
 
     _view->trees = new QObject*[2];
     _view->trees[TARGETDESC] = new TreeViewModel((QWidget *)_view, TARGETDESC);
     _view->trees[TEMPLATEDESC] = new TreeViewModel((QWidget *)_view, TEMPLATEDESC);
-
-    connect(TREES(TARGETDESC), SIGNAL(doubleClicked(const QModelIndex&)), this,
-            SLOT(ElementTreeTargetActivated(const QModelIndex&)), Qt::QueuedConnection);
-    connect(TREES(TEMPLATEDESC), SIGNAL(doubleClicked(const QModelIndex&)), this,
-            SLOT(ElementTreeTemplateActivated(const QModelIndex&)), Qt::QueuedConnection);
-
-
-    connect(this, SIGNAL(loadDescComplete()), this, SLOT(FillTable()), Qt::QueuedConnection);
-    //Correlation model
-    allocateCorrelationModel();
-    loadingModels(MODELS(TEMPLATEDESC), TREES(TEMPLATEDESC));
-    loadingModels(MODELS(TARGETDESC), TREES(TARGETDESC));
 }
 
 void PresenterForNonFunctionUI::freeObjects()

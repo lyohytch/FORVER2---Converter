@@ -34,13 +34,14 @@ void CorrelationModelNoFunction::fillInTable()
     QString nameCurrent, nameTarget;
     QList<QStandardItem*> itemList;
     int i = 0;
-
+    //TODO: move to foreach
     for (; i < iTemplateCount; i++)
     {
         itemList.clear();
         //name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
         //Г…Г±Г«ГЁ ГҐГ±ГІГј Г±Г®Г®ГІГўГҐГІГ±ГўГЁГҐ, ГҐГ±Г«ГЁ Г­ГҐГІ, ГІГ® ГЅГ«ГҐГ¬ГҐГ­ГІ Г±Г«ГҐГ¤ГіГѕГ№ГЁГ© Г±Г¬Г®ГІГ°ГЁГ¬
         QString targetValue = getCurrentModel()->getVisibleElements()[i].toMap().value(target).toString();
+        qDebug()<<" Template by Ids => "<<getCurrentModel()->getVisibleElements()[i].toMap().value(id).toString();
         QStandardItem *itemCurrent;
         QStandardItem *itemTarget;
         if( !targetValue.isEmpty() )

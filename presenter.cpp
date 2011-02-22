@@ -202,7 +202,7 @@ void Presenters::onExportTargetDataToDB()
 
 void Presenters::createObjects()
 {
-    allocateMemoryForObjects();
+    initializeObjects();
     loadingModels(MODELS(TEMPLATEDESC), TREES(TEMPLATEDESC));
     loadingModels(MODELS(TARGETDESC), TREES(TARGETDESC));
 }
@@ -242,6 +242,24 @@ void Presenters::FillTable()
 
 void Presenters::loadingModels(QObject* loadedModel, QObject* tree)
 {
+    QStringList filenames = getDefaultFilesForModel(loadedModel);
+
+    foreach(QString fname, filenames)
+    {
+        ((QModelDescribing *)loadedModel)->appendFromDataFilesToDataElements(fname);
+    }
+    if (((QModelDescribing *)loadedModel)->isExistElementsWithoutData())
+    {
+        //TODO попробовать просто отобразить модель
+        ((QModelDescribing *)loadedModel)->createTreeForViewing();
+        ((TreeViewModel *)tree)->loadModel((QModelDescribing *)loadedModel);
+        //pLabel->setText("Model was loaded");
+        emit loadDescComplete();
+    }
+}
+
+QStringList Presenters::getDefaultFilesForModel(QObject * loadedModel)
+{
     QStringList filenames;
     if (loadedModel == _view->modelD)
     {
@@ -261,23 +279,14 @@ void Presenters::loadingModels(QObject* loadedModel, QObject* tree)
         filenames.append(prosPathF5);
         filenames.append(prosPathF12);
     }
-
-
-    foreach(QString fname, filenames)
+    else if(loadedModel == _view->modelJURA)
     {
-        ((QModelDescribing *)loadedModel)->appendFromDataFilesToDataElements(fname);
+        filenames.append(juraPath1);
     }
-    if (((QModelDescribing *)loadedModel)->getElementsWithoutData().count() > 0)
-    {
-        //TODO попробовать просто отобразить модель
-        ((QModelDescribing *)loadedModel)->createTreeForViewing();
-        ((TreeViewModel *)tree)->loadModel((QModelDescribing *)loadedModel);
-        //pLabel->setText("Model was loaded");
-        emit loadDescComplete();
-    }
+    return filenames;
 }
 
-void Presenters::allocateMemoryForObjects()
+void Presenters::allocateMemory()
 {
     // TODO: create factory of objects
     //Multiple case. Old Spravka's files
@@ -290,14 +299,29 @@ void Presenters::allocateMemoryForObjects()
     _view->modelP = new QModelDescribingPros();
 
     _view->models = new QObject*[2];
+}
 
+void Presenters::setModelsAndTreesObjects()
+{
     _view->models[TARGETDESC] = _view->modelP;
     _view->models[TEMPLATEDESC] = _view->modelD;
 
     _view->trees = new QObject*[2];
     _view->trees[TARGETDESC] = new TreeViewModel((QWidget *)_view, TARGETDESC);
     _view->trees[TEMPLATEDESC] = new TreeViewModel((QWidget *)_view, TEMPLATEDESC);
+}
 
+void Presenters::initializeObjects()
+{
+    allocateMemory();
+    setModelsAndTreesObjects();
+    connectActionsToObjects();
+    //Correlation model
+    allocateCorrelationModel();   
+}
+
+void Presenters::connectActionsToObjects()
+{
     connect(TREES(TARGETDESC), SIGNAL(doubleClicked(const QModelIndex&)), this,
             SLOT(ElementTreeTargetActivated(const QModelIndex&)), Qt::QueuedConnection);
     connect(TREES(TEMPLATEDESC), SIGNAL(doubleClicked(const QModelIndex&)), this,
@@ -305,8 +329,6 @@ void Presenters::allocateMemoryForObjects()
 
 
     connect(this, SIGNAL(loadDescComplete()), this, SLOT(FillTable()), Qt::QueuedConnection);
-    //Correlation model
-    allocateCorrelationModel();   
 }
 
 void Presenters::ElementTableActivated(const QModelIndex & index)

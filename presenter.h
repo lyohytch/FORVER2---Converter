@@ -14,10 +14,14 @@ public:
 protected:
     IView *_view;
     void loadingModels(QObject* loadedModel, QObject* tree);
+    QStringList getDefaultFilesForModel(QObject *loadedModel);
     bool selectDescription(const QStringList& filenames, int description_id);
     bool refreshDescribingLists(int descriptionId, QObject * model);
-    void allocateMemoryForObjects();
+    void initializeObjects();
+    void connectActionsToObjects();
     virtual void allocateCorrelationModel() = 0;
+    virtual void allocateMemory();
+    virtual void setModelsAndTreesObjects();
     void loadDescriptionModelFromFiles(const QStringList &filenames, int descriptionId);
     void loadDataFromFilesWithData(const QStringList &filenames, int descriptionId);
     virtual QString setNameFilterForTargetFiles();

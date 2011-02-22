@@ -99,6 +99,11 @@ void QModelDescribing::setElementNameByFile(const QString& filename)
     {
         elementName = weapon;
     }
+    //TODO: change fname
+    else if (filename.endsWith("Pros.txt", Qt::CaseSensitive))
+    {
+        elementName = generic;
+    }
     else
     {
         //Adding by default

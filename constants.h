@@ -113,6 +113,7 @@ const QString prosPathF1("Resources/Description/PROS/F1.TXT");
 const QString prosPathF2("Resources/Description/PROS/F2.TXT");
 const QString prosPathF5("Resources/Description/PROS/F5.TXT");
 const QString prosPathF12("Resources/Description/PROS/F12.TXT");
+const QString juraPath1("Resources/Description/Jura/Pros.txt");
 #elif defined Q_OS_WIN32 && !defined DEBUGING
 const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
 const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");
@@ -123,6 +124,7 @@ const QString prosPathF1("..\\Resources\\Description\\PROS\\F1.TXT");
 const QString prosPathF2("..\\Resources\\Description\\PROS\\F2.TXT");
 const QString prosPathF5("..\\Resources\\Description\\PROS\\F5.TXT");
 const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
+const QString juraPath1("..\\Resources\\Description\\Jura\\Pros.txt");
 #else
 const QString demopath("Resources\\Description\\Demo\\sprav_d.txt");
 const QString target1path("Resources\\Description\\4Views\\Sprav1.txt");
@@ -133,6 +135,7 @@ const QString prosPathF1("Resources\\Description\\PROS\\F1.TXT");
 const QString prosPathF2("Resources\\Description\\PROS\\F2.TXT");
 const QString prosPathF5("Resources\\Description\\PROS\\F5.TXT");
 const QString prosPathF12("Resources\\Description\\PROS\\F12.TXT");
+const QString juraPath1("Resources\\Description\\Jura\\Pros.txt");
 #endif
 
 #ifdef DEBUGING
