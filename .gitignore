@@ -8,3 +8,7 @@ Demo.Converter
 debug/
 object_script.*
 *.pro.user
+build/bin
+build/objs
+build/mocs
+build/lib
