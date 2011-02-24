@@ -35,23 +35,14 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
             capturedText = search.capturedTexts();
 
             qDebug()<<capturedText;
-            // TODO: move this block to particular function
+
             if(countDependFields)
             {
-                //Выравниваем количество нулей и единиц
-                int valueOfOnesAndZeros = FromIntegerToBinaryString(countDependFields).size();
-                qDebug()<< dependFieldList;
-                alignOneAndZerosInCorrelationCodes(valueOfOnesAndZeros,
-                                                   &dependFieldList);
-
-                elements[count].toMap().insert(dependFields, dependFieldList);
-
-                qDebug() << elements[count].toMap().value(dependFields);
+                elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
+                qDebug() << "elements => "<<elements[count].toMap().value(dependFields);
             }
-            // TODO: move this block to particular function
 
             elements.append(fillOneElement(capturedText));
-
 
             count++;
             countDependFields = 0;
@@ -78,6 +69,19 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
     }
     qDebug()<< "end. Elements =>"<< elements;
     return elements;
+}
+
+QVariantMap QModelDescribingFromJura::getNewAlignedCorrelationsList(int countDependFields,
+                                                                    const QVariantMap &element,
+                                                                    QVariantList *dependFieldList)
+{
+    QVariantMap elementMap = element;
+    int valueOfOnesAndZeros = FromIntegerToBinaryString(countDependFields).size();
+    alignOneAndZerosInCorrelationCodes(valueOfOnesAndZeros,
+                                       dependFieldList);
+    elementMap.insert(dependFields, *dependFieldList);
+
+    return elementMap;
 }
 
 QString QModelDescribingFromJura::FromIntegerToBinaryString(int countDependFields)

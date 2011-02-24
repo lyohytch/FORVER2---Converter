@@ -39,6 +39,7 @@ private:
     QVariantMap setDependFieldInfo(const QStringList &capturedText, int countDependFields);
     QString FromIntegerToBinaryString(int countDependFields);
     void alignOneAndZerosInCorrelationCodes(int valueOfOnesAndZeros, QVariantList *dependList);
+    QVariantMap getNewAlignedCorrelationsList(int countDependFields, const QVariantMap &element, QVariantList *dependFieldList);
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H
