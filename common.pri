@@ -3,8 +3,9 @@ TEMPLATE = lib
 
 QT += gui core
 
-DESTDIR = ../build/lib/$$TARGET
-DLLDESTDIR = ../build/bin
+win32:DESTDIR = ../build/lib/$$TARGET
+win32:DLLDESTDIR = ../build/bin
+unix:DESTDIR = ../build/bin
 MOC_DIR = ../build/mocs/$$TARGET
 OBJECTS_DIR = ../build/objs/$$TARGET
 

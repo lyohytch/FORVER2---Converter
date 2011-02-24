@@ -12,6 +12,7 @@ const QString rBracket(")");
 const QString lBracket("(");
 const QString quote2("\"");
 const QString quote("\'");
+const QString underline("_");
 //Sql
 const QString createTbl("CREATE TABLE");
 const QString insertTbl("INSERT INTO");
@@ -52,15 +53,22 @@ const QString numb("number");//Номер по порядку
 const QString repeat("repeat");//дублируюший элемент
 const QString rapid("rapid");
 const QString prosDesc("prosDesc");//вспомогательный контейнер для обработки описаний от прокуратуры
-const QString target("target");//соответствие между исходным и конвертируемым(ид)
+const QString targetId("targetId");//соответствие между исходным и конвертируемым(ид)
+const QString targetName("targetName");//соответствие между исходным и конвертируемым(имя)
 /**
   List of QMap<QString, QString> where each element is
   0001 <-> compactxx45x - for compact data
   0001 <-> code12345 - for simple encoded data
   0001 <-> "" (Empty string) for entire value
   */
+const QString compactCode("compact");
+const QString simpleCode("code");
+const QString correlationValue("correlationValue");
+
 const QString targetDataForConvert("dataforconvert");//дополнительные данные для раскодирования QList<QMap<QString, QString> >   0001 <-> xx45x
 const QString dependFields("dependFields"); //List of depend fields
+const QString dependId("dependingId");
+
 const QString codingRules("codingRules"); // Encoding rules as described above
 
 
@@ -69,6 +77,7 @@ const QString generic("generic_");
 const QString figurant("figurant_");
 const QString locus("locus_delicti_");
 const QString weapon("weapon_");
+const QString generic_F5("generic_F5");
 
 //Correlation
 const QString number("number");
@@ -104,16 +113,16 @@ const int TEMPLATEDESC = 1;
 
 //Predefined file paths
 #ifdef Q_OS_LINUX
-const QString demopath("Resources/Description/Demo/sprav_d.txt");
-const QString target1path("Resources/Description/4Views/Sprav1.txt");
-const QString target2path("Resources/Description/4Views/Sprav2.txt");
-const QString target3path("Resources/Description/4Views/Sprav3.txt");
-const QString target4path("Resources/Description/4Views/Sprav4.txt");
-const QString prosPathF1("Resources/Description/PROS/F1.TXT");
-const QString prosPathF2("Resources/Description/PROS/F2.TXT");
-const QString prosPathF5("Resources/Description/PROS/F5.TXT");
-const QString prosPathF12("Resources/Description/PROS/F12.TXT");
-const QString juraPath1("Resources/Description/Jura/Pros.txt");
+const QString demopath("../../Resources/Description/Demo/sprav_d.txt");
+const QString target1path("../../Resources/Description/4Views/Sprav1.txt");
+const QString target2path("../../Resources/Description/4Views/Sprav2.txt");
+const QString target3path("../../Resources/Description/4Views/Sprav3.txt");
+const QString target4path("../../Resources/Description/4Views/Sprav4.txt");
+const QString prosPathF1("../../Resources/Description/PROS/F1.TXT");
+const QString prosPathF2("../../Resources/Description/PROS/F2.TXT");
+const QString prosPathF5("../../Resources/Description/PROS/F5.TXT");
+const QString prosPathF12("../../Resources/Description/PROS/F12.TXT");
+const QString juraPath1("../../Resources/Description/Jura/Pros.txt");
 #elif defined Q_OS_WIN32 && !defined DEBUGING
 const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
 const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");

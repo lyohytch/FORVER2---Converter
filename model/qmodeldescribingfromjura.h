@@ -19,7 +19,7 @@ public:
     //Add new field
 protected:
     virtual  bool checkFileStructure(QTextStream* fileStream);
-    virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap) {return true;}
+    virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &/*checkMap*/) {return true;}
     virtual QVariantMap fillOneElement(const QStringList & capturedText);
     virtual QVariantList getElementsFromText(QTextStream* fileStream);
 
@@ -33,6 +33,12 @@ protected:
     virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* /*fileStream*/) {}
     virtual void setElementNameByDataFile(const QString &/*filename*/) {}
     virtual bool isValidElementsWithDataForParticularFile() {return true;}
+
+private:
+    QString setTargetDataForConvert(const QString & dataForConvert);
+    QVariantMap setDependFieldInfo(const QStringList &capturedText, int countDependFields);
+    QString FromIntegerToBinaryString(int countDependFields);
+    void alignOneAndZerosInCorrelationCodes(int valueOfOnesAndZeros, QVariantList *dependList);
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H

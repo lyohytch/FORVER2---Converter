@@ -102,7 +102,7 @@ void QModelDescribing::setElementNameByFile(const QString& filename)
     //TODO: change fname
     else if (filename.endsWith("Pros.txt", Qt::CaseSensitive))
     {
-        elementName = generic;
+        elementName = generic_F5;
     }
     else
     {
@@ -151,6 +151,7 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
 
 /** Read all lines in file. Need to close and open again file after using function
   */
+//!!!TODO: rework it
 QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
 {
     QTextCodec *textCodec = QTextCodec::codecForName("Windows-1251");
@@ -158,6 +159,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
     QString text = outStream.readAll();
     if( textCodec->canEncode(text) )
     {
+        textCodec = QTextCodec::codecForName("UTF-8");
         return textCodec;
     }
     else
@@ -165,6 +167,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
         textCodec = QTextCodec::codecForName("UTF-8");
         if ( textCodec->canEncode(text))
         {
+            textCodec = QTextCodec::codecForName("Windows-1251");
             return textCodec;
         }
         else

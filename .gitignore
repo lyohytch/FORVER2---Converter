@@ -12,3 +12,5 @@ build/bin
 build/objs
 build/mocs
 build/lib
+*.so.*
+*.so
