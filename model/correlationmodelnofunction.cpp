@@ -85,3 +85,55 @@ int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targ
     }
     return -1;
 }
+
+//!!!!!!!Если у зависимых полей несколько соответвий из второй части, то указываем это в таблице отношений
+QVariantList CorrelationModelNoFunction::targetToCurrent()
+{
+    qDebug() << " Real start convering....";
+    QVariantList retData;
+    QVariantList convertedData = QVariantList();
+    QVariantList dataForConverting = getTargetModel()->getElementsWithData();
+    QVariantList currDescrList = getCurrentModel()->getVisibleElements();
+
+    int cRow = 0;
+    QVariantMap mapToAddingInResult = QVariantMap();
+    QVariantMap mapForOneElementData = QVariantMap();
+    QVariantList searchTemplates = QVariantList();
+    QVariantList dataToAppend = QVariantList();
+
+    for (int i = 0; i < dataForConverting.count(); i++)
+    {
+        convertedData = dataForConverting[i].toMap().value(rapid).toList();//наше обычное описание но с полем dvalue(данные)
+        mapToAddingInResult.insert(id, i);
+        dataToAppend.clear();
+        foreach(QVariant curr, currDescrList)
+        {
+            mapForOneElementData = curr.toMap();
+
+            searchTemplates.clear();
+            searchTemplates.append(findItemInTableTemplate(curr, cRow));// Нашли темплейт в корреляционной таблице
+
+            mapForOneElementData.insert(dvalue, processTargetData(convertedData, searchTemplates) );
+
+            qDebug() << mapForOneElementData;
+
+            dataToAppend.append(mapForOneElementData);
+        }
+        mapToAddingInResult.insert(rapid, dataToAppend);
+        retData.append(mapToAddingInResult);
+    }
+
+    return retData;
+}
+
+QString CorrelationModelNoFunction::processTargetData(const QVariantList & convertedData, const QVariantList& searchTemplates)
+{
+     QString dataString = "";
+     Q_UNUSED(convertedData)
+     if(!searchTemplates.isEmpty())
+     {
+         //here is a processing
+
+     }
+     return dataString;
+}
