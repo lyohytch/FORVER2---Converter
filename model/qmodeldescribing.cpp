@@ -60,6 +60,7 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
             if (checkFileStructure(&fileStream))
             {
                 setElementNameByFile(filename);
+                setAdditionsToNamesByFile(filename);
                 addingDataToBlankElements(&fileStream);
             }
             else

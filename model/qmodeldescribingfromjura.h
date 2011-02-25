@@ -35,11 +35,12 @@ protected:
     virtual bool isValidElementsWithDataForParticularFile() {return true;}
 
 private:
-    QString setTargetDataForConvert(const QString & dataForConvert);
+    QString setTargetDataForConvert(const QString & dataFor);
     QVariantMap setDependFieldInfo(const QStringList &capturedText, int countDependFields);
     QString FromIntegerToBinaryString(int countDependFields);
     void alignOneAndZerosInCorrelationCodes(int valueOfOnesAndZeros, QVariantList *dependList);
     QVariantMap getNewAlignedCorrelationsList(int countDependFields, const QVariantMap &element, QVariantList *dependFieldList);
+    QString getElementNameByCodeForm(const QString&);
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H

@@ -22,6 +22,8 @@ class QModelDescribing : public QStandardItemModel
 
         QString elementName;//"generic_","figurant_","locus_delicti_","weapon_"
 
+        QString additionToNames; // For pros files;
+
         QVariantList ElementsFromDescriptionFiles; //List of maps like (id,name,type,level,value) value == NULL for Description Files. "Element" is one element from this list
 
         QVariantList VisibleElementsFromDescriptionFiles;
@@ -31,11 +33,14 @@ class QModelDescribing : public QStandardItemModel
         QVariantList VisibleElementsWithDataForParticularFile;//List of maps (id, value) where value is data from particular file
 
         //Operations with elements without data
+
         virtual bool checkFileStructure(QTextStream* /*fileStream*/) = 0;
 
         virtual QVariantMap fillOneElement(const QStringList & capturedText) = 0;
 
-        virtual QVariantList getElementsFromText(QTextStream* fileStream);      
+        virtual QVariantList getElementsFromText(QTextStream* fileStream);
+
+        virtual void setAdditionsToNamesByFile(const QString &/*filename*/) {};
 
         void addingDataToBlankElements(QTextStream* fileStream);
 

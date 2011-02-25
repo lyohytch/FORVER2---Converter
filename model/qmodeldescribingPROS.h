@@ -16,6 +16,7 @@ class QModelDescribingPros: public QModelDescribing
         //GENERAL
         //virtual QMap<QString, QVariant>* processLineInDescriptionFile(const QString& line);
         virtual bool checkFileStructure(QTextStream* fileStream);
+        virtual void setAdditionsToNamesByFile(const QString &filename);
         //virtual void addNextElementsToList(QMap<QString, QVariant> & oneRec);
         virtual QVariantList getElementsFromText(QTextStream* /*fileStream*/);
         virtual QVariantMap fillOneElement(const QStringList & /*capturedText*/) {return QVariantMap();}
@@ -29,6 +30,6 @@ class QModelDescribingPros: public QModelDescribing
         virtual bool checkFileFileStructureData(QTextStream* /*fileStream*/);
     private:
         bool isProcessLine;
-        QString removeSpaces(const QString& ex);
+        QString removeSpaces(const QString& ex);       
 };
 #endif // QMODELDESCRIBINGPROS_H

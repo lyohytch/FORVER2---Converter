@@ -34,12 +34,10 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
          {
             capturedText = search.capturedTexts();
 
-            qDebug()<<capturedText;
-
             if(countDependFields)
             {
                 elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
-                qDebug() << "elements => "<<elements[count].toMap().value(dependFields);
+                //qDebug() << "elements => "<<elements[count].toMap().value(dependFields);
             }
 
             elements.append(fillOneElement(capturedText));
@@ -53,12 +51,7 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
              if( searchDependFields.indexIn(textLine) != -1 && count != -1)
              {
                     capturedText = searchDependFields.capturedTexts();
-
-                    qDebug()<<capturedText;
-
                     dependFieldList.append(setDependFieldInfo(capturedText, ++countDependFields));
-
-                    qDebug()<< dependFieldList;
              }
              else
              {
@@ -106,13 +99,21 @@ QString QModelDescribingFromJura::FromIntegerToBinaryString(int countDependField
 
 void QModelDescribingFromJura::alignOneAndZerosInCorrelationCodes(int valueOfOnesAndZeros, QVariantList *dependList)
 {
-    int diff;
-    foreach(QVariant dependElement, *dependList)
+    int diff = 0;
+    QString tempElement = QString();
+    QVariantMap tempMap = QVariantMap();
+    QString nullString = QString();
+    for(int i = 0; i < dependList->size(); ++i)
     {
-        diff = valueOfOnesAndZeros - dependElement.toMap().value(correlationValue).toString().size() ;
+        diff = valueOfOnesAndZeros - (*dependList)[i].toMap().value(correlationValue).toString().size() ;
         if(diff > 0)
         {
-            dependElement.toMap().value(correlationValue).toString().insert(0, &QChar('0'), diff);
+            tempMap =  (*dependList)[i].toMap();
+            tempElement = tempMap.value(correlationValue).toString();
+            nullString.fill('0', diff);
+            tempElement = nullString + tempElement;
+            tempMap.insert(correlationValue, tempElement);
+            (*dependList)[i] = tempMap;
         }
     }
 }
@@ -129,10 +130,6 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList &capt
     element.insert(targetName, capturedText.at(6));
     element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(7)));
     element.insert(correlationValue, FromIntegerToBinaryString(countDependFields) );
-
-
-    qDebug()<<element;
-
 
     return element;
 }
@@ -151,7 +148,8 @@ QVariantMap QModelDescribingFromJura::fillOneElement(const QStringList & capture
    }
 
    //For av, dv, cb these fields should be empty
-   element.insert(targetId, generic + capturedText.at(7) + underline + capturedText.at(8));
+   //F5_text
+   element.insert(targetId,getElementNameByCodeForm(capturedText.at(7)) + capturedText.at(8));
    element.insert(targetName, capturedText.at(9));
    element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(10)));
 
@@ -160,21 +158,50 @@ QVariantMap QModelDescribingFromJura::fillOneElement(const QStringList & capture
    return element;
 }
 
-QString QModelDescribingFromJura::setTargetDataForConvert(const QString & dataForConvert)
+QString QModelDescribingFromJura::getElementNameByCodeForm(const QString &codeForm)
+{
+    QString elName;
+    if(codeForm == "F5" ||
+       codeForm == QString::fromUtf8("Ф5"))
+    {
+        elName = locus;
+    }
+    else if (codeForm == "F1" ||
+             codeForm == QString::fromUtf8("Ф1"))
+    {
+        elName = generic;
+    }
+    else if (codeForm == "F2" ||
+             codeForm == QString::fromUtf8("Ф2"))
+    {
+        elName = figurant;
+    }
+    else if (codeForm == "F12" ||
+             codeForm == QString::fromUtf8("Ф12"))
+    {
+        elName = weapon;
+    }
+
+    return elName;
+}
+
+QString QModelDescribingFromJura::setTargetDataForConvert(const QString & dataFor)
 {
     QString code = "";// Take value only
+    QString dataForConvert = dataFor;
     if(dataForConvert.contains("X", Qt::CaseInsensitive) ||
        dataForConvert.contains(QString::fromUtf8("Х"), Qt::CaseInsensitive))
     {
         // Compact code. Value = compactXXX3XXX
-        return (compactCode + dataForConvert);
+        code =  (compactCode + dataForConvert);
     }
-    if(dataForConvert.startsWith("k", Qt::CaseInsensitive) ||
-       dataForConvert.startsWith(QString::fromUtf8("к"), Qt::CaseInsensitive))
-    {
-        // Simple code. Value = code0232
-        return (simpleCode + dataForConvert);
-    }
+    else if(dataForConvert.startsWith("k", Qt::CaseInsensitive) ||
+            dataForConvert.startsWith(QString::fromUtf8("к"), Qt::CaseInsensitive))
+        {
+             // Simple code. Value = code0232
+            dataForConvert.remove(0,1); // Remove k
+            code =  (simpleCode + dataForConvert);
+        }
 
     return code;
 }

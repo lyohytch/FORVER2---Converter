@@ -36,12 +36,35 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
     int count = 0;
     foreach(QString nameKey, lineSplitted)
     {
-        elementForAdding.insert(id, elementName + count);
-        elementForAdding.insert(name, nameKey);
+        elementForAdding.insert(id, elementName + QString::number(count));
+        elementForAdding.insert(name,additionToNames + nameKey);
         elements.append(elementForAdding);
         count++;
     }
     return elements;
+}
+
+void QModelDescribingPros::setAdditionsToNamesByFile(const QString &filename)
+{
+    if (filename.endsWith("F1.TXT", Qt::CaseSensitive))
+    {
+        //Not implemented
+        additionToNames = "";
+    }
+    else if (filename.endsWith("F2.TXT", Qt::CaseSensitive))
+    {
+        //Not implemented
+        additionToNames = "";
+    }
+    else if (filename.endsWith("F12.TXT", Qt::CaseSensitive))
+    {
+        //Not implemented
+        additionToNames = "";
+    }
+    else if (filename.endsWith("F5.TXT", Qt::CaseSensitive))
+    {
+        additionToNames = F5_names;
+    }
 }
 
 void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)

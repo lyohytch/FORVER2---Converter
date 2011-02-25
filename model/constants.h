@@ -77,7 +77,9 @@ const QString generic("generic_");
 const QString figurant("figurant_");
 const QString locus("locus_delicti_");
 const QString weapon("weapon_");
-const QString generic_F5("generic_F5");
+const QString generic_F5("generic_F5_");
+
+const QString F5_names("F5_");
 
 //Correlation
 const QString number("number");

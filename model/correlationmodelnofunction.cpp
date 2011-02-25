@@ -64,6 +64,7 @@ void CorrelationModelNoFunction::fillInTable()
                qWarning()<<"Incorrect correlation. Please check description file";
                itemCurrent = NULL;
                itemTarget = NULL;
+               continue;
            }
            itemList.append(itemCurrent);
            itemList.append(itemTarget);
@@ -78,7 +79,8 @@ int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targ
     int targetCount = getTargetModel()->getVisibleElements().count();
     for (int i = 0; i< targetCount; i++)
     {
-        if(getTargetModel()->getVisibleElements()[i].toMap().value(name).toString() == targetString)
+        qDebug()<<"targetModel Ids = > "<<getTargetModel()->getVisibleElements()[i].toMap().value(id);
+        if(getTargetModel()->getVisibleElements()[i].toMap().value(id).toString() == targetString)
             return i;
     }
     return -1;
