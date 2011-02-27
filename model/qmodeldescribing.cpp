@@ -160,7 +160,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
     QString text = outStream.readAll();
     if( textCodec->canEncode(text) )
     {
-        textCodec = QTextCodec::codecForName("UTF-8");
+//textCodec = QTextCodec::codecForName("UTF-8");
         return textCodec;
     }
     else
@@ -168,7 +168,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
         textCodec = QTextCodec::codecForName("UTF-8");
         if ( textCodec->canEncode(text))
         {
-            textCodec = QTextCodec::codecForName("Windows-1251");
+       //     textCodec = QTextCodec::codecForName("Windows-1251");
             return textCodec;
         }
         else

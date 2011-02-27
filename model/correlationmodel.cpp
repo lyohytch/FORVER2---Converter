@@ -100,7 +100,7 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
             return tableModel->item(i, iTarget)->data(Qt::UserRole + 1);
         }
     }
-    return NULL;
+    return QVariant();
 }
 
 void CorrelationModel::fillInTable(QVariantMap mapTable)

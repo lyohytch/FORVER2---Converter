@@ -13,6 +13,13 @@ const QString lBracket("(");
 const QString quote2("\"");
 const QString quote("\'");
 const QString underline("_");
+const QString zero("0");
+const QString one("1");
+
+const QChar X_Rus('\Õ');
+const QChar X_Eng('X');
+const QChar k_Rus('\ê');
+const QChar k_eng('k');
 //Sql
 const QString createTbl("CREATE TABLE");
 const QString insertTbl("INSERT INTO");
