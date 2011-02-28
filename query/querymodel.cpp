@@ -92,7 +92,7 @@ void querymodel::initlist()
     QMap<QString, QVariant> oneMap;
     if (iQueryRequestDesc.isEmpty() && iQueryRequestData.isEmpty())
     {
-        QVariantList reqList = corrModel->getCurrentModel()->getVisibleElements();
+        QVariantList reqList = corrModel->getTemplateModel()->getVisibleElements();
         for (int i = 0; i < reqList.count() ; i++)
         {
             //I know that cpDescribeList[i] is QMap object
@@ -152,11 +152,11 @@ void querymodel::fillingRequestList()
     //Более простая реализация
     //Сначала для темплейта
     listOfRequests.clear();
-    QVariantList tTemplate = corrModel->getCurrentModel()->getElementsWithData();//Записали все дела из демо
+    QVariantList tTemplate = corrModel->getTemplateModel()->getElementsWithData();//Записали все дела из демо
     QVariantList tTemplateItem;
-    QVariantList reqList = corrModel->getCurrentModel()->getVisibleElements();
+    QVariantList reqList = corrModel->getTemplateModel()->getVisibleElements();
     QString reqString;
-    tTemplate.append(corrModel->targetToCurrent());// добавили переконвертированные дела из старой версии
+    tTemplate.append(corrModel->targetToTemplate());// добавили переконвертированные дела из старой версии
     //qDebug()<<Q_FUNC_INFO<<tTemplate.at(1).toMap().value(rapid).toList().at(0).toMap().value(dvalue);
     for (int i = 0 ; i < tTemplate.count(); i++)
     {

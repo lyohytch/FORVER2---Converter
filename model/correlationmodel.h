@@ -17,20 +17,20 @@ class CorrelationModel: public QTableView
 
     public:
 
-        CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target);
-        CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target, QStandardItemModel* iTableModel);
+        CorrelationModel(QWidget* parent, QModelDescribing* templ, QModelDescribing* target);
+        CorrelationModel(QWidget* parent, QModelDescribing* templ, QModelDescribing* target, QStandardItemModel* iTableModel);
         ~CorrelationModel();
 
         virtual void fillInTable() = 0;
         virtual void fillInTable(QVariantMap mapTable);
         virtual QVariantMap tableModelToMap();
-        virtual QVariantList targetToCurrent();
+        virtual QVariantList targetToTemplate();
         virtual void setApplyTreeClick(int id);
         virtual bool applyTreeClick(int id);
 
-        QModelDescribing* getCurrentModel()
+        QModelDescribing* getTemplateModel()
         {
-            return iCurrentModel;
+            return iTemplateModel;
         }
         QModelDescribing* getTargetModel()
         {
@@ -46,14 +46,13 @@ class CorrelationModel: public QTableView
         void changeTargetValue(int col, int row, QVariant data, bool first);
         virtual void changeFunctionValue(int /*col*/, int /*row*/, int /*funcId*/) {}
     protected:
-        virtual void createTableModel(QStandardItemModel* tableModel) = 0;
         virtual void setupTableModel(QStandardItemModel* tableModel) = 0;
         virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) = 0;// { return QVariant();}
         QVariant findItemInTableTemplate(const QVariant& search, int& row);
         QVariantList foundByUIDsRetValues(const QVariantList& dataListItem, const QVariantList& searchTemplates);
 
     private:
-        QModelDescribing* iCurrentModel;
+        QModelDescribing* iTemplateModel;
         QModelDescribing* iTargetModel;
         QStandardItemModel* tableModel;
         bool isTemp;

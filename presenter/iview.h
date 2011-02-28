@@ -24,6 +24,7 @@ public:
 
     virtual void removeWidgets() = 0;
     virtual void addWidgets() = 0;
+    virtual void updateTextLabel(const QString& txtMsg) = 0;
 
     int activeRowId;
     bool countTV;

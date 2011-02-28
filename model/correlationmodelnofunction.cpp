@@ -1,21 +1,15 @@
 #include "correlationmodelnofunction.h"
 
-CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget* parent, QModelDescribing* current, QModelDescribing* target):
-        CorrelationModel(parent, current, target)
-{
-    createTableModel(getTableModel());
-}
-
-CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDescribing *current, QModelDescribing *target, QStandardItemModel *iTableModel):
-        CorrelationModel(parent, current, target, iTableModel)
+CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget* parent, QModelDescribing* templ, QModelDescribing* target):
+        CorrelationModel(parent, templ, target)
 {
     setupTableModel(getTableModel());
 }
 
- void CorrelationModelNoFunction::createTableModel(QStandardItemModel* tableModel)
+CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDescribing *templ, QModelDescribing *target, QStandardItemModel *iTableModel):
+        CorrelationModel(parent, templ, target, iTableModel)
 {
-   tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
-    tableModel->setColumnCount(2);
+    setupTableModel(getTableModel());
 }
 
  void CorrelationModelNoFunction::setupTableModel(QStandardItemModel* tableModel)
@@ -29,7 +23,7 @@ void CorrelationModelNoFunction::fillInTable()
 {
     qDebug();
     clearCorrelationTable();
-    int iTemplateCount = getCurrentModel()->getVisibleElements().count();
+    int iTemplateCount = getTemplateModel()->getVisibleElements().count();
 
     QString nameCurrent, nameTarget;
     QList<QStandardItem*> itemList;
@@ -39,9 +33,8 @@ void CorrelationModelNoFunction::fillInTable()
     {
         itemList.clear();
         //name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
-        //Г…Г±Г«ГЁ ГҐГ±ГІГј Г±Г®Г®ГІГўГҐГІГ±ГўГЁГҐ, ГҐГ±Г«ГЁ Г­ГҐГІ, ГІГ® ГЅГ«ГҐГ¬ГҐГ­ГІ Г±Г«ГҐГ¤ГіГѕГ№ГЁГ© Г±Г¬Г®ГІГ°ГЁГ¬
-        QString targetValue = getCurrentModel()->getVisibleElements()[i].toMap().value(targetId).toString();
-        qDebug()<<" Template by Ids => "<<getCurrentModel()->getVisibleElements()[i].toMap().value(id).toString();
+        QString targetValue = getTemplateModel()->getVisibleElements()[i].toMap().value(targetId).toString();
+        qDebug()<<" Template by Ids => "<<getTemplateModel()->getVisibleElements()[i].toMap().value(id).toString();
         QStandardItem *itemCurrent;
         QStandardItem *itemTarget;
         if( !targetValue.isEmpty() )
@@ -49,15 +42,17 @@ void CorrelationModelNoFunction::fillInTable()
            int index = findTargetIndexByTargetValue(targetValue);
            if (index != -1)
            {
-                nameCurrent = getCurrentModel()->getVisibleElements()[i].toMap().value(name).toString();
+                nameCurrent = getTemplateModel()->getVisibleElements()[i].toMap().value(name).toString();
                 itemCurrent =  new QStandardItem(nameCurrent);
-                itemCurrent->setData(getCurrentModel()->getVisibleElements()[i], Qt::UserRole + 1);
+                itemCurrent->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
                 itemCurrent->setEditable(false);
 
+                //TODO: add other data from dependList
                 nameTarget = getTargetModel()->getVisibleElements()[index].toMap().value(name).toString();
                 itemTarget = new QStandardItem(nameTarget);
                 itemTarget->setData(getTargetModel()->getVisibleElements()[index], Qt::UserRole + 1);
                 itemTarget->setEditable(false);
+
            }
            else
            {
@@ -71,7 +66,8 @@ void CorrelationModelNoFunction::fillInTable()
            getTableModel()->appendRow(itemList);
         }
     }
-    resizeColumnsToContents();
+    this->resizeColumnsToContents();
+    this->show();
 }
 
 int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targetString)
@@ -87,13 +83,13 @@ int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targ
 }
 
 //!!!!!!!Если у зависимых полей несколько соответвий из второй части, то указываем это в таблице отношений
-QVariantList CorrelationModelNoFunction::targetToCurrent()
+QVariantList CorrelationModelNoFunction::targetToTemplate()
 {
     qDebug() << " Real start convering....";
     QVariantList retData;
     QVariantList convertedData = QVariantList();
     QVariantList dataForConverting = getTargetModel()->getElementsWithData();
-    QVariantList currDescrList = getCurrentModel()->getVisibleElements();
+    QVariantList currDescrList = getTemplateModel()->getVisibleElements();
 
     int cRow = 0;
     QVariantMap mapToAddingInResult = QVariantMap();
@@ -106,7 +102,6 @@ QVariantList CorrelationModelNoFunction::targetToCurrent()
         convertedData = dataForConverting[i].toMap().value(rapid).toList();//наше обычное описание но с полем dvalue(данные)
         mapToAddingInResult.insert(id, i);
         dataToAppend.clear();
-//Надо делать обход дерева
 
         foreach(QVariant curr, currDescrList)
         {
@@ -126,34 +121,7 @@ QVariantList CorrelationModelNoFunction::targetToCurrent()
 
     return retData;
 }
-/*
-QVariantList CorrelationModelNoFunction::fillEmptyFields(const QVariantList &dataToAppend)
-{
-    QVariantList reorganizedData = QVariantList();
-    foreach(QVariant elementFromAppending, dataToAppend)
-    {
-        if(elementFromAppending.toMap().value(dvalue).toString().isEmpty())
-        {
-            qDebug()<<"Element empty. Try to find dependIds";
-            if(elementFromAppending.toMap().value(dependFields).toList().isEmpty())
-            {
-                qDebug()<<"List of depending elements are empty";
-            }
-            else
-            {
 
-            }
-        }
-        else
-        {
-            qDebug()<<"Element filled already";
-        }
-        reorganizedData.append(elementFromAppending);
-    }
-
-    return reorganizedData;
-}
-*/
 QString CorrelationModelNoFunction::processTargetData(const QVariantList &convertedData, const QVariant &elementFromCorrTable)
 {
      QString dataString = "";
@@ -166,9 +134,9 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
          if( dependList.isEmpty() )
          {
              //Take entire value
-             QString targetId = elementFromCorrTable.toMap().value(targetId).toString();
-             qDebug()<< "targetId = "<<targetId;
-             QVariant foundedTarget = findTargetDataById(targetId, convertedData);
+             QString targetName = elementFromCorrTable.toMap().value(targetName).toString();
+             qDebug()<< "targetId = "<<targetName;
+             QVariant foundedTarget = findTargetDataById(targetName, convertedData);
              if(!foundedTarget.isNull())
              {
                 dataString = foundedTarget.toMap().value(dvalue).toString();
@@ -185,18 +153,18 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
              foreach(QVariant dependElement, dependList)
              {
                 QString codedData = dependElement.toMap().value(targetDataForConvert).toString();
-                QString targetId = dependElement.toMap().value(targetId).toString();
+                QString targetName = dependElement.toMap().value(targetName).toString();
                 QString correlationValue = dependElement.toMap().value(correlationValue).toString();
                 QString dependIdStr = dependElement.toMap().value(dependId).toString();
 
-                QVariant foundTarget = findTargetDataById(targetId, convertedData);
+                QVariant foundTarget = findTargetDataById(targetName, convertedData);
                 if( codedData.isEmpty())
                 {
                     qWarning()<<"Error in correlation table. Incorrect element in depedFields";
                     if( !dependIdStr.isEmpty())
                     {
                         //If dependId exist. Get dataString
-                        //if(dependIdSetted(dependIdStr, convertedData))
+                        if(dependIdSetted(dependIdStr, convertedData))
                         {
                             dataString = setNewDataValueByType(typeElement, correlationValue, dataString);
                         }
@@ -242,12 +210,16 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
 
      return dataString;
 }
-/*
+
 bool CorrelationModelNoFunction::dependIdSetted(const QString &dependId, const QVariantList &convertedData)
 {
+    //Нашли зависимый элемент в списке
+    QVariant foundTarget = findTargetDataById(dependId, convertedData);
+    QString dataString = processTargetData(convertedData, foundTarget);
 
+    return !dataString.isEmpty();
 }
-*/
+
 bool CorrelationModelNoFunction::compareCompactCodes(const QString &codedDataWithoutCode,
                                                      const QString & datafromTarget)
 {
@@ -278,31 +250,31 @@ bool CorrelationModelNoFunction::compareCompactCodes(const QString &codedDataWit
 QString CorrelationModelNoFunction::setNewDataValueByType(const QString &typeElement,
                                                           const QString &correlationValue, const QString &dataString)
 {
-//    if(dataString.isEmpty())
-//    {
-//        return correlationValue;
-//    }
-//    else
-//    {
-//        if(typeElement == DV)
-//        {
-//            //Concat two values
-//            QString dataStringNew = dataString;
-//            for(int i = 0; i < dataString.count() ; ++i)
-//            {
-//                if(correlationValue[i] == one)
-//                {
-//                    dataStringNew[i] = correlationValue[i];
-//                }
-//            }
-//            qDebug()<<" new string : "<<dataStringNew;
-//            return dataStringNew;
-//        }
-//        else
-//        {
-//            return correlationValue;
-//        }
-//    }
+    if(dataString.isEmpty())
+    {
+        return correlationValue;
+    }
+    else
+    {
+        if(typeElement == DV)
+        {
+            //Concat two values
+            QString dataStringNew = dataString;
+            for(int i = 0; i < dataString.count() ; ++i)
+            {
+                if(correlationValue[i] == one)
+                {
+                    dataStringNew[i] = correlationValue[i];
+                }
+            }
+            qDebug()<<" new string : "<<dataStringNew;
+            return dataStringNew;
+        }
+        else
+        {
+            return correlationValue;
+        }
+    }
 }
 
 QVariant CorrelationModelNoFunction::findTargetDataById(const QString &targetTemplate, const QVariantList &convertedData)

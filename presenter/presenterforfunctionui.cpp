@@ -46,7 +46,6 @@ void PresenterForFunctionUI::freeObjects()
 
 void PresenterForFunctionUI::allocateCorrelationModel()
 {
-
     _view->corrModel = new CorrelationModelFunction((QWidget *)_view,
                                                     MODELS(TEMPLATEDESC),
                                                     MODELS(TARGETDESC));
@@ -67,20 +66,20 @@ void PresenterForFunctionUI::ElementTableActivated(const QModelIndex & index)
         case iTemplate:
             {
             CORR_MODEL->setApplyTreeClick(iTemplate);
-                //pLabel->setText("Change template variable. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+            _view->updateTextLabel("Change template variable. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
             }
             break;
         case iTarget:
             {
                 CORR_MODEL->setApplyTreeClick(iTarget);
-                //pLabel->setText("Change target variables. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel("Change target variables. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
                 Presenters::_view->countTV = true;
             }
             break;
         case iFunction:
             {
                 CORR_MODEL->setApplyTreeClick(iFunction);
-                //pLabel->setText("Change function. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel("Change function. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
                 funcWidget->showNormal();
             }
             break;
@@ -100,7 +99,7 @@ void PresenterForFunctionUI::FunctionIsChecked(int functionId)
     else
     {
         qDebug() << " function table cell isn't checked or not applicable";
-        //this->statusBar()->showMessage("Function table cell isn't checked or not applicable", 3000);
+        _view->updateTextLabel("Function table cell isn't checked or not applicable");
     }
 }
 

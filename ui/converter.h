@@ -25,6 +25,7 @@ class converter : public IView
 
         virtual void removeWidgets();
         virtual void addWidgets();
+        virtual void updateTextLabel(const QString &txtMsg);
 
     protected:
         void changeEvent(QEvent* e);
@@ -32,6 +33,8 @@ class converter : public IView
     private:
         Ui::converter* ui;
         QHBoxLayout* layout;
+        QLabel *pLabel;
+
 
         //Init functions
         void init();

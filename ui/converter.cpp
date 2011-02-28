@@ -50,31 +50,29 @@ void converter::on_actionOpen_triggered()
 
 void converter::removeWidgets()
 {
-    qDebug()<<layout->count();
     //template
     layout->removeWidget((QTreeView *)trees[TEMPLATEDESC]);
     //table - corrModel
     layout->removeWidget((QTableView *)corrModel);
     //target
     layout->removeWidget((QTreeView *)trees[TARGETDESC]);
-    qDebug()<<layout->count();
 
 }
 
 void converter::addWidgets()
 {
-   // if (layout) delete layout;
     //template
-    qDebug()<<layout->count();
-    layout->update();
     layout->addWidget((QTreeView *)trees[TEMPLATEDESC]);
     //table - corrModel
     layout->addWidget((QTableView *)corrModel);
     //target
     layout->addWidget((QTreeView *)trees[TARGETDESC]);
-    layout->update();
-    qDebug()<<layout->count();
 
+}
+
+void converter::updateTextLabel(const QString &txtMsg)
+{
+    pLabel->setText(txtMsg);
 }
 
 void converter::on_actionOpen_template_triggered()
@@ -137,11 +135,20 @@ void converter::init_setup_desktop_widgets()
 {
     //Put tree model on widget
     layout = new QHBoxLayout;
-    addWidgets();
+    qDebug()<<"Template tree " <<trees[TEMPLATEDESC];
+    qDebug()<<"Target tree "<<trees[TEMPLATEDESC];
+    qDebug()<<"CorrModel "<<corrModel;
+
+    //layout->addWidget((QTreeView *)trees[TEMPLATEDESC]);
+    //table - corrModel
+    //layout->addWidget((QTableView *)corrModel);
+    //target
+    //layout->addWidget((QTreeView *)trees[TARGETDESC]);
+
     this->centralWidget()->setLayout(layout);
-//    pLabel = new QLabel;
-//    pLabel->setText("Application started. Please load target and template files to start converting");
-//    this->statusBar()->addWidget(pLabel);
+    pLabel = new QLabel;
+    updateTextLabel("Application started. Please load target and template files to start converting");
+    this->statusBar()->addWidget(pLabel);
 
 }
 

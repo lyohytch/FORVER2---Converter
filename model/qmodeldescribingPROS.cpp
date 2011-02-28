@@ -77,9 +77,8 @@ void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream
     while (!fileStream->atEnd())
     {
         QString line = fileStream->readLine();
-        oneRecord = processLineInDataFile(line, dataStructure); //Тут только сразу весь мап
-        //Первые три строки отбрасываем
-        if (!oneRecord.isEmpty() && i >= 5)
+        oneRecord = processLineInDataFile(line, dataStructure);
+        if (!oneRecord.isEmpty() && i >= 4)
         {
             //getIdByStatName
             oneData.insert(id, getIdByStatName(elementName, oneRecord));
@@ -225,12 +224,13 @@ void QModelDescribingPros::preparingDataStructureBeforeFilling()
             oneRec.append(tmpMap.value(rapid).toList());
             count++;
         }
-        //Если у нас некорректное число файлов
+        /*
         if (count != 4)
         {
             qWarning() << "Data files is not valid";
             continue;
         }
+        */
         oneMap.insert(numb, i++);
         oneMap.insert(rapid, oneRec);
         VisibleElementWithData.append(oneMap);

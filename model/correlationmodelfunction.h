@@ -24,7 +24,6 @@ public:
     virtual void changeFunctionValue(int col, int row, int funcId);
 
 protected:
-     virtual  void createTableModel(QStandardItemModel* tableModel);
      virtual  void setupTableModel(QStandardItemModel* tableModel);
 
      virtual QVariant switchFunction(int id, const QVariantList& parameters);

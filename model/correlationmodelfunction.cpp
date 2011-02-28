@@ -2,26 +2,18 @@
 
 #include "correlationmodelfunction.h"
 
-CorrelationModelFunction::CorrelationModelFunction(QWidget* parent, QModelDescribing* current, QModelDescribing* target):
-        CorrelationModel(parent, current, target)
-{
-    createTableModel(getTableModel());
-    isFunc = false;
-}
-
-CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescribing *current, QModelDescribing *target, QStandardItemModel *iTableModel):
-        CorrelationModel(parent, current, target, iTableModel)
+CorrelationModelFunction::CorrelationModelFunction(QWidget* parent, QModelDescribing* templ, QModelDescribing* target):
+        CorrelationModel(parent, templ, target)
 {
     setupTableModel(getTableModel());
     isFunc = false;
 }
 
-//TODO: remove creaTTableModel
- void CorrelationModelFunction::createTableModel(QStandardItemModel* tableModel)
+CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescribing *templ, QModelDescribing *target, QStandardItemModel *iTableModel):
+        CorrelationModel(parent, templ, target, iTableModel)
 {
-    qDebug();
-    tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника")<< QString::fromUtf8("Функция"));
-    tableModel->setColumnCount(3);
+    setupTableModel(getTableModel());
+    isFunc = false;
 }
 
  void CorrelationModelFunction::setupTableModel(QStandardItemModel* tableModel)
@@ -33,7 +25,7 @@ CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescri
  void CorrelationModelFunction::fillInTable()
  {
      clearCorrelationTable();
-     int iTemplateCount = getCurrentModel()->getVisibleElements().count();
+     int iTemplateCount = getTemplateModel()->getVisibleElements().count();
      int iTargetCount = getTargetModel()->getVisibleElements().count();
      QString name1, name2;
      QList<QStandardItem*> itemList;
@@ -43,9 +35,9 @@ CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescri
      for (; i < iTemplateCount; i++)
      {
          itemList.clear();
-         name1 = getCurrentModel()->getVisibleElements()[i].toMap().value(name).toString();
+         name1 = getTemplateModel()->getVisibleElements()[i].toMap().value(name).toString();
          QStandardItem* item1 = new QStandardItem(name1);
-         item1->setData(getCurrentModel()->getVisibleElements()[i], Qt::UserRole + 1);
+         item1->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
          QStandardItem* item2;
          if (i < iTargetCount)
          {
@@ -68,6 +60,7 @@ CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescri
          item3->setEditable(false);
      }
      this->resizeColumnsToContents();
+     this->show();
  }
 
  void CorrelationModelFunction::fillInTable(QVariantMap mapTable)
@@ -125,6 +118,7 @@ CorrelationModelFunction::CorrelationModelFunction(QWidget *parent, QModelDescri
 
      }
      this->resizeColumnsToContents();
+     this->show();
  }
 
  bool CorrelationModelFunction::applyTreeClick(int id)

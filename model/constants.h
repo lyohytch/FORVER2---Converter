@@ -13,12 +13,14 @@ const QString lBracket("(");
 const QString quote2("\"");
 const QString quote("\'");
 const QString underline("_");
-const QString zero("0");
-const QString one("1");
 
-const QChar X_Rus('\Õ');
+
+const QChar zero('0');
+const QChar one('1');
+
+const QChar X_Rus('Õ');
 const QChar X_Eng('X');
-const QChar k_Rus('\ê');
+const QChar k_Rus('ê');
 const QChar k_eng('k');
 //Sql
 const QString createTbl("CREATE TABLE");
@@ -129,9 +131,9 @@ const QString target3path("../../Resources/Description/4Views/Sprav3.txt");
 const QString target4path("../../Resources/Description/4Views/Sprav4.txt");
 const QString prosPathF1("../../Resources/Description/PROS/F1.TXT");
 const QString prosPathF2("../../Resources/Description/PROS/F2.TXT");
-const QString prosPathF5("../../Resources/Description/PROS/F5.TXT");
+const QString prosPathF5("Resources/Description/PROS/F5.TXT");
 const QString prosPathF12("../../Resources/Description/PROS/F12.TXT");
-const QString juraPath1("../../Resources/Description/Jura/Pros.txt");
+const QString juraPath1("Resources/Description/Jura/Pros.txt");
 #elif defined Q_OS_WIN32 && !defined DEBUGING
 const QString demopath("..\\Resources\\Description\\Demo\\sprav_d.txt");
 const QString target1path("..\\Resources\\Description\\4Views\\Sprav1.txt");

@@ -160,7 +160,9 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
     QString text = outStream.readAll();
     if( textCodec->canEncode(text) )
     {
-//textCodec = QTextCodec::codecForName("UTF-8");
+#ifdef Q_OS_LINUX
+        textCodec = QTextCodec::codecForName("UTF-8");
+#endif
         return textCodec;
     }
     else
@@ -168,7 +170,9 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
         textCodec = QTextCodec::codecForName("UTF-8");
         if ( textCodec->canEncode(text))
         {
-       //     textCodec = QTextCodec::codecForName("Windows-1251");
+#ifdef Q_OS_LINUX
+            textCodec = QTextCodec::codecForName("Windows-1251");
+#endif
             return textCodec;
         }
         else
@@ -202,7 +206,13 @@ void QModelDescribing::loadingDataElementsFromFile(const QString& filename)
         }
         else
         {
+            QTextCodec *txtCodec = setFileEncodingByContain(&fileSource);
+
+            fileSource.close();
+            fileSource.open(QIODevice::ReadOnly | QIODevice::Text);
             QTextStream fileStream(&fileSource);
+            fileStream.setCodec(txtCodec);
+
             if (checkFileFileStructureData(&fileStream))
             {
                 setElementNameByDataFile(filename);

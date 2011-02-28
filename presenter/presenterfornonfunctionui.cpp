@@ -12,6 +12,7 @@
 // TODO: нельзя менять местами таргет и темлейт. Сделать это
 void PresenterForNonFunctionUI::allocateCorrelationModel()
 {
+
     _view->corrModel = new CorrelationModelNoFunction((QWidget *)_view,
                                                     MODELS(TEMPLATEDESC),
                                                     MODELS(TARGETDESC));

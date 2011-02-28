@@ -13,20 +13,22 @@ const QString level("level");
 const QString value("value");*/
 
 // TODO: make corr model
-CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target):
-    QTableView(parent), iCurrentModel(current) , iTargetModel(target)
+CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* templ, QModelDescribing* target):
+    QTableView(parent), iTemplateModel(templ) , iTargetModel(target)
 {
     tableModel = new QStandardItemModel;
     this->setModel(tableModel);
     this->resizeColumnsToContents();
+    this->hide();
     isTemp = isTarg = false;
 }
-CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* current, QModelDescribing* target, QStandardItemModel* iTableModel):
-    QTableView(parent), iCurrentModel(current) , iTargetModel(target), tableModel(iTableModel)
+CorrelationModel::CorrelationModel(QWidget* parent, QModelDescribing* templ, QModelDescribing* target, QStandardItemModel* iTableModel):
+    QTableView(parent), iTemplateModel(templ) , iTargetModel(target), tableModel(iTableModel)
 {
 
     this->setModel(tableModel);
     this->resizeColumnsToContents();
+    this->hide();
     isTemp = isTarg = false;
 }
 
@@ -37,13 +39,13 @@ CorrelationModel::~CorrelationModel()
 
 //Rework it to iListData
 
-QVariantList CorrelationModel::targetToCurrent()
+QVariantList CorrelationModel::targetToTemplate()
 {
     //TODO check it
     qDebug() << " Real start convering....";
     QVariantList retData;
     QVariantList dataList = iTargetModel->getElementsWithData();
-    QVariantList currDescrList = iCurrentModel->getVisibleElements();
+    QVariantList currDescrList = iTemplateModel->getVisibleElements();
     QVariantList searchTemplates;
     QVariantList dataListItem;
     QVariantMap oneMap;
@@ -52,7 +54,7 @@ QVariantList CorrelationModel::targetToCurrent()
     int fID;
     for (int i = 0; i < dataList.count(); i++)
     {
-        currDescrList = iCurrentModel->getVisibleElements();
+        currDescrList = iTemplateModel->getVisibleElements();
         dataListItem = dataList[i].toMap().value(rapid).toList();
         oneMap.insert(id, i);
         appData.clear();
@@ -150,6 +152,7 @@ void CorrelationModel::fillInTable(QVariantMap mapTable)
 
     }
     this->resizeColumnsToContents();
+    this->show();
 }
 
 void CorrelationModel::clearCorrelationTable()
