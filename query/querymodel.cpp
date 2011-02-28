@@ -7,6 +7,7 @@ querymodel::querymodel(CorrelationModel* acorrModel):
 }
 
 querymodel::querymodel(const querymodel &templateQueryModel):
+        QObject(),
         corrModel(templateQueryModel.corrModel),
         iQueryRequestDesc(templateQueryModel.iQueryRequestDesc),
         iQueryRequestData(templateQueryModel.iQueryRequestData),
