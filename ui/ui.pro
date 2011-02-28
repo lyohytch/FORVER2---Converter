@@ -7,3 +7,6 @@ FORMS += converter.ui
 include( ../common.pri )
 include( ../constants.pri )
 include( ../ui.pri )
+
+RESOURCES += \
+    ../resources.qrc

@@ -23,8 +23,8 @@
    <string>converter</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../../../../Desktop/University/Link to DIPLOM/FORVER2---Converter/Resources/Icons/converter.ico</normaloff>../../../../Desktop/University/Link to DIPLOM/FORVER2---Converter/Resources/Icons/converter.ico</iconset>
+   <iconset resource="../resources.qrc">
+    <normaloff>:/application_icon/Resources/Icons/converter.ico</normaloff>:/application_icon/Resources/Icons/converter.ico</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -196,7 +196,9 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionClose</sender>

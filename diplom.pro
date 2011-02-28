@@ -7,5 +7,5 @@ SUBDIRS += model \
            build
 TARGET = Demo.Converter
 DESTDIR = ./build/bin
-RC_FILE += icon.rc
+RC_FILE += converter.rc
 

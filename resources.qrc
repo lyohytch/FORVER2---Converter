@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/application_icon">
+        <file>Resources/Icons/converter.ico</file>
+    </qresource>
+</RCC>

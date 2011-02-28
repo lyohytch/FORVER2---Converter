@@ -11,6 +11,12 @@ def removeMakeFiles(mkfDir):
         if os.path.exists(mkfDir + '/' + 'Makefile'):     
             os.remove(mkfDir + '/' + 'Makefile')
             print 'Makefile from ' + mkfDir + ' removed.'
+        if os.path.exists(mkfDir + '/' + 'Makefile.Release'):
+            os.remove(mkfDir + '/' + 'Makefile.Release')
+            print 'Makefile.Release from ' + mkfDir + ' removed.'
+        if os.path.exists(mkfDir + '/' + 'Makefile.Debug'):
+            os.remove(mkfDir + '/' + 'Makefile.Debug')
+            print 'Makefile.Debug from ' + mkfDir + ' removed.'           
        
 
 def removeBuildFolders(tmpDir):
@@ -28,7 +34,7 @@ if __name__ == '__main__':
         removeMakeFiles(currDir + dirname)
     
     for dirname in buildDirList:
-        removeBuildFolders(buildDir + '/' + dirname)
+        removeBuildFolders(buildDir + dirname)
     
     print 'Project successfully flushed.'
             
