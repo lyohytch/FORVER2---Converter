@@ -422,7 +422,7 @@ void Presenters::loadDescriptionModelFromFiles(const QStringList &filenames, int
             //TODO попробовать просто отобразить модель
             MODELS(descriptionId)->createTreeForViewing();
             TREES(descriptionId)->loadModel(MODELS(descriptionId));
-            _view->updateTextLabel("Target model was created");
+            _view->updateTextLabel("Model was created");
             emit loadDescComplete();
         }
     }
@@ -558,7 +558,7 @@ void Presenters::loadDataFromFilesWithData(const QStringList &filenames, int des
     if (MODELS(descriptionId)->isValidElementsWithDataForParticularFile())
     {
         MODELS(descriptionId)->preparingDataStructureBeforeFilling();
-        _view->updateTextLabel("Template data successfully loaded");
+        _view->updateTextLabel("Data successfully loaded");
     }
     else
     {

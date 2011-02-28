@@ -48,7 +48,7 @@ class CorrelationModel: public QTableView
     protected:
         virtual void setupTableModel(QStandardItemModel* tableModel) = 0;
         virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) = 0;// { return QVariant();}
-        QVariant findItemInTableTemplate(const QVariant& search, int& row);
+        virtual QVariant findItemInTableTemplate(const QVariant& search, int& row);
         QVariantList foundByUIDsRetValues(const QVariantList& dataListItem, const QVariantList& searchTemplates);
 
     private:

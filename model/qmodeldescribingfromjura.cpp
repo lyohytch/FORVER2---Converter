@@ -126,7 +126,7 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList &capt
         element.insert(dependId, elementName + capturedText.at(1));
     }
     //For av, dv, cb these fields should be empty
-    element.insert(targetId, generic + capturedText.at(4) + underline + capturedText.at(5));
+    element.insert(targetId, getElementNameByCodeForm(capturedText.at(4)) + capturedText.at(5));
     element.insert(targetName, capturedText.at(6));
     element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(7)));
     element.insert(correlationValue, FromIntegerToBinaryString(countDependFields) );

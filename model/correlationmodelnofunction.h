@@ -14,13 +14,14 @@ public:
       Fill correlation table from description file
     */
     virtual void fillInTable();
+    virtual QVariant findItemInTableTemplate(const QVariant& search, int& row);
 private:
     int findTargetIndexByTargetValue(const QString &targetString);
-    QString processTargetData(const QVariantList & convertedData, const QVariant& elementFromCorrTable);
+    QString processTargetData(const QVariantList & convertedData, const QVariant& elementFromCorrTable, const QVariantList &templateDescrList);
     QVariant findTargetDataById(const QString &targetTemplate, const QVariantList &convertedData);
     QString setNewDataValueByType(const QString &typeElement,  const QString &correlationValue, const QString &dataString);
     bool compareCompactCodes(const QString &codedDataWithoutCode, const QString & datafromTarget);
-    bool dependIdSetted(const QString &dependId, const QVariantList &convertedData);
+    bool dependIdSetted(const QString &dependId, const QVariantList &convertedData, const QVariantList &templateDescrList);
 protected:
     virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/)  {return QVariant();}
 

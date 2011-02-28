@@ -13,6 +13,8 @@ converter::converter(QWidget* parent) :
     ui(new Ui::converter)
 {
     ui->setupUi(this);
+    pLabel = NULL;
+    layout = NULL;
     init();
 }
 
@@ -72,6 +74,10 @@ void converter::addWidgets()
 
 void converter::updateTextLabel(const QString &txtMsg)
 {
+    if (!pLabel)
+    {
+        pLabel = new QLabel;
+    }
     pLabel->setText(txtMsg);
 }
 
@@ -146,7 +152,10 @@ void converter::init_setup_desktop_widgets()
     //layout->addWidget((QTreeView *)trees[TARGETDESC]);
 
     this->centralWidget()->setLayout(layout);
-    pLabel = new QLabel;
+    if ( !pLabel )
+    {
+        pLabel = new QLabel;
+    }
     updateTextLabel("Application started. Please load target and template files to start converting");
     this->statusBar()->addWidget(pLabel);
 
