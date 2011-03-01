@@ -22,6 +22,8 @@ private:
     QString setNewDataValueByType(const QString &typeElement,  const QString &correlationValue, const QString &dataString);
     bool compareCompactCodes(const QString &codedDataWithoutCode, const QString & datafromTarget);
     bool dependIdSetted(const QString &dependId, const QVariantList &convertedData, const QVariantList &templateDescrList);
+    QStandardItem* addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate);
+    QVariant findTargetDescriptionById(const QString &targetTemplate);
 protected:
     virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/)  {return QVariant();}
 

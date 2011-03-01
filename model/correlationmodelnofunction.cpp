@@ -37,37 +37,103 @@ void CorrelationModelNoFunction::fillInTable()
         qDebug()<<" Template by Ids => "<<getTemplateModel()->getVisibleElements()[i].toMap().value(id).toString();
         QStandardItem *itemCurrent;
         QStandardItem *itemTarget;
+
+        nameCurrent = getTemplateModel()->getVisibleElements()[i].toMap().value(name).toString();
+        itemCurrent =  new QStandardItem(nameCurrent);
+        itemCurrent->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
+        itemCurrent->setEditable(false);
+
         if( !targetValue.isEmpty() )
         {
            int index = findTargetIndexByTargetValue(targetValue);
            if (index != -1)
            {
-                nameCurrent = getTemplateModel()->getVisibleElements()[i].toMap().value(name).toString();
-                itemCurrent =  new QStandardItem(nameCurrent);
-                itemCurrent->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
-                itemCurrent->setEditable(false);
-
-                //TODO: add other data from dependList
-                nameTarget = getTargetModel()->getVisibleElements()[index].toMap().value(name).toString();
-                itemTarget = new QStandardItem(nameTarget);
-                itemTarget->setData(getTargetModel()->getVisibleElements()[index], Qt::UserRole + 1);
-                itemTarget->setEditable(false);
-
+                itemTarget = addHeadAndDependingItemsInTarget(getTemplateModel()->getVisibleElements()[i]);
            }
            else
            {
                qWarning()<<"Incorrect correlation. Please check description file";
-               itemCurrent = NULL;
                itemTarget = NULL;
-               continue;
            }
-           itemList.append(itemCurrent);
-           itemList.append(itemTarget);
-           getTableModel()->appendRow(itemList);
         }
+        else
+        {
+            qWarning()<<"Empty correlation. Please add information in description file";
+            itemTarget = NULL;
+        }
+        itemList.append(itemCurrent);
+        itemList.append(itemTarget);
+        getTableModel()->appendRow(itemList);
     }
     this->resizeColumnsToContents();
     this->show();
+}
+
+//Изменить поведения меняльщика
+//первый щелчок - первый элемент - открывается новая форма - таблица с текущими значениями, где щелчками можно поменять или убрать значение
+QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)
+{
+   QStandardItem *item;
+   QString nameItem;
+   QStringList itemNames = QStringList();
+   QStringList targetIds = QStringList();
+   QVariantList dataToList = QVariantList();
+
+   QVariantList dependList = elemFromTemplate.toMap().value(dependFields).toList();
+   QString firstTName = elemFromTemplate.toMap().value(targetId).toString();
+   dataToList.append(findTargetDescriptionById(firstTName));
+   itemNames.append(findTargetDescriptionById(firstTName).toMap().value(name).toString());
+   targetIds.append(firstTName);
+
+   foreach(QVariant dependElement, dependList)
+   {
+       QString targIdName = dependElement.toMap().value(targetId).toString();
+       if (targIdName.isEmpty())
+       {
+           itemNames.append(QString(" "));
+       }
+       else
+       {
+            targetIds.append(targIdName);
+            QVariant foundedTarget = findTargetDescriptionById(targIdName);
+            if(!foundedTarget.isNull())
+            {
+                 QString simpleName = foundedTarget.toMap().value(name).toString();
+                 dataToList.append(foundedTarget);
+                 itemNames.append(simpleName);
+            }
+            else
+            {
+                qWarning()<<"Strange error";
+            }
+       }
+   }
+   if(itemNames.count() > 0)
+   {
+       nameItem = itemNames.takeAt(0);
+   }
+   if(!itemNames.isEmpty())
+   {
+       nameItem += " { [" + itemNames.takeAt(0) + "]";
+   }
+   foreach(QString name, itemNames)
+   {
+       if(!name.isEmpty())
+       {
+           nameItem += ", [" + name + "]";
+       }
+   }
+   if(!itemNames.isEmpty())
+   {
+       nameItem += " }";
+   }
+   //nameItem should be look like "id1 {[id2], [id3], [id1], [ ] ...}
+   // Нужно устанавливать номер!!!!
+   item = new QStandardItem(nameItem);
+   item->setData(dataToList, Qt::UserRole + 1);
+   item->setEditable(false);
+
+   return item;
 }
 
 int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targetString)
@@ -83,7 +149,7 @@ int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targ
     return -1;
 }
 
-//!!!!!!!Если у зависимых полей несколько соответвий из второй части, то указываем это в таблице отношений
+//!!!!!!!Нужно устанавливать номер!!!!rework
 QVariantList CorrelationModelNoFunction::targetToTemplate()
 {
     qDebug() << " Real start convering....";
@@ -310,6 +376,19 @@ QVariant CorrelationModelNoFunction::findTargetDataById(const QString &targetTem
         if(elementFromConvList.toMap().value(id) == targetTemplate)
         {
             return elementFromConvList;
+        }
+    }
+    return QVariant();
+}
+
+QVariant CorrelationModelNoFunction::findTargetDescriptionById(const QString &targetTemplate)
+{
+    QVariantList searchList = getTargetModel()->getVisibleElements();
+    foreach(QVariant el, searchList)
+    {
+        if(el.toMap().value(id) == targetTemplate)
+        {
+            return el;
         }
     }
     return QVariant();

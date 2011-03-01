@@ -60,7 +60,6 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
              }
          }
     }
-    qDebug()<< "end. Elements =>"<< elements;
     return elements;
 }
 
@@ -79,8 +78,8 @@ QVariantMap QModelDescribingFromJura::getNewAlignedCorrelationsList(int countDep
 
 QString QModelDescribingFromJura::FromIntegerToBinaryString(int countDependFields)
 {
-   QString binaryString;
-   QString reverseBinaryString;
+   QString binaryString = QString();
+   QString reverseBinaryString = QString();
 
    while(countDependFields > 1)
    {
