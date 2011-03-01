@@ -14,3 +14,4 @@ build/mocs
 build/lib
 *.so.*
 *.so
+qrc_*

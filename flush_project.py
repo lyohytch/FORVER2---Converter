@@ -26,7 +26,7 @@ def removeBuildFolders(tmpDir):
             print tmpDir + ' deleted.'
 #MAIN
 if __name__ == '__main__':
-    print 'Flushing project stared.'
+    print 'Flushing project started.'
     dirList = os.listdir(currDir)
     buildDirList = os.listdir(buildDir)
     removeMakeFiles(currDir)
