@@ -15,6 +15,8 @@ public:
     */
     virtual void fillInTable();
     virtual QVariant findItemInTableTemplate(const QVariant& search, int& row);
+    virtual void setApplyTreeClick(int id) { Q_UNUSED(id); }
+
 private:
     int findTargetIndexByTargetValue(const QString &targetString);
     QString processTargetData(const QVariantList & convertedData, const QVariant& elementFromCorrTable, const QVariantList &templateDescrList);

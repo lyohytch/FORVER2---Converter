@@ -70,36 +70,51 @@ void CorrelationModelNoFunction::fillInTable()
 }
 
 //Изменить поведения меняльщика
+//combobox!
 //первый щелчок - первый элемент - открывается новая форма - таблица с текущими значениями, где щелчками можно поменять или убрать значение
 QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)
 {
+
+
    QStandardItem *item;
    QString nameItem;
-   QStringList itemNames = QStringList();
-   QStringList targetIds = QStringList();
-   QVariantList dataToList = QVariantList();
+
+   QVariantMap corrDataForTable = QVariantMap();// Data to add in additional correlation table
+   QStringList itemNames = QStringList(); //"itemNames"
+   QStringList targetIds = QStringList(); //"targetIds"
+   QStringList corrValues = QStringList(); //"corrValues"
+   QStringList codes = QStringList(); //"codeValues"
+   QString typeName = elemFromTemplate.toMap().value(type).toString(); //"typeName"
+   QString templateName = elemFromTemplate.toMap().value(name).toString();//"templateName"
+   QStringList dependIds = QStringList();//"dependIds" - dopy
 
    QVariantList dependList = elemFromTemplate.toMap().value(dependFields).toList();
-   QString firstTName = elemFromTemplate.toMap().value(targetId).toString();
-   dataToList.append(findTargetDescriptionById(firstTName));
-   itemNames.append(findTargetDescriptionById(firstTName).toMap().value(name).toString());
-   targetIds.append(firstTName);
 
+
+   QString firstTName = elemFromTemplate.toMap().value(targetId).toString();
+
+   itemNames.append(findTargetDescriptionById(firstTName).toMap().value(name).toString());
+   corrValues.append(elemFromTemplate.toMap().value(correlationValue).toString());
+   targetIds.append(firstTName);
+   codes.append(elemFromTemplate.toMap().value(targetDataForConvert).toString());
+   dependIds.append(QString(" "));
    foreach(QVariant dependElement, dependList)
    {
        QString targIdName = dependElement.toMap().value(targetId).toString();
+       targetIds.append(targIdName);
+       corrValues.append(dependElement.toMap().value(correlationValue).toString());
+       codes.append(dependElement.toMap().value(targetDataForConvert).toString());
+       dependIds.append(dependElement.toMap().value(dependId).toString());
        if (targIdName.isEmpty())
        {
            itemNames.append(QString(" "));
        }
        else
        {
-            targetIds.append(targIdName);
             QVariant foundedTarget = findTargetDescriptionById(targIdName);
             if(!foundedTarget.isNull())
             {
                  QString simpleName = foundedTarget.toMap().value(name).toString();
-                 dataToList.append(foundedTarget);
                  itemNames.append(simpleName);
             }
             else
@@ -108,10 +123,21 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
             }
        }
    }
+
    if(itemNames.count() > 0)
    {
-       nameItem = itemNames.takeAt(0);
+       nameItem = itemNames.at(0);
    }
+
+   corrDataForTable.insert("itemNames", itemNames);
+   corrDataForTable.insert("targetIds", targetIds);
+   corrDataForTable.insert("corrValues", corrValues);
+   corrDataForTable.insert("codeValues", codes);
+   corrDataForTable.insert("typeName", typeName);
+   corrDataForTable.insert("dependIds", dependIds);
+   corrDataForTable.insert("templateName", templateName);
+
+   /*
    if(!itemNames.isEmpty())
    {
        nameItem += " { [" + itemNames.takeAt(0) + "]";
@@ -127,10 +153,11 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
    {
        nameItem += " }";
    }
+   */
    //nameItem should be look like "id1 {[id2], [id3], [id1], [ ] ...}
    // Нужно устанавливать номер!!!!
    item = new QStandardItem(nameItem);
-   item->setData(dataToList, Qt::UserRole + 1);
+   item->setData(corrDataForTable, Qt::UserRole + 1);
    item->setEditable(false);
 
    return item;
