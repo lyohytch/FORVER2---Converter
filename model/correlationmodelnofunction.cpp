@@ -53,6 +53,32 @@ void CorrelationModelNoFunction::fillInTable()
     this->show();
 }
 
+void CorrelationModelNoFunction::fillInTable(QVariantMap mapTable)
+{
+    clearCorrelationTable();
+    qDebug();
+    int N = mapTable.value(tempList).toList().count();
+    QList<QStandardItem*> itemList;
+    QString itemNames = "";
+    for(int i = 0; i < N; ++i)
+    {
+        itemList.clear();
+        itemNames = mapTable.value(tempList).toList().at(i).toMap().value(name).toString();
+        QStandardItem *item1 = new QStandardItem(itemNames);
+        item1->setData(mapTable.value(tempList).toList().at(i), Qt::UserRole + 1);
+        item1->setEditable(false);
+        itemNames = mapTable.value(targList).toList().at(i).toMap().value(itemNamesInForm).toStringList().at(0);
+        QStandardItem *item2 = new QStandardItem(itemNames);
+        item2->setData(mapTable.value(targList).toList().at(i), Qt::UserRole + 1);
+        item2->setEditable(false);
+        itemList.append(item1);
+        itemList.append(item2);
+        getTableModel()->appendRow(itemList);
+    }
+    this->resizeColumnsToContents();
+    this->show();
+}
+
 QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)
 {
 

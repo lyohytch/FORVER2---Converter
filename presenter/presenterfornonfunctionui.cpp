@@ -1,6 +1,7 @@
 #include <QModelIndex>
 #include <QDesktopWidget>
 #include <QApplication>
+#include <QFileDialog>
 
 #include "presenterfornonfunctionui.h"
 #include "constants.h"

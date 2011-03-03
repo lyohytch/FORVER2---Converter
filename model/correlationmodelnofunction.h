@@ -14,6 +14,7 @@ public:
       Fill correlation table from description file
     */
     virtual void fillInTable();
+    virtual void fillInTable(QVariantMap mapTable);
     virtual void setApplyTreeClick(int id) { Q_UNUSED(id); }
 
 private:
