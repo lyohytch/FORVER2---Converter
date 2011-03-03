@@ -99,7 +99,14 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
         if (tableModel->item(i, iTemplate)->data(Qt::UserRole + 1) == search)
         {
             row = i;
-            return tableModel->item(i, iTarget)->data(Qt::UserRole + 1);
+            if(tableModel->item(i, iTarget) != NULL )
+            {
+                return tableModel->item(i, iTarget)->data(Qt::UserRole + 1);
+            }
+            else
+            {
+                return QVariant();
+            }
         }
     }
     return QVariant();

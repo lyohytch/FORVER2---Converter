@@ -179,10 +179,10 @@ QStandardItemModel* AdditionCorrelationTable::createModelFromData(const QVariant
 
    if( !corrData.isNull())
    {
-       QVariantList names = corrData.toMap().value("itemNames").toList();
-       QVariantList codes = corrData.toMap().value("codeValues").toList();
-       QVariantList corrs = corrData.toMap().value("corrValues").toList();
-       QVariantList depids = corrData.toMap().value("dependIds").toList();
+       QVariantList names = corrData.toMap().value(itemNamesInForm).toList();
+       QVariantList codes = corrData.toMap().value(codesInForm).toList();
+       QVariantList corrs = corrData.toMap().value(corrValuesInForm).toList();
+       QVariantList depids = corrData.toMap().value(dependIdsInForm).toList();
 
        tNames = fillRowInAdditionalTable(names);
        tCodes = fillRowInAdditionalTable(codes);

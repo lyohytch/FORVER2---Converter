@@ -14,16 +14,16 @@ public:
       Fill correlation table from description file
     */
     virtual void fillInTable();
-    virtual QVariant findItemInTableTemplate(const QVariant& search, int& row);
     virtual void setApplyTreeClick(int id) { Q_UNUSED(id); }
 
 private:
     int findTargetIndexByTargetName(const QString &targetString);
-    QString processTargetData(const QVariantList & convertedData, const QVariant& elementFromCorrTable, const QVariantList &templateDescrList);
+    QVariant findTemplateByTargetName(const QString &tname);
+    QString processTargetData(const QVariantList & convertedData, const QVariant& elementFromCorrTable);
     QVariant findTargetDataByName(const QString &targetTemplate, const QVariantList &convertedData);
     QString setNewDataValueByType(const QString &typeElement,  const QString &correlationValue, const QString &dataString);
     bool compareCompactCodes(const QString &codedDataWithoutCode, const QString & datafromTarget);
-    bool dependIdSetted(const QString &dependId, const QVariantList &convertedData, const QVariantList &templateDescrList);
+    bool dependIdSetted(const QString &dependId, const QVariantList &convertedData);
     QStandardItem* addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate);
     QVariant findTargetDescriptionByName(const QString &targetTemplate);
 protected:

@@ -109,6 +109,14 @@ const QString targList("targList");
 const QString funcList("funcList");
 const QString cmf(".cmf");
 
+//Items in additional correlation table
+const QString itemNamesInForm("itemNames");
+const QString corrValuesInForm("corrValues");
+const QString codesInForm("codeValues");
+const QString typeNameInForm("typeName");
+const QString dependIdsInForm("dependIds");
+const QString templateNameInForm("templateName");
+
 const int iTemplate = 0;
 const int iTarget = 1;
 const int iFunction = 2;
