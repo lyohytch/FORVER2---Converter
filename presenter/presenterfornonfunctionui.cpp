@@ -113,16 +113,46 @@ void PresenterForNonFunctionUI::ElementTableActivated(const QModelIndex & index)
 void PresenterForNonFunctionUI::setupAddTableForm()
 {
     AddTableForm = new AdditionCorrelationTable(this, _view);
-    connect(AddTableForm, SIGNAL(sendDataToMainTableForm(const QModelIndex &)),this,
-            SLOT(getDataFromAddCorrelationTable(const QModelIndex &)), Qt::QueuedConnection);
+    connect(AddTableForm, SIGNAL(sendDataToMainTableForm(QStandardItem *, int, int)),this,
+            SLOT(getDataFromAddCorrelationTable(QStandardItem *, int, int)), Qt::QueuedConnection);
 }
 
-void PresenterForNonFunctionUI::getDataFromAddCorrelationTable(const QModelIndex &index)
+void PresenterForNonFunctionUI::getDataFromAddCorrelationTable(QStandardItem *item, int mainRow, int mainColumn)
 {
     qDebug()<<"Calling correlation model to fix table model";
-    qDebug()<<index.data(Qt::UserRole + 1);
-    qDebug()<<"index.row() - "<<index.row();
-    qDebug()<<"index.column() - "<<index.column();
+    qDebug()<<item->data(Qt::UserRole + 1);
+    qDebug()<<"ROW - "<<mainRow;
+    qDebug()<<"COLUMN - "<<mainColumn;
+    CORR_MODEL->saveDataForTarget(item->data(Qt::UserRole + 1), mainRow, mainColumn);
+}
+
+void PresenterForNonFunctionUI::ElementTreeTemplateActivated(const QModelIndex& index)
+{
+    qDebug() << "index = " << index.data(Qt::UserRole + 1);
+    if (MODELS(TEMPLATEDESC)->isVisibleElement(index.data(Qt::UserRole + 1)))
+    {
+        emit sendChangedDataToAddCorrForm(iTemplate, index.data(Qt::UserRole + 1).toMap().value(id).toString());
+    }
+    else
+    {
+        qDebug() << " template table cell isn't checked or not applicable";
+        _view->updateTextLabel("Template table cell isn't checked or not applicable");
+    }
+}
+
+void PresenterForNonFunctionUI::ElementTreeTargetActivated(const QModelIndex& index)
+{
+    qDebug() << "index = " << index.data(Qt::UserRole + 1);
+    qDebug() << "index.row() = " << index.row();
+    if ( MODELS(TARGETDESC)->isVisibleElement(index.data(Qt::UserRole + 1)))
+    {
+        emit sendChangedDataToAddCorrForm(iTarget, index.data(Qt::UserRole + 1).toMap().value(name).toString());
+    }
+    else
+    {
+        qDebug() << " target table cell isn't checked or not applicable";
+        _view->updateTextLabel("Target table cell isn't checked or not applicable");
+    }
 }
 
 //------------------------------------------------------------------------
@@ -142,31 +172,120 @@ AdditionCorrelationTable::AdditionCorrelationTable(Presenters *presenter, IView 
     cLayout->addWidget(viewMainCorrs);
     setLayout(cLayout);
 
+    isWaitChanges = false; // Не ждём изменений
+
+
     connect(presenter, SIGNAL(sendDataToAddCorrForm(const QModelIndex &) ), this,
             SLOT(processDataFromMainPresenter(const QModelIndex &)), Qt::QueuedConnection);
 
     connect(viewMainCorrs, SIGNAL(doubleClicked(const QModelIndex&)), this,
+            SLOT(elementInCorrTableClear(const QModelIndex&)), Qt::QueuedConnection);
+
+    connect(viewMainCorrs, SIGNAL(clicked(const QModelIndex&)), this,
             SLOT(elementInCorrTableActivated(const QModelIndex&)), Qt::QueuedConnection);
+
+    connect(presenter,SIGNAL(sendChangedDataToAddCorrForm(int, const QString&)), this,
+            SLOT(updateElementInCorrTable(int, const QString&)), Qt::QueuedConnection);
+
+
+}
+
+void AdditionCorrelationTable::updateElementInCorrTable(int descriptionId, const QString &value)
+{
+    qDebug()<<"START";
+    bool isApplicableChanges = ( (descriptionId == iTarget && activeRow == 0) ||
+                                 (descriptionId == iTemplate && activeRow == 3) );
+    if(isWaitChanges && isApplicableChanges)
+    {
+        QStandardItem *item = new QStandardItem(value);
+        item->setEditable(false);
+        tableModel->setItem(activeRow, activeColumn, item);
+    }
+    qDebug()<<"END";
+}
+
+void AdditionCorrelationTable::elementInCorrTableActivated(const QModelIndex & index)
+{
+    qDebug();
+    bool isEditable = (index.row() == 1 || index.row() == 2);
+    activeRow = index.row();
+    activeColumn = index.column();
+    if(isEditable)
+    {
+        isWaitChanges = false;
+    }
+    else
+    {
+        isWaitChanges = true;
+    }
 }
 
 void AdditionCorrelationTable::closeEvent(QCloseEvent */*clEvent*/)
 {
     qDebug() << " ::AdditionalCorrelation table was closed";
-    emit sendDataToMainTableForm(corrAdditionMap);
+    isWaitChanges = false;
+    QStandardItem *item  = new QStandardItem;
+    item->setData( fillCorrelationMap(), Qt::UserRole + 1);
+    emit sendDataToMainTableForm(item, mainRow, mainColumn);
+}
+
+QVariantMap AdditionCorrelationTable::fillCorrelationMap()
+{
+    QVariantMap corrMap;
+    QVariantList names = QVariantList();
+    QVariantList codes = QVariantList();
+    QVariantList corrs = QVariantList();
+    QVariantList depids = QVariantList();
+
+    int rowCount = tableModel->rowCount();
+    int colCount = tableModel->columnCount();
+    for(int i = 0; i < rowCount; ++i)
+        for(int j = 0; j < colCount; ++j)
+        {
+            switch(i)
+            {
+                case 0:
+                    names.append(tableModel->item(i, j)->text());
+                    break;
+                case 1:
+                    codes.append(tableModel->item(i, j)->text());
+                    break;
+                case 2:
+                    corrs.append(tableModel->item(i,j)->text());
+                    break;
+                case 3:
+                    depids.append(tableModel->item(i,j)->text());
+                    break;
+                default:
+                    break;
+            }
+        }
+    corrMap.insert(itemNamesInForm, names);
+    corrMap.insert(codesInForm, codes);
+    corrMap.insert(corrValuesInForm, corrs);
+    corrMap.insert(dependIdsInForm, depids);
+    corrMap.insert(templateNameInForm, nameOfTarget);
+    corrMap.insert(typeNameInForm, typeOfElement);
+
+    return corrMap;
 }
 
 void AdditionCorrelationTable::processDataFromMainPresenter(const QModelIndex & tableData)
 {
-    corrAdditionMap = tableData;
     qDebug()<<" dataSended is corrAdditionMap";
 
     tableModel->clear();
-    tableModel = createModelFromData(corrAdditionMap.data(Qt::UserRole + 1));
+    tableModel = createModelFromData(tableData.data(Qt::UserRole + 1));
     tableModel->setHorizontalHeaderLabels(QStringList()<<"Heads"<<"Depend fields");
     tableModel->setVerticalHeaderLabels(QStringList()<<"Names"<<"Codes"<<"Values"<<"Depend ID");
 
     viewMainCorrs->resizeColumnsToContents();
-    this->setWindowTitle(corrAdditionMap.data(Qt::UserRole + 1).toMap().value("templateName").toString() + " :: " + corrAdditionMap.data(Qt::UserRole + 1).toMap().value("typeName").toString());
+    nameOfTarget = tableData.data(Qt::UserRole + 1).toMap().value(templateNameInForm).toString();
+    typeOfElement = tableData.data(Qt::UserRole + 1).toMap().value(typeNameInForm).toString();
+    this->setWindowTitle(nameOfTarget + " :: " + typeOfElement);
+
+    mainRow = tableData.row();
+    mainColumn = tableData.column();
 }
 
 QStandardItemModel* AdditionCorrelationTable::createModelFromData(const QVariant &corrData)
@@ -184,10 +303,10 @@ QStandardItemModel* AdditionCorrelationTable::createModelFromData(const QVariant
        QVariantList corrs = corrData.toMap().value(corrValuesInForm).toList();
        QVariantList depids = corrData.toMap().value(dependIdsInForm).toList();
 
-       tNames = fillRowInAdditionalTable(names);
-       tCodes = fillRowInAdditionalTable(codes);
-       tValues = fillRowInAdditionalTable(corrs);
-       tDepIds = fillRowInAdditionalTable(depids);
+       tNames = fillRowInAdditionalTable(names, 0);
+       tCodes = fillRowInAdditionalTable(codes, 1);
+       tValues = fillRowInAdditionalTable(corrs, 2);
+       tDepIds = fillRowInAdditionalTable(depids, 3);
    }
 
    tModel->insertRow(0, tNames);
@@ -198,23 +317,29 @@ QStandardItemModel* AdditionCorrelationTable::createModelFromData(const QVariant
    return tModel;
 }
 
-QList<QStandardItem *> AdditionCorrelationTable::fillRowInAdditionalTable(QVariantList & elfill)
+QList<QStandardItem *> AdditionCorrelationTable::fillRowInAdditionalTable(QVariantList & elfill, int row)
 {
    QList<QStandardItem *> tmpList;
-   tmpList.append(new QStandardItem(elfill.takeFirst().toString()));
+   QStandardItem *item = new QStandardItem(elfill.takeFirst().toString());
+   bool isEditable = (row == 1 || row == 2);
+   item->setEditable(isEditable);
+   tmpList.append(item);
    if(elfill.count() > 0)
    {
        for(int i = 0; i < elfill.count(); ++i)
        {
-            tmpList.append( new QStandardItem(elfill.at(i).toString()));
+            QStandardItem *itLoc = new QStandardItem(elfill.at(i).toString());
+            itLoc->setEditable(isEditable);
+            tmpList.append(itLoc);
        }
    }
    return tmpList;
 }
 
-void AdditionCorrelationTable::elementInCorrTableActivated(const QModelIndex &elementData)
+void AdditionCorrelationTable::elementInCorrTableClear(const QModelIndex &elementData)
 {
-    //process clicking
-    Q_UNUSED(elementData);
-    qDebug();
+    QStandardItem *item = new QStandardItem;
+    bool isEditable = (elementData.row() == 1 || elementData.row() == 2);
+    item->setEditable(isEditable);
+    tableModel->setItem(elementData.row(), elementData.column(), item);
 }

@@ -120,6 +120,7 @@ void QModelDescribingFromJura::alignOneAndZerosInCorrelationCodes(int valueOfOne
 QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList &capturedText, int countDependFields)
 {
     QVariantMap element;
+    element.insert(dependId, QString(" "));
     if(!capturedText.at(1).isEmpty())
     {
         element.insert(dependId, elementName + capturedText.at(1));

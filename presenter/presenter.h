@@ -39,8 +39,8 @@ protected slots:
 
     void onLoadTemplateData();
     void onLoadTargetData();
-    void ElementTreeTemplateActivated(const QModelIndex&);
-    void ElementTreeTargetActivated(const QModelIndex&);
+    virtual void ElementTreeTemplateActivated(const QModelIndex&);
+    virtual void ElementTreeTargetActivated(const QModelIndex&);
     virtual void ElementTableActivated(const QModelIndex &);
     void FillTable();
     void onExportTemplateDataToDB();

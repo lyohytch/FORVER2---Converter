@@ -43,6 +43,7 @@ class CorrelationModel: public QTableView
         void clearCorrelationTable();
         //Change table
         void changeTemplateValue(int col, int row, QVariant data);
+        void saveDataForTarget(const QVariant &data, int row, int col);
         void changeTargetValue(int col, int row, QVariant data, bool first);
         virtual void changeFunctionValue(int /*col*/, int /*row*/, int /*funcId*/) {}
     protected:

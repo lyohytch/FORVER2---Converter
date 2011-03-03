@@ -112,6 +112,19 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
     return QVariant();
 }
 
+void CorrelationModel::saveDataForTarget(const QVariant &data, int row, int col)
+{
+    QStandardItem* item = NULL;
+    if( !data.isNull())
+    {
+        item = new QStandardItem(data.toMap().value(itemNamesInForm).toStringList().at(0));
+        item->setData(data, Qt::UserRole + 1);
+        item->setEditable(false);
+    }
+    tableModel->setItem(row, col, item);
+    this->resizeColumnsToContents();
+}
+
 void CorrelationModel::fillInTable(QVariantMap mapTable)
 {
     clearCorrelationTable();

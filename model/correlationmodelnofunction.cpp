@@ -43,25 +43,8 @@ void CorrelationModelNoFunction::fillInTable()
         itemCurrent =  new QStandardItem(nameCurrent);
         itemCurrent->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
         itemCurrent->setEditable(false);
+        itemTarget = addHeadAndDependingItemsInTarget(getTemplateModel()->getVisibleElements()[i]);
 
-        if( !targetIdName.isEmpty() )
-        {
-           int index = findTargetIndexByTargetName(targetIdName);
-           if (index != -1)
-           {
-                itemTarget = addHeadAndDependingItemsInTarget(getTemplateModel()->getVisibleElements()[i]);
-           }
-           else
-           {
-               qWarning()<<"Incorrect correlation. Please check description file";
-               itemTarget = NULL;
-           }
-        }
-        else
-        {
-            qWarning()<<"Empty correlation. Please add information in description file";
-            itemTarget = NULL;
-        }
         itemList.append(itemCurrent);
         itemList.append(itemTarget);
         getTableModel()->appendRow(itemList);
@@ -70,9 +53,6 @@ void CorrelationModelNoFunction::fillInTable()
     this->show();
 }
 
-//Изменить поведения меняльщика
-//combobox!
-//первый щелчок - первый элемент - открывается новая форма - таблица с текущими значениями, где щелчками можно поменять или убрать значение
 QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)
 {
 
