@@ -25,7 +25,7 @@ void CorrelationModelNoFunction::fillInTable()
     clearCorrelationTable();
     int iTemplateCount = getTemplateModel()->getVisibleElements().count();
 
-    QString nameCurrent, nameTarget;
+    QString nameCurrent;
     QList<QStandardItem*> itemList;
     int i = 0;
     //TODO: move to foreach
@@ -33,7 +33,8 @@ void CorrelationModelNoFunction::fillInTable()
     {
         itemList.clear();
         //name1 = iCurrentModel->getVisibleElements()[i].toMap().value(name).toString();
-        QString targetValue = getTemplateModel()->getVisibleElements()[i].toMap().value(targetId).toString();
+        //QString formIdName = getTemplateModel()->getVisibleElements()[i].toMap().value(formId).toString();
+        QString targetIdName = getTemplateModel()->getVisibleElements()[i].toMap().value(targetName).toString();
         qDebug()<<" Template by Ids => "<<getTemplateModel()->getVisibleElements()[i].toMap().value(id).toString();
         QStandardItem *itemCurrent;
         QStandardItem *itemTarget;
@@ -43,9 +44,9 @@ void CorrelationModelNoFunction::fillInTable()
         itemCurrent->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
         itemCurrent->setEditable(false);
 
-        if( !targetValue.isEmpty() )
+        if( !targetIdName.isEmpty() )
         {
-           int index = findTargetIndexByTargetValue(targetValue);
+           int index = findTargetIndexByTargetName(targetIdName);
            if (index != -1)
            {
                 itemTarget = addHeadAndDependingItemsInTarget(getTemplateModel()->getVisibleElements()[i]);
@@ -81,7 +82,7 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
 
    QVariantMap corrDataForTable = QVariantMap();// Data to add in additional correlation table
    QStringList itemNames = QStringList(); //"itemNames"
-   QStringList targetIds = QStringList(); //"targetIds"
+   //QStringList targetIds = QStringList(); //"targetIds"
    QStringList corrValues = QStringList(); //"corrValues"
    QStringList codes = QStringList(); //"codeValues"
    QString typeName = elemFromTemplate.toMap().value(type).toString(); //"typeName"
@@ -90,38 +91,16 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
 
    QVariantList dependList = elemFromTemplate.toMap().value(dependFields).toList();
 
-
-   QString firstTName = elemFromTemplate.toMap().value(targetId).toString();
-
-   itemNames.append(findTargetDescriptionById(firstTName).toMap().value(name).toString());
+   itemNames.append(elemFromTemplate.toMap().value(targetName).toString());
    corrValues.append(elemFromTemplate.toMap().value(correlationValue).toString());
-   targetIds.append(firstTName);
    codes.append(elemFromTemplate.toMap().value(targetDataForConvert).toString());
    dependIds.append(QString(" "));
    foreach(QVariant dependElement, dependList)
    {
-       QString targIdName = dependElement.toMap().value(targetId).toString();
-       targetIds.append(targIdName);
+       itemNames.append(dependElement.toMap().value(targetName).toString());
        corrValues.append(dependElement.toMap().value(correlationValue).toString());
        codes.append(dependElement.toMap().value(targetDataForConvert).toString());
        dependIds.append(dependElement.toMap().value(dependId).toString());
-       if (targIdName.isEmpty())
-       {
-           itemNames.append(QString(" "));
-       }
-       else
-       {
-            QVariant foundedTarget = findTargetDescriptionById(targIdName);
-            if(!foundedTarget.isNull())
-            {
-                 QString simpleName = foundedTarget.toMap().value(name).toString();
-                 itemNames.append(simpleName);
-            }
-            else
-            {
-                qWarning()<<"Strange error";
-            }
-       }
    }
 
    if(itemNames.count() > 0)
@@ -130,31 +109,12 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
    }
 
    corrDataForTable.insert("itemNames", itemNames);
-   corrDataForTable.insert("targetIds", targetIds);
    corrDataForTable.insert("corrValues", corrValues);
    corrDataForTable.insert("codeValues", codes);
    corrDataForTable.insert("typeName", typeName);
    corrDataForTable.insert("dependIds", dependIds);
    corrDataForTable.insert("templateName", templateName);
 
-   /*
-   if(!itemNames.isEmpty())
-   {
-       nameItem += " { [" + itemNames.takeAt(0) + "]";
-   }
-   foreach(QString name, itemNames)
-   {
-       if(!name.isEmpty())
-       {
-           nameItem += ", [" + name + "]";
-       }
-   }
-   if(!itemNames.isEmpty())
-   {
-       nameItem += " }";
-   }
-   */
-   //nameItem should be look like "id1 {[id2], [id3], [id1], [ ] ...}
    // Нужно устанавливать номер!!!!
    item = new QStandardItem(nameItem);
    item->setData(corrDataForTable, Qt::UserRole + 1);
@@ -163,12 +123,14 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
    return item;
 }
 
-int CorrelationModelNoFunction::findTargetIndexByTargetValue(const QString &targetString)
+int CorrelationModelNoFunction::findTargetIndexByTargetName(const QString &targetString)
 {
     int targetCount = getTargetModel()->getVisibleElements().count();
+
     for (int i = 0; i< targetCount; i++)
     {
-        if(getTargetModel()->getVisibleElements()[i].toMap().value(id).toString() == targetString)
+        qDebug()<<getTargetModel()->getVisibleElements()[i].toMap().value(name).toString();
+        if(getTargetModel()->getVisibleElements()[i].toMap().value(name).toString() == targetString)
         {
             return i;
         }
@@ -247,9 +209,9 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
          if( dependList.isEmpty() )
          {
              //Take entire value
-             QString targetIdName = elementFromCorrTable.toMap().value(targetId).toString();
+             QString targetIdName = elementFromCorrTable.toMap().value(targetName).toString();
              qDebug()<< "targetId = "<<targetIdName;
-             QVariant foundedTarget = findTargetDataById(targetIdName, convertedData);
+             QVariant foundedTarget = findTargetDataByName(targetIdName, convertedData);
              if(!foundedTarget.isNull())
              {
                 dataString = foundedTarget.toMap().value(dvalue).toString();
@@ -266,11 +228,11 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
              foreach(QVariant dependElement, dependList)
              {
                 QString codedData = dependElement.toMap().value(targetDataForConvert).toString();
-                QString targetIdName = dependElement.toMap().value(targetId).toString();
+                QString targetIdName = dependElement.toMap().value(targetName).toString();
                 QString correlation = dependElement.toMap().value(correlationValue).toString();
                 QString dependIdStr = dependElement.toMap().value(dependId).toString();
 
-                QVariant foundTarget = findTargetDataById(targetIdName, convertedData);
+                QVariant foundTarget = findTargetDataByName(targetIdName, convertedData);
 
                 if (foundTarget.isNull())
                 {
@@ -324,7 +286,7 @@ bool CorrelationModelNoFunction::dependIdSetted(const QString &dependId, const Q
                                                 const QVariantList &templateDescrList)
 {
     //Нашли зависимый элемент в списке
-    QVariant foundTarget = findTargetDataById(dependId, templateDescrList);
+    QVariant foundTarget = findTargetDataByName(dependId, templateDescrList);
     QString dataString = processTargetData(convertedData, foundTarget, templateDescrList);
 
     return !dataString.isEmpty();
@@ -396,11 +358,11 @@ QString CorrelationModelNoFunction::setNewDataValueByType(const QString &typeEle
     }
 }
 
-QVariant CorrelationModelNoFunction::findTargetDataById(const QString &targetTemplate, const QVariantList &convertedData)
+QVariant CorrelationModelNoFunction::findTargetDataByName(const QString &targetTemplate, const QVariantList &convertedData)
 {
     foreach(QVariant elementFromConvList, convertedData)
     {
-        if(elementFromConvList.toMap().value(id) == targetTemplate)
+        if(elementFromConvList.toMap().value(name) == targetTemplate)
         {
             return elementFromConvList;
         }
@@ -408,7 +370,7 @@ QVariant CorrelationModelNoFunction::findTargetDataById(const QString &targetTem
     return QVariant();
 }
 
-QVariant CorrelationModelNoFunction::findTargetDescriptionById(const QString &targetTemplate)
+QVariant CorrelationModelNoFunction::findTargetDescriptionByName(const QString &targetTemplate)
 {
     QVariantList searchList = getTargetModel()->getVisibleElements();
     foreach(QVariant el, searchList)

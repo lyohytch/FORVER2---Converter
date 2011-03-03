@@ -62,7 +62,7 @@ const QString numb("number");//Ќомер по пор€дку
 const QString repeat("repeat");//дублируюший элемент
 const QString rapid("rapid");
 const QString prosDesc("prosDesc");//вспомогательный контейнер дл€ обработки описаний от прокуратуры
-const QString targetId("targetId");//соответствие между исходным и конвертируемым(ид)
+const QString formId("formId");//соответствие между исходным и конвертируемым(ид)
 const QString targetName("targetName");//соответствие между исходным и конвертируемым(им€)
 /**
   List of QMap<QString, QString> where each element is

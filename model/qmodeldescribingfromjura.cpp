@@ -16,13 +16,13 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
       It's regular expression for strings like
       "101	2					ed				Год возбуждения		Ф5	3	Г	знач"
     */
-    //               1id          2level          3type       4dop        Mask    Config    5Comment   6Short Name  7Form       8Position    9Name      10Encoding data
+    //               1id          2level          3type       4dop        Mask    Config    5Comment   6Short Name  7Form      8Position-InForm    9Name      10Encoding data
     QRegExp search("([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)");
     /**
       It's regular expression for strings like
       "							120			Водный	водный				30000	"
     */
-    //                                  1dop           2Comment   3Short name 4Form   5Position     6Name     7Encoding data
+    //                                  1dop           2Comment   3Short name 4Form   5Position-InForm     6Name     7Encoding data
     QRegExp searchDependFields("\\t{7}([^\\t]*)\\t{3}([^\\t]+)\\t([^\\t]*)\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)");
     int count = -1;
     int countDependFields = 0;
@@ -125,8 +125,8 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList &capt
         element.insert(dependId, elementName + capturedText.at(1));
     }
     //For av, dv, cb these fields should be empty
-    element.insert(targetId, getElementNameByCodeForm(capturedText.at(4)) + capturedText.at(5));
-    element.insert(targetName, capturedText.at(6));
+    element.insert(formId, getElementNameByCodeForm(capturedText.at(4)));//F5 , F1 , F2 or F12
+    element.insert(targetName, getElementNameByCodeForm(capturedText.at(4)) + underline + capturedText.at(6));
     element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(7)));
     element.insert(correlationValue, FromIntegerToBinaryString(countDependFields) );
 
@@ -148,8 +148,8 @@ QVariantMap QModelDescribingFromJura::fillOneElement(const QStringList & capture
 
    //For av, dv, cb these fields should be empty
    //F5_text
-   element.insert(targetId,getElementNameByCodeForm(capturedText.at(7)) + capturedText.at(8));
-   element.insert(targetName, capturedText.at(9));
+   element.insert(formId,getElementNameByCodeForm(capturedText.at(7)));//F5 , F1 , F2 or F12
+   element.insert(targetName, getElementNameByCodeForm(capturedText.at(7)) + underline + capturedText.at(9));
    element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(10)));
 
    element.insert(dependFields, QVariantList());
@@ -159,26 +159,30 @@ QVariantMap QModelDescribingFromJura::fillOneElement(const QStringList & capture
 
 QString QModelDescribingFromJura::getElementNameByCodeForm(const QString &codeForm)
 {
-    QString elName;
+    QString elName = "U";
     if(codeForm == "F5" ||
        codeForm == QString::fromUtf8("Ф5"))
     {
-        elName = locus;
+        //elName = locus;
+        elName = "F5";
     }
     else if (codeForm == "F1" ||
              codeForm == QString::fromUtf8("Ф1"))
     {
-        elName = generic;
+        //elName = generic;
+        elName = "F1";
     }
     else if (codeForm == "F2" ||
              codeForm == QString::fromUtf8("Ф2"))
     {
-        elName = figurant;
+        //elName = figurant;
+        elName = "F2";
     }
     else if (codeForm == "F12" ||
              codeForm == QString::fromUtf8("Ф12"))
     {
-        elName = weapon;
+        //elName = weapon;
+        elName = "F12";
     }
 
     return elName;

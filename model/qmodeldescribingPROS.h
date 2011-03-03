@@ -30,6 +30,7 @@ class QModelDescribingPros: public QModelDescribing
         virtual bool checkFileFileStructureData(QTextStream* /*fileStream*/);
     private:
         bool isProcessLine;
-        QString removeSpaces(const QString& ex);       
+        QString removeSpaces(const QString& ex);
+        QString setNameWithoutRepeat(const QString &namekey, const QVariantList &elements);
 };
 #endif // QMODELDESCRIBINGPROS_H
