@@ -86,13 +86,13 @@ void PresenterForNonFunctionUI::ElementTableActivated(const QModelIndex & index)
         case iTemplate:
             {
                 CORR_MODEL->setApplyTreeClick(iTemplate);
-                _view->updateTextLabel("Change template variable. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel(tr("Change template variable. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
             }
             break;
         case iTarget:
             {
                 CORR_MODEL->setApplyTreeClick(iTarget);
-                _view->updateTextLabel("Change target variables. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel(tr("Change target variables. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
                 Presenters::_view->countTV = true;
                 if( !AddTableForm->isVisible() )
                 {
@@ -101,7 +101,7 @@ void PresenterForNonFunctionUI::ElementTableActivated(const QModelIndex & index)
                 }
                 else
                 {
-                    _view->updateTextLabel("You don't have open more than one additional correlation form!");
+                    _view->updateTextLabel(tr("You don't have open more than one additional correlation form!"));
                 }
 
             }
@@ -137,7 +137,7 @@ void PresenterForNonFunctionUI::ElementTreeTemplateActivated(const QModelIndex& 
     else
     {
         qDebug() << " template table cell isn't checked or not applicable";
-        _view->updateTextLabel("Template table cell isn't checked or not applicable");
+        _view->updateTextLabel(tr("Template table cell isn't checked or not applicable"));
     }
 }
 
@@ -152,7 +152,7 @@ void PresenterForNonFunctionUI::ElementTreeTargetActivated(const QModelIndex& in
     else
     {
         qDebug() << " target table cell isn't checked or not applicable";
-        _view->updateTextLabel("Target table cell isn't checked or not applicable");
+        _view->updateTextLabel(tr("Target table cell isn't checked or not applicable"));
     }
 }
 
@@ -277,8 +277,8 @@ void AdditionCorrelationTable::processDataFromMainPresenter(const QModelIndex & 
 
     tableModel->clear();
     tableModel = createModelFromData(tableData.data(Qt::UserRole + 1));
-    tableModel->setHorizontalHeaderLabels(QStringList()<<"Heads"<<"Depend fields");
-    tableModel->setVerticalHeaderLabels(QStringList()<<"Names"<<"Codes"<<"Values"<<"Depend ID");
+    tableModel->setHorizontalHeaderLabels(QStringList()<<tr("Heads")<<tr("Depend fields"));
+    tableModel->setVerticalHeaderLabels(QStringList()<<tr("Names")<<tr("Codes")<<tr("Values")<<tr("Depend ID"));
 
     viewMainCorrs->resizeColumnsToContents();
     nameOfTarget = tableData.data(Qt::UserRole + 1).toMap().value(templateNameInForm).toString();

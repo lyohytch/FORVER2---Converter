@@ -42,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -77,8 +77,16 @@
     <addaction name="actionSave_correlation_model"/>
     <addaction name="actionLoad_correlation_model"/>
    </widget>
+   <widget class="QMenu" name="menuLanguage">
+    <property name="title">
+     <string>Language</string>
+    </property>
+    <addaction name="actionEnglish"/>
+    <addaction name="actionRussian"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuExecute"/>
+   <addaction name="menuLanguage"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -139,6 +147,9 @@
    </property>
   </action>
   <action name="actionLoad_Template_Data">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Load Template Data from FILE</string>
    </property>
@@ -155,6 +166,9 @@
    </property>
   </action>
   <action name="actionExport_template_data_to_DB">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export template data to DB</string>
    </property>
@@ -163,6 +177,9 @@
    </property>
   </action>
   <action name="actionLoad_Target_Data_from_DB">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Load Target Data from DB</string>
    </property>
@@ -192,6 +209,25 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="actionRussian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Russian</string>
    </property>
   </action>
  </widget>

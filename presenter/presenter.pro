@@ -1,3 +1,5 @@
+TRANSLATIONS = ../Resources/Translations/converter_presenter_ru.ts
+
 HEADERS += iview.h \
            presenter.h \
            presenterforfunctionui.h \

@@ -1,3 +1,5 @@
+TRANSLATIONS = ../Resources/Translations/converter_model_ru.ts
+
 HEADERS += constants.h \
            correlationmodel.h \
            correlationmodelfunction.h \

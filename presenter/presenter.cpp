@@ -84,7 +84,7 @@ void Presenters::onSaveCorrelationTable()
         tableRecord = CORR_MODEL->tableModelToMap();
         oneRecord.insert(TableRecord, tableRecord);
         out << oneRecord;
-        _view->updateTextLabel("Correlation table was saved");
+        _view->updateTextLabel(tr("Correlation table was saved"));
     }
     corrModelFile.close();
 }
@@ -122,7 +122,7 @@ void Presenters::onLoadCorrelationTable()
             QVariantMap record;
             in >> record;
             CORR_MODEL->fillInTable(record.value(TableRecord).toMap());
-            _view->updateTextLabel("Correlation table was loaded");
+            _view->updateTextLabel(tr("Correlation table was loaded"));
         }
         cModelFile.close();
     }
@@ -148,7 +148,7 @@ void Presenters::onExportTemplateDataToDB()
     else
     {
         qDebug() << " Template data wasn't loaded";
-        _view->updateTextLabel("Template data wasn't loaded");
+        _view->updateTextLabel(tr("Template data wasn't loaded"));
     }
 }
 
@@ -165,7 +165,7 @@ void Presenters::makeRequestSlot()
 void Presenters::completeAddingToDB(int aError, QString errStr)
 {
     qDebug() << " id = " << aError << " Msg: " << errStr;
-    _view->updateTextLabel("Adding data was complete. ErrorMessage: " + errStr);
+    _view->updateTextLabel(tr("Adding data was complete. ErrorMessage: ") + errStr);
     //Clear Data.
     MODELS(TARGETDESC)->clearElementsWithData();
     MODELS(TEMPLATEDESC)->clearElementsWithData();
@@ -196,7 +196,7 @@ void Presenters::onExportTargetDataToDB()
     else
     {
         qDebug() << " Target data wasn't loaded";
-        _view->updateTextLabel("Target data wasn't loaded");
+        _view->updateTextLabel(tr("Target data wasn't loaded"));
     }
 }
 
@@ -254,7 +254,7 @@ void Presenters::loadingModels(QObject* loadedModel, QObject* tree)
         //TODO попробовать просто отобразить модель
         ((QModelDescribing *)loadedModel)->createTreeForViewing();
         ((TreeViewModel *)tree)->loadModel((QModelDescribing *)loadedModel);
-        _view->updateTextLabel("Model was loaded");
+        _view->updateTextLabel(tr("Model was loaded"));
         emit loadDescComplete();
     }
 }
@@ -346,13 +346,13 @@ void Presenters::ElementTableActivated(const QModelIndex & index)
         case iTemplate:
             {
                 CORR_MODEL->setApplyTreeClick(iTemplate);
-                _view->updateTextLabel("Change template variable. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel(tr("Change template variable. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
             }
             break;
         case iTarget:
             {
                 CORR_MODEL->setApplyTreeClick(iTarget);
-                _view->updateTextLabel("Change target variables. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel(tr("Change target variables. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
                 _view->countTV = true;
             }
             break;
@@ -373,7 +373,7 @@ void Presenters::ElementTreeTemplateActivated(const QModelIndex& index)
     else
     {
         qDebug() << " template table cell isn't checked or not applicable";
-        _view->updateTextLabel("Template table cell isn't checked or not applicable");
+        _view->updateTextLabel(tr("Template table cell isn't checked or not applicable"));
     }
 }
 
@@ -391,7 +391,7 @@ void Presenters::ElementTreeTargetActivated(const QModelIndex& index)
     else
     {
         qDebug() << " target table cell isn't checked or not applicable";
-        _view->updateTextLabel("Target table cell isn't checked or not applicable");
+        _view->updateTextLabel(tr("Target table cell isn't checked or not applicable"));
     }
 }
 
@@ -422,7 +422,7 @@ void Presenters::loadDescriptionModelFromFiles(const QStringList &filenames, int
             //TODO попробовать просто отобразить модель
             MODELS(descriptionId)->createTreeForViewing();
             TREES(descriptionId)->loadModel(MODELS(descriptionId));
-            _view->updateTextLabel("Model was created");
+            _view->updateTextLabel(tr("Model was created"));
             emit loadDescComplete();
         }
     }
@@ -558,11 +558,11 @@ void Presenters::loadDataFromFilesWithData(const QStringList &filenames, int des
     if (MODELS(descriptionId)->isValidElementsWithDataForParticularFile())
     {
         MODELS(descriptionId)->preparingDataStructureBeforeFilling();
-        _view->updateTextLabel("Data successfully loaded");
+        _view->updateTextLabel(tr("Data successfully loaded"));
     }
     else
     {
-        _view->updateTextLabel("Data didn't load");
+        _view->updateTextLabel(tr("Data didn't load"));
     }
 }
 
@@ -592,7 +592,7 @@ void Presenters::onLoadTargetData()
     if (!MODELS(TARGETDESC)->isValidElementsWithoutData())
     {
         qWarning() << " Description wasn't loaded";
-        _view->updateTextLabel("Target Description wasn't loaded");
+        _view->updateTextLabel(tr("Target Description wasn't loaded"));
         return;
     }
     QStringList filenames = openDataFilesByAnyNameFilter(setNameFilterForDataTargetFiles());

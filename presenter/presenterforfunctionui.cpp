@@ -66,20 +66,20 @@ void PresenterForFunctionUI::ElementTableActivated(const QModelIndex & index)
         case iTemplate:
             {
             CORR_MODEL->setApplyTreeClick(iTemplate);
-            _view->updateTextLabel("Change template variable. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+            _view->updateTextLabel(tr("Change template variable. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
             }
             break;
         case iTarget:
             {
                 CORR_MODEL->setApplyTreeClick(iTarget);
-                _view->updateTextLabel("Change target variables. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel(tr("Change target variables. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
                 Presenters::_view->countTV = true;
             }
             break;
         case iFunction:
             {
                 CORR_MODEL->setApplyTreeClick(iFunction);
-                _view->updateTextLabel("Change function. Row: " + QVariant(index.row() + 1).toString() + " Column: " + QVariant(index.column() + 1).toString());
+                _view->updateTextLabel(tr("Change function. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
                 funcWidget->showNormal();
             }
             break;
@@ -99,7 +99,7 @@ void PresenterForFunctionUI::FunctionIsChecked(int functionId)
     else
     {
         qDebug() << " function table cell isn't checked or not applicable";
-        _view->updateTextLabel("Function table cell isn't checked or not applicable");
+        _view->updateTextLabel(tr("Function table cell isn't checked or not applicable"));
     }
 }
 
@@ -113,7 +113,7 @@ void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
 {
     qDebug() << " ::func from closed";
     int id = nonef;
-    QRadioButton* r1 = this->findChild<QRadioButton*>("AGE");
+    QRadioButton* r1 = this->findChild<QRadioButton*>(tr("AGE"));
     if (r1 && r1->isChecked())
     {
         //TODO emit signal to converter
@@ -122,7 +122,7 @@ void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
     }
     else
     {
-        QRadioButton* r2 = this->findChild<QRadioButton*>("CONCAT");
+        QRadioButton* r2 = this->findChild<QRadioButton*>(tr("CONCAT"));
         if (r2 && r2->isChecked())
         {
             qDebug() << "::CONCAT";
@@ -130,7 +130,7 @@ void QWidgetFunction::closeEvent(QCloseEvent */*clEvent*/)
         }
         else
         {
-            QRadioButton* r3 = this->findChild<QRadioButton*>("NONE");
+            QRadioButton* r3 = this->findChild<QRadioButton*>(tr("NONE"));
             if (r3 && r3->isChecked())
             {
                 qDebug() << "::NO FUNCTION";

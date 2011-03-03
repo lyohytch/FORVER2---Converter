@@ -156,7 +156,7 @@ void converter::init_setup_desktop_widgets()
     {
         pLabel = new QLabel;
     }
-    updateTextLabel("Application started. Please load target and template files to start converting");
+    updateTextLabel(tr("Application started. Please load target and template files to start converting"));
     this->statusBar()->addWidget(pLabel);
 
 }

@@ -14,7 +14,8 @@ CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDe
 
  void CorrelationModelNoFunction::setupTableModel(QStandardItemModel* tableModel)
  {
-     tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+     //tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+     tableModel->setHorizontalHeaderLabels(QStringList()<<tr("Receiver fields") << tr("Source fields"));
      tableModel->setColumnCount(2);
  }
 
