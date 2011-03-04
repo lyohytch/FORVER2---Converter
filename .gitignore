@@ -16,3 +16,4 @@ build/lib
 *.so
 qrc_*
 *.bundle
+Resources/Libs
