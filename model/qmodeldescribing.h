@@ -9,45 +9,100 @@
 
 #include "constants.h"
 
-//TODO: describe functions
-/** Class provide bla-bla-bla
- *
- */
+//! QModelDescribing - базовый класс для файлов описания классификатора
+/**
+  * Класс предоставляет функции для работы с файлами описания классификаторов.
+  * Формирует структуры из файлов описаний для последующего построения корреляционной таблицы
+  */
 
 class QModelDescribing : public QStandardItemModel
 {
         Q_OBJECT
 
     protected:
-
-        QString elementName;//"generic_","figurant_","locus_delicti_","weapon_"
-
-        QString additionToNames; // For pros files;
-
-        QVariantList ElementsFromDescriptionFiles; //List of maps like (id,name,type,level,value) value == NULL for Description Files. "Element" is one element from this list
-
+        /**
+          * Начало ID элемента в БД. Сейчас актуальны: "generic_","figurant_","locus_delicti_","weapon_"
+          */
+        QString elementName;
+        /**
+          * Дополнительные добавки к именам. Используются при отображении на форме
+          */
+        QString additionToNames;
+        /**
+          * Все считанные элементы из файла описания
+          * Список карт с ключами (id, name, type, level, dvalue).
+          */
+        QVariantList ElementsFromDescriptionFiles;
+        /**
+          * Все элементы, которые будут отображаться на форме и несут некоторое значение, из файла описания
+          * Список карт с ключами (id, name, type, level, value).
+          */
         QVariantList VisibleElementsFromDescriptionFiles;
-
-        QVariantList VisibleElementWithData;// QList<  [[[  QList<QMap<QString, QVariant> > ]]]  >
-
-        QVariantList VisibleElementsWithDataForParticularFile;//List of maps (id, value) where value is data from particular file
+        /**
+          * Элементы, заполненные данными.
+          * Список, содержащий карты VisibleElementsFromDescriptionFiles
+          * QList<  [[[  QList<QMap<QString, QVariant> > ]]]  >
+          */
+        QVariantList VisibleElementWithData;
+        /**
+          * Элементы, заполненные данными. (Для одного файла)
+          * Список карт типа (id, value)
+          * \note Временный список для последующего преобразования в VisibleElementWithData
+          */
+        QVariantList VisibleElementsWithDataForParticularFile;
 
         //Operations with elements without data
-
-        virtual bool checkFileStructure(QTextStream* /*fileStream*/) = 0;
-
+        /**
+          * Проверяет корректная или нет структура файла
+          * \param fileStream поток текстовых данных
+          * \return 1 - корректная, 0 - иначе
+          */
+        virtual bool checkFileStructure(QTextStream *fileStream) = 0;
+        /**
+          * Заполняет отдельный элемент из ElementsFromDescriptionFiles
+          * \param capturedText данные, захваченные регулярным выражением
+          * \return заполненый элемент
+          */
         virtual QVariantMap fillOneElement(const QStringList & capturedText) = 0;
-
+        /**
+          * Формирует данные для ElementsFromDescriptionFiles
+          * \param fileStream текстовый файл
+          * \return список элементов ElementsFromDescriptionFiles
+          */
         virtual QVariantList getElementsFromText(QTextStream* fileStream);
-
-        virtual void setAdditionsToNamesByFile(const QString &/*filename*/) {};
-
+        /**
+          * Устанавливает additionToNames по имени файла
+          * \param filename имя файлв
+          */
+        virtual void setAdditionsToNamesByFile(const QString & filename)
+        {
+            Q_UNUSED(filename);
+        };
+        /**
+          * Заполняет весь ElementsFromDescriptionFiles из файла
+          * \param fileStream текстовый файл
+          */
         void addingDataToBlankElements(QTextStream* fileStream);
-
+        /**
+          * Формирует дерево из ElementsFromDescriptionFiles
+          * \param iList один из элементов ElementsFromDescriptionFiles
+          * \param i количество пройденных элементов в списке
+          * \param levels уровень предыдущего элемента
+          * \param parent указатель на родительский элемент QStandardItem
+          * \note Функция рекурсивная
+          */
         void createTreeFromElements(const QVariantList& iList, int i, int levels, QStandardItem* parent);
-
+        /**
+          * Устанавливает кодек по содержимому файла
+          * \param filesource указатель на QFile
+          * \note Читает весь файл. Нужно переоткрыть файл для дальнейшей работы
+          */
         QTextCodec* setFileEncodingByContain(QFile *filesource);
-
+        /**
+          * Определяет можно ли добавить текущий элемент в ElementsFromDescriptionFiles
+          * \param checkMap проверяемый элемент
+          * \return 1 - подходящий элемент, 0 - иначе
+          */
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
 
         virtual void addNextElementsToList(const QVariantList & oneRec);

@@ -165,7 +165,6 @@ QVariant CorrelationModelNoFunction::findTemplateByTargetName(const QString &tna
     return QVariant();
 }
 
-//!!!!!!!Нужно устанавливать номер!!!!rework
 QVariantList CorrelationModelNoFunction::targetToTemplate()
 {
     qDebug() << " Real start convering....";
@@ -191,14 +190,6 @@ QVariantList CorrelationModelNoFunction::targetToTemplate()
             mapForOneElementData = curr.toMap();
 
             QVariant element = findItemInTableTemplate(curr, cRow);
-            /** It's element
-            corrDataForTable.insert("itemNames", itemNames);
-            corrDataForTable.insert("corrValues", corrValues);
-            corrDataForTable.insert("codeValues", codes);
-            corrDataForTable.insert("typeName", typeName);
-            corrDataForTable.insert("dependIds", dependIds);
-            corrDataForTable.insert("templateName", templateName);
-            **/
             qDebug()<<"NNN "<<element;
             QString dvalString = processTargetData(convertedData, element);
             qDebug()<<"NNN "<<dvalString;

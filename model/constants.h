@@ -3,7 +3,6 @@
 #include <QString>
 #include <QDebug>
 
-//Сюда добавлять все константы
 //Common
 const QString dot(".");
 const QString comma(",");
@@ -18,9 +17,7 @@ const QString underline("_");
 const QChar zero('0');
 const QChar one('1');
 
-const QChar X_Rus('Х');
 const QChar X_Eng('X');
-const QChar k_Rus('к');
 const QChar k_eng('k');
 //Sql
 const QString createTbl("CREATE TABLE");

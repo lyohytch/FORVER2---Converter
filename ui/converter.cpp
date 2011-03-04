@@ -82,7 +82,7 @@ void converter::updateTextLabel(const QString &txtMsg)
 
 void converter::russianLanguageSet(bool check)
 {
-    QAction * action = (this->findChild<QAction*>(actionRussian));
+    QAction * action = this->findChild<QAction*>(actionRussian);
     action->setChecked(check);
 }
 
@@ -167,16 +167,6 @@ void converter::init_setup_desktop_widgets()
 {
     //Put tree model on widget
     layout = new QHBoxLayout;
-    qDebug()<<"Template tree " <<trees[TEMPLATEDESC];
-    qDebug()<<"Target tree "<<trees[TEMPLATEDESC];
-    qDebug()<<"CorrModel "<<corrModel;
-
-    //layout->addWidget((QTreeView *)trees[TEMPLATEDESC]);
-    //table - corrModel
-    //layout->addWidget((QTableView *)corrModel);
-    //target
-    //layout->addWidget((QTreeView *)trees[TARGETDESC]);
-
     this->centralWidget()->setLayout(layout);
     if ( !pLabel )
     {
@@ -184,7 +174,6 @@ void converter::init_setup_desktop_widgets()
     }
     updateTextLabel(tr("Application started. Please load target and template files to start converting"));
     this->statusBar()->addWidget(pLabel);
-
 }
 
 
