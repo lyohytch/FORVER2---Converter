@@ -5,6 +5,8 @@
 
 class CorrelationModelNoFunction: public CorrelationModel
 {
+        Q_OBJECT
+
 public:
     CorrelationModelNoFunction(QWidget* parent, QModelDescribing* templ, QModelDescribing* target);
     CorrelationModelNoFunction(QWidget* parent, QModelDescribing* templ, QModelDescribing* target, QStandardItemModel* iTableModel);

@@ -1,18 +1,27 @@
 #ifndef PRESENTER_H
 #define PRESENTER_H
 #include <QModelIndex>
+#include <QSettings>
+#include <QTranslator>
+#include <QApplication>
 
 #include "iview.h"
+
 
 class Presenters: public QObject
 {
     Q_OBJECT
 
 public:
-    Presenters(IView *view);
+    Presenters(IView *view, QApplication *app);
 
 protected:
     IView *_view;
+    QApplication *mainApplication;
+    QTranslator translateUi;
+    QTranslator translateModel;
+    QTranslator translatePresenter;
+    QSettings translateSettings;
     void loadingModels(QObject* loadedModel, QObject* tree);
     QStringList getDefaultFilesForModel(QObject *loadedModel);
     bool selectDescription(const QStringList& filenames, int description_id);
@@ -30,6 +39,8 @@ protected:
     virtual QString setNameFilterForDataTargetFiles();
     QStringList openFilesByAnyNameFilter(const QString &nameFilter);
     QStringList openDataFilesByAnyNameFilter(const QString &nameFilter);
+    void defaultTranslateSets();
+    void loadTranslationFiles();
 protected slots:
     void onOpenTargetFiles();
     void onOpenTemplateFiles();
@@ -51,6 +62,9 @@ protected slots:
     void onLoadCorrelationTable();
 
     void completeAddingToDB(int , QString );
+
+    void onEnglishChecked(bool checked);
+    void onRussianChecked(bool checked);
 
 signals:
     void loadDescComplete();

@@ -25,6 +25,8 @@ public:
     virtual void removeWidgets() = 0;
     virtual void addWidgets() = 0;
     virtual void updateTextLabel(const QString& txtMsg) = 0;
+    virtual void englishLanguageSet(bool check) = 0;
+    virtual void russianLanguageSet(bool check) = 0;
 
     int activeRowId;
     bool countTV;
@@ -49,6 +51,10 @@ signals:
 
      void OnSaveCorrelationTable();
      void OnLoadCorrelationTable();
+
+     //Translations
+     void OnEnglishChecked(bool);
+     void OnRussianChecked(bool);
 };
 
 #endif // IVIEW_H

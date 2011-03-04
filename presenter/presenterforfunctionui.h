@@ -23,7 +23,7 @@ class PresenterForFunctionUI : public Presenters
     Q_OBJECT
 
 public:
-    PresenterForFunctionUI(IView *view) : Presenters(view) {}
+    PresenterForFunctionUI(IView *view, QApplication *app) : Presenters(view, app) {}
 private:
     //For function support
     QWidgetFunction* funcWidget;

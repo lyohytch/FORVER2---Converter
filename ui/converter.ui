@@ -23,7 +23,7 @@
    <string>converter</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../resources.qrc">
+   <iconset>
     <normaloff>:/application_icon/Resources/Icons/converter.ico</normaloff>:/application_icon/Resources/Icons/converter.ico</iconset>
   </property>
   <property name="iconSize">
@@ -232,9 +232,7 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="../resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionClose</sender>

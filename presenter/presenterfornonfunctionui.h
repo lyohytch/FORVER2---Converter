@@ -45,7 +45,7 @@ class PresenterForNonFunctionUI: public Presenters
 {
     Q_OBJECT
 public:
-    PresenterForNonFunctionUI(IView *view):Presenters(view) {};
+    PresenterForNonFunctionUI(IView *view, QApplication *app):Presenters(view, app) {};
 protected:
     virtual void allocateCorrelationModel();
     virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/) { return QVariantList(); }

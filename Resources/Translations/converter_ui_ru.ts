@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="ru_RU" sourcelanguage="en_US">
+<!DOCTYPE TS><TS>
 <context>
     <name>converter</name>
     <message>
@@ -126,6 +124,18 @@
     <message>
         <source>Application started. Please load target and template files to start converting</source>
         <translation>Приложение запущено. Загрузите файлы источника и приёмника для начала работы</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation>Язык</translation>
+    </message>
+    <message>
+        <source>English</source>
+        <translation>Английский</translation>
+    </message>
+    <message>
+        <source>Russian</source>
+        <translation>Русский</translation>
     </message>
 </context>
 </TS>

@@ -4,6 +4,7 @@ CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget* parent, QModelDe
         CorrelationModel(parent, templ, target)
 {
     setupTableModel(getTableModel());
+    this->show();
 }
 
 CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDescribing *templ, QModelDescribing *target, QStandardItemModel *iTableModel):
@@ -13,8 +14,7 @@ CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDe
 }
 
  void CorrelationModelNoFunction::setupTableModel(QStandardItemModel* tableModel)
- {
-     //tableModel->setHorizontalHeaderLabels(QStringList() << QString::fromUtf8("Поля приёмника") << QString::fromUtf8("Поля источника"));
+ {    
      tableModel->setHorizontalHeaderLabels(QStringList()<<tr("Receiver fields") << tr("Source fields"));
      tableModel->setColumnCount(2);
  }
@@ -77,7 +77,6 @@ void CorrelationModelNoFunction::fillInTable(QVariantMap mapTable)
         getTableModel()->appendRow(itemList);
     }
     this->resizeColumnsToContents();
-    this->show();
 }
 
 QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)

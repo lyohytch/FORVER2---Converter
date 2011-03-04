@@ -5,6 +5,8 @@
 
 class CorrelationModelFunction: public CorrelationModel
 {
+    Q_OBJECT
+
 public:
     enum EfuncList
     {

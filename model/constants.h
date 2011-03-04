@@ -117,6 +117,19 @@ const QString typeNameInForm("typeName");
 const QString dependIdsInForm("dependIds");
 const QString templateNameInForm("templateName");
 
+//Translations
+const QString English("EnglishSetting");
+const QString Russian("RussianSetting");
+const QString ApplicationName("Converter");
+const QString TranslateSettings("Translate");
+
+const QString modelQmPath(":translations/model/Resources/Translations/converter_model_ru.qm");
+const QString presenterQmPath(":translations/presenter/Resources/Translations/converter_presenter_ru.qm");
+const QString UiQmPath(":translations/ui/Resources/Translations/converter_ui_ru.qm");
+
+const QString actionRussian("actionRussian");
+const QString actionEnglish("actionEnglish");
+
 const int iTemplate = 0;
 const int iTarget = 1;
 const int iFunction = 2;

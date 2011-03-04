@@ -1,6 +1,7 @@
 #include <QFileDialog>
 #include <QDesktopWidget>
 #include <QThreadPool>
+#include <QTranslator>
 
 
 #include "presenter.h"
@@ -14,9 +15,11 @@
 #include "querymodel.h"
 #include "mssqlquery.h"
 
-Presenters::Presenters(IView *view)
+Presenters::Presenters(IView *view, QApplication *app)
 {
     _view = view;
+
+    mainApplication = app;
 
     connect(_view, SIGNAL(OnOpenTargetFiles()),this,
              SLOT(onOpenTargetFiles()), Qt::QueuedConnection);
@@ -42,6 +45,99 @@ Presenters::Presenters(IView *view)
             SLOT(onSaveCorrelationTable()), Qt::QueuedConnection);
     connect(_view, SIGNAL(OnLoadCorrelationTable()), this,
             SLOT(onLoadCorrelationTable()), Qt::QueuedConnection);
+
+    connect(_view, SIGNAL(OnEnglishChecked(bool)), this,
+            SLOT(onEnglishChecked(bool)), Qt::QueuedConnection);
+    connect(_view, SIGNAL(OnRussianChecked(bool)), this,
+            SLOT(onRussianChecked(bool)), Qt::QueuedConnection);
+
+    loadTranslationFiles();
+    //Initial function for
+    defaultTranslateSets();
+}
+
+void Presenters::loadTranslationFiles()
+{
+    translateModel.load(modelQmPath);
+    translateUi.load(UiQmPath);
+    translatePresenter.load(presenterQmPath);
+}
+
+void Presenters::defaultTranslateSets()
+{
+    QVariant engSetted = translateSettings.value(English);
+    QVariant rusSetted = translateSettings.value(Russian);
+    bool isSettingNone = engSetted.isNull() || rusSetted.isNull();
+    if(isSettingNone)
+    {
+        translateSettings.setValue(English, QVariant(true));
+        translateSettings.setValue(Russian, QVariant(false));
+    }
+    else if( engSetted.toBool() && !rusSetted.toBool())
+    {
+        translateSettings.setValue(English, QVariant(true));
+        translateSettings.setValue(Russian, QVariant(false));
+    }
+    else if (rusSetted.toBool() && !engSetted.toBool())
+    {
+        translateSettings.setValue(English, QVariant(false));
+        translateSettings.setValue(Russian, QVariant(true));
+        mainApplication->installTranslator(&translateModel);
+        mainApplication->installTranslator(&translateUi);
+        mainApplication->installTranslator(&translatePresenter);
+    }
+
+}
+void Presenters::onEnglishChecked(bool /*checked*/)
+{
+    QVariant engSetted = translateSettings.value(English);
+    QVariant rusSetted = translateSettings.value(Russian);
+    if(engSetted.isNull() || rusSetted.isNull())
+    {
+        translateSettings.setValue(English, QVariant(true));
+        translateSettings.setValue(Russian, QVariant(false));
+        _view->englishLanguageSet(true);
+        _view->russianLanguageSet(false);
+    }
+    else if (rusSetted.toBool() && !engSetted.toBool())
+    {
+        translateSettings.setValue(English, QVariant(true));
+        translateSettings.setValue(Russian, QVariant(false));
+        _view->englishLanguageSet(true);
+        _view->russianLanguageSet(false);
+    }
+    else if (engSetted.toBool() && !rusSetted.toBool())
+    {
+        _view->englishLanguageSet(true);
+        _view->russianLanguageSet(false);
+    }
+}
+
+void Presenters::onRussianChecked(bool /*checked*/)
+{
+    QVariant rusSetted = translateSettings.value(Russian);
+    QVariant engSetted = translateSettings.value(English);
+    if(engSetted.isNull() || rusSetted.isNull())
+    {
+        translateSettings.setValue(English, QVariant(true));
+        translateSettings.setValue(Russian, QVariant(false));
+        mainApplication->installTranslator(NULL);
+        _view->englishLanguageSet(true);
+        _view->russianLanguageSet(false);
+    }
+    else if (engSetted.toBool() && !rusSetted.toBool())
+    {
+        translateSettings.setValue(English, QVariant(false));
+        translateSettings.setValue(Russian, QVariant(true));
+        mainApplication->installTranslator(NULL);
+        _view->englishLanguageSet(false);
+        _view->russianLanguageSet(true);
+    }
+    else if (rusSetted.toBool() && !engSetted.toBool())
+    {
+        _view->englishLanguageSet(false);
+        _view->russianLanguageSet(true);
+    }
 }
 
 void Presenters::onSaveCorrelationTable()

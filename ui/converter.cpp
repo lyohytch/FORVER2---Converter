@@ -8,14 +8,13 @@
 
 #include "presenterfornonfunctionui.h"
 
-converter::converter(QWidget* parent) :
+converter::converter(QWidget* parent, QApplication *app) :
     IView(parent),
     ui(new Ui::converter)
 {
-    ui->setupUi(this);
     pLabel = NULL;
     layout = NULL;
-    init();
+    init(app);
 }
 
 converter::~converter()
@@ -81,6 +80,18 @@ void converter::updateTextLabel(const QString &txtMsg)
     pLabel->setText(txtMsg);
 }
 
+void converter::russianLanguageSet(bool check)
+{
+    QAction * action = (this->findChild<QAction*>(actionRussian));
+    action->setChecked(check);
+}
+
+void converter::englishLanguageSet(bool check)
+{
+    QAction * action = this->findChild<QAction*>(actionEnglish);
+    action->setChecked(check);
+}
+
 void converter::on_actionOpen_template_triggered()
 {
     //TODO: fix problem when download
@@ -116,13 +127,16 @@ void converter::on_actionExport_all_triggered()
 }
 
 
-void converter::init()
+void converter::init(QApplication *app)
 {
     //Template
     qDebug();
 
     //new PresenterForFunctionUI(this);
-    new PresenterForNonFunctionUI(this);
+    new PresenterForNonFunctionUI(this, app);
+
+    ui->setupUi(this);
+
     emit CreateObjects();
 
     init_setup_main_form();
@@ -134,7 +148,19 @@ void converter::init_setup_main_form()
     //Setup Main Form position
     QDesktopWidget* d = QApplication::desktop();
     this->setGeometry(100, 100, d->width() / 3, d->height() - 400);
+
+    //Set Language checkbox
+    QSettings settings;
+    QVariant engSetted = settings.value(English);
+    QVariant rusSetted = settings.value(Russian);
+    bool isSettingsNone = engSetted.isNull() || rusSetted.isNull();
+    if (!isSettingsNone && (!engSetted.toBool() && rusSetted.toBool()) )
+    {
+        russianLanguageSet(true);
+        englishLanguageSet(false);
+    }
 }
+
 
 
 void converter::init_setup_desktop_widgets()
@@ -172,19 +198,12 @@ void converter::on_actionLoad_correlation_model_triggered()
     emit OnLoadCorrelationTable();
 }
 
-//void converter::on_actionChange_DB_structure_triggered()
-//{
-////    qDebug();
-////    if (corrModel)
-////    {
-////        corrModel->clearCorrelationTable();
-////        this->statusBar()->showMessage("Correlation table was cleared. Please load table", 3000);
-////    }
-//}
+void converter::on_actionEnglish_triggered(bool checked)
+{
+    emit OnEnglishChecked(checked);
+}
 
-
-
-
-
-
-
+void converter::on_actionRussian_triggered(bool checked)
+{
+    emit OnRussianChecked(checked);
+}
