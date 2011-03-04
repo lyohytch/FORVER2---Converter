@@ -1,8 +1,8 @@
-﻿#ifndef QMODELDESCRIBINGOLD4_H
+#ifndef QMODELDESCRIBINGOLD4_H
 #define QMODELDESCRIBINGOLD4_H
 #include "qmodeldescribing.h"
 
-//Класс для старого формата данных, где есть 4 файла: главный, фигурант, оружие, место
+
 class QModelDescribingOld4: public QModelDescribing
 {
     public:
