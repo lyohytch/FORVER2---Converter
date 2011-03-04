@@ -1,4 +1,4 @@
-#ifndef QMODELDESCRIBING_H
+﻿#ifndef QMODELDESCRIBING_H
 #define QMODELDESCRIBING_H
 
 #include <QVariantList>

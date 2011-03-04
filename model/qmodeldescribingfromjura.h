@@ -1,4 +1,4 @@
-#ifndef QMODELDESCRIBINGFROMJURA_H
+﻿#ifndef QMODELDESCRIBINGFROMJURA_H
 #define QMODELDESCRIBINGFROMJURA_H
 
 #include "qmodeldescribing.h"

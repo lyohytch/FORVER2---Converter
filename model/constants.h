@@ -49,18 +49,18 @@ const QString RM("rm");
 const QString CB("cb");
 
 //Describing model fields
-const QString id("id");//Идентификатор
-const QString name("name");//Имя
-const QString type("type");//Тип
-const QString level("level");//Уровень
-const QString dvalue("value");//данные
-const QString error("error");//Ошибка
-const QString numb("number");//Номер по порядку
-const QString repeat("repeat");//дублируюший элемент
+const QString id("id");//РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
+const QString name("name");//РРјСЏ
+const QString type("type");//РўРёРї
+const QString level("level");//РЈСЂРѕРІРµРЅСЊ
+const QString dvalue("value");//РґР°РЅРЅС‹Рµ
+const QString error("error");//РћС€РёР±РєР°
+const QString numb("number");//РќРѕРјРµСЂ РїРѕ РїРѕСЂСЏРґРєСѓ
+const QString repeat("repeat");//РґСѓР±Р»РёСЂСѓСЋС€РёР№ СЌР»РµРјРµРЅС‚
 const QString rapid("rapid");
-const QString prosDesc("prosDesc");//вспомогательный контейнер для обработки описаний от прокуратуры
-const QString formId("formId");//соответствие между исходным и конвертируемым(ид)
-const QString targetName("targetName");//соответствие между исходным и конвертируемым(имя)
+const QString prosDesc("prosDesc");//РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РєРѕРЅС‚РµР№РЅРµСЂ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё РѕРїРёСЃР°РЅРёР№ РѕС‚ РїСЂРѕРєСѓСЂР°С‚СѓСЂС‹
+const QString formId("formId");//СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РјРµР¶РґСѓ РёСЃС…РѕРґРЅС‹Рј Рё РєРѕРЅРІРµСЂС‚РёСЂСѓРµРјС‹Рј(РёРґ)
+const QString targetName("targetName");//СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РјРµР¶РґСѓ РёСЃС…РѕРґРЅС‹Рј Рё РєРѕРЅРІРµСЂС‚РёСЂСѓРµРјС‹Рј(РёРјСЏ)
 /**
   List of QMap<QString, QString> where each element is
   0001 <-> compactxx45x - for compact data
@@ -71,12 +71,11 @@ const QString compactCode("compact");
 const QString simpleCode("code");
 const QString correlationValue("correlationValue");
 
-const QString targetDataForConvert("dataforconvert");//дополнительные данные для раскодирования QList<QMap<QString, QString> >   0001 <-> xx45x
+const QString targetDataForConvert("dataforconvert");//РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ РґР»СЏ СЂР°СЃРєРѕРґРёСЂРѕРІР°РЅРёСЏ QList<QMap<QString, QString> >   0001 <-> xx45x
 const QString dependFields("dependFields"); //List of depend fields
 const QString dependId("dependingId");
 
 const QString codingRules("codingRules"); // Encoding rules as described above
-
 
 //Data model fields
 const QString generic("generic_");
@@ -117,7 +116,7 @@ const QString templateNameInForm("templateName");
 //Translations
 const QString English("EnglishSetting");
 const QString Russian("RussianSetting");
-const QString ApplicationName("Converter");
+const QString applicationIni("converter.ini");
 const QString TranslateSettings("Translate");
 
 const QString modelQmPath(":translations/model/Resources/Translations/converter_model_ru.qm");

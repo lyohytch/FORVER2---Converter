@@ -46,7 +46,7 @@ void converter::on_actionOpen_triggered()
     //TODO: fix problem when download
     //Target file
     emit OnOpenTargetFiles();
-    //Ïîëó÷èòü äàííûå èç ìîäåëè
+    //ÐŸÐ¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¸Ð· Ð¼Ð¾Ð´ÐµÐ»Ð¸
 }
 
 void converter::removeWidgets()
@@ -150,7 +150,7 @@ void converter::init_setup_main_form()
     this->setGeometry(100, 100, d->width() / 3, d->height() - 400);
 
     //Set Language checkbox
-    QSettings settings;
+    QSettings settings(applicationIni, QSettings::IniFormat);
     QVariant engSetted = settings.value(English);
     QVariant rusSetted = settings.value(Russian);
     bool isSettingsNone = engSetted.isNull() || rusSetted.isNull();

@@ -65,6 +65,7 @@ void Presenters::loadTranslationFiles()
 
 void Presenters::defaultTranslateSets()
 {
+    QSettings translateSettings(applicationIni, QSettings::IniFormat);
     QVariant engSetted = translateSettings.value(English);
     QVariant rusSetted = translateSettings.value(Russian);
     bool isSettingNone = engSetted.isNull() || rusSetted.isNull();
@@ -90,6 +91,7 @@ void Presenters::defaultTranslateSets()
 }
 void Presenters::onEnglishChecked(bool /*checked*/)
 {
+    QSettings translateSettings(applicationIni, QSettings::IniFormat);
     QVariant engSetted = translateSettings.value(English);
     QVariant rusSetted = translateSettings.value(Russian);
     if(engSetted.isNull() || rusSetted.isNull())
@@ -115,13 +117,13 @@ void Presenters::onEnglishChecked(bool /*checked*/)
 
 void Presenters::onRussianChecked(bool /*checked*/)
 {
+    QSettings translateSettings(applicationIni, QSettings::IniFormat);
     QVariant rusSetted = translateSettings.value(Russian);
     QVariant engSetted = translateSettings.value(English);
     if(engSetted.isNull() || rusSetted.isNull())
     {
         translateSettings.setValue(English, QVariant(true));
         translateSettings.setValue(Russian, QVariant(false));
-        mainApplication->installTranslator(NULL);
         _view->englishLanguageSet(true);
         _view->russianLanguageSet(false);
     }
@@ -129,7 +131,6 @@ void Presenters::onRussianChecked(bool /*checked*/)
     {
         translateSettings.setValue(English, QVariant(false));
         translateSettings.setValue(Russian, QVariant(true));
-        mainApplication->installTranslator(NULL);
         _view->englishLanguageSet(false);
         _view->russianLanguageSet(true);
     }

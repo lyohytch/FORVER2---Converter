@@ -1,4 +1,4 @@
-#ifndef MSSQLQUERY_H
+п»ї#ifndef MSSQLQUERY_H
 #define MSSQLQUERY_H
 
 #include <QObject>
@@ -25,8 +25,8 @@ class mssqlquery : public QObject, public QRunnable
         };
         QSqlDatabase db;
         querymodel* queryModel;
-        QStringList iListofRequests;//Лист запросов для добавления в базу данных
-        QStringList createRequestList;// Лист запросов для создания таблицы базы данных
+        QStringList iListofRequests;//Р›РёСЃС‚ Р·Р°РїСЂРѕСЃРѕРІ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
+        QStringList createRequestList;// Р›РёСЃС‚ Р·Р°РїСЂРѕСЃРѕРІ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ С‚Р°Р±Р»РёС†С‹ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
         virtual void run();
     signals:
         void complete(int aError, QString errStr);

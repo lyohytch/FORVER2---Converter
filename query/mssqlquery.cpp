@@ -1,4 +1,4 @@
-#include <QSqlDatabase>
+п»ї#include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 
@@ -15,7 +15,7 @@ void mssqlquery::run()
     iListofRequests.append(queryModel->getRequestList());
     createRequestList = queryModel->getCreateTable();
     mutex.lock();
-    //Создать базу данных, если нет её - добавить данные
+    //РЎРѕР·РґР°С‚СЊ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…, РµСЃР»Рё РЅРµС‚ РµС‘ - РґРѕР±Р°РІРёС‚СЊ РґР°РЅРЅС‹Рµ
     QSqlDatabase db = QSqlDatabase::addDatabase("QODBC3", "MainDBConnection");
     qDebug() << "ODBC driver valid?" << db.isValid();
     db.setDatabaseName("Driver={SQL Server};Server=localhost\\SQLEXPRESS;Database=CrimDemoDB;Trusted_Connection=yes;");
@@ -37,7 +37,7 @@ void mssqlquery::run()
         if (!isTableinDB)
         {
             //Create table
-            //TODO проверить поддерживаются ли транзакции
+            //TODO РїСЂРѕРІРµСЂРёС‚СЊ РїРѕРґРґРµСЂР¶РёРІР°СЋС‚СЃСЏ Р»Рё С‚СЂР°РЅР·Р°РєС†РёРё
             db.transaction();
             for (int i = 0; i < createRequestList.count(); i++)
             {

@@ -1,4 +1,4 @@
-#ifndef PRESENTERFORFUNCTIONUI_H
+﻿#ifndef PRESENTERFORFUNCTIONUI_H
 #define PRESENTERFORFUNCTIONUI_H
 #include <QWidget>
 #include <QHBoxLayout>

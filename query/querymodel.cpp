@@ -1,4 +1,4 @@
-#include "querymodel.h"
+п»ї#include "querymodel.h"
 
 querymodel::querymodel(CorrelationModel* acorrModel):
     corrModel(acorrModel)
@@ -25,19 +25,19 @@ void querymodel::run()
     this->makeRequest();
 }
 
-//У нас есть структура
+//РЈ РЅР°СЃ РµСЃС‚СЊ СЃС‚СЂСѓРєС‚СѓСЂР°
 //id(for example, generic_133) , name, type(me,dv,av,ed,cb,et,rm)
 void querymodel::makeRequest()
 {
     qDebug();
-    initlist();//выполниться один раз
+    initlist();//РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ РѕРґРёРЅ СЂР°Р·
     //Making templates create table, update table and insert into requests
-    makeCreateTableRequest();//выполниться один раз
-    makeUpdateTableRequest();//выполниться один раз
-    makeInsertIntoListRequests();//выполниться один раз
+    makeCreateTableRequest();//РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ РѕРґРёРЅ СЂР°Р·
+    makeUpdateTableRequest();//РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ РѕРґРёРЅ СЂР°Р·
+    makeInsertIntoListRequests();//РІС‹РїРѕР»РЅРёС‚СЊСЃСЏ РѕРґРёРЅ СЂР°Р·
     //Fill in list for request
     //1 request = 1 item in iListData
-    //Заполняется один раз
+    //Р—Р°РїРѕР»РЅСЏРµС‚СЃСЏ РѕРґРёРЅ СЂР°Р·
     fillingRequestList();
     emit this->makeRequestSignal();
 }
@@ -58,7 +58,7 @@ void querymodel::makeCreateTableRequest()
         }
     }
 
-    //createRequest = "CREATE TABLE TBLNAME()" - запрос создаёт пустую табдицу
+    //createRequest = "CREATE TABLE TBLNAME()" - Р·Р°РїСЂРѕСЃ СЃРѕР·РґР°С‘С‚ РїСѓСЃС‚СѓСЋ С‚Р°Р±РґРёС†Сѓ
     //altRequest = "ALTER TABLE TBLNAME ADD(...)"
 }
 void  querymodel::makeUpdateTableRequest()
@@ -67,7 +67,7 @@ void  querymodel::makeUpdateTableRequest()
 }
 void querymodel::makeInsertIntoListRequests()
 {
-    //в запросе только один элемент
+    //РІ Р·Р°РїСЂРѕСЃРµ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЌР»РµРјРµРЅС‚
     qDebug() << " Generating template for insert into";
     if (insertRequest.isEmpty())
     {
@@ -150,34 +150,34 @@ void querymodel::resetList()
 void querymodel::fillingRequestList()
 {
     qDebug();
-    //Более простая реализация
-    //Сначала для темплейта
+    //Р‘РѕР»РµРµ РїСЂРѕСЃС‚Р°СЏ СЂРµР°Р»РёР·Р°С†РёСЏ
+    //РЎРЅР°С‡Р°Р»Р° РґР»СЏ С‚РµРјРїР»РµР№С‚Р°
     listOfRequests.clear();
-    QVariantList tTemplate = corrModel->getTemplateModel()->getElementsWithData();//Записали все дела из демо
+    QVariantList tTemplate = corrModel->getTemplateModel()->getElementsWithData();//Р—Р°РїРёСЃР°Р»Рё РІСЃРµ РґРµР»Р° РёР· РґРµРјРѕ
     QVariantList tTemplateItem;
     QVariantList reqList = corrModel->getTemplateModel()->getVisibleElements();
     QString reqString;
-    tTemplate.append(corrModel->targetToTemplate());// добавили переконвертированные дела из старой версии
+    tTemplate.append(corrModel->targetToTemplate());// РґРѕР±Р°РІРёР»Рё РїРµСЂРµРєРѕРЅРІРµСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ РґРµР»Р° РёР· СЃС‚Р°СЂРѕР№ РІРµСЂСЃРёРё
     //qDebug()<<Q_FUNC_INFO<<tTemplate.at(1).toMap().value(rapid).toList().at(0).toMap().value(dvalue);
     for (int i = 0 ; i < tTemplate.count(); i++)
     {
-        //TODO как представляется iListData
+        //TODO РєР°Рє РїСЂРµРґСЃС‚Р°РІР»СЏРµС‚СЃСЏ iListData
         reqString = insertRequest;
-        tTemplateItem = tTemplate[i].toMap().value(rapid).toList();//Кажись так
+        tTemplateItem = tTemplate[i].toMap().value(rapid).toList();//РљР°Р¶РёСЃСЊ С‚Р°Рє
         for (int j = 0; j < reqList.count(); j++)
         {
-            //Нужно найти для каждого reqList такой же элемент в tTemplateItem
-            //Если он есть, то добавить значение - нет, добавить пустое место
-            QVariant searchTmpl = reqList[j].toMap().value(id);//Значение ID
+            //РќСѓР¶РЅРѕ РЅР°Р№С‚Рё РґР»СЏ РєР°Р¶РґРѕРіРѕ reqList С‚Р°РєРѕР№ Р¶Рµ СЌР»РµРјРµРЅС‚ РІ tTemplateItem
+            //Р•СЃР»Рё РѕРЅ РµСЃС‚СЊ, С‚Рѕ РґРѕР±Р°РІРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ - РЅРµС‚, РґРѕР±Р°РІРёС‚СЊ РїСѓСЃС‚РѕРµ РјРµСЃС‚Рѕ
+            QVariant searchTmpl = reqList[j].toMap().value(id);//Р—РЅР°С‡РµРЅРёРµ ID
             QString foundValue = findByID(tTemplateItem, searchTmpl).toString();
             qDebug() << foundValue;
             if (j == 0)
             {
-                reqString += quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
+                reqString += quote + foundValue + quote;//РІС‹РІРµСЃС‚Рё Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ dvalue РІ tTemplateItem
             }
             else
             {
-                reqString += comma + quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
+                reqString += comma + quote + foundValue + quote;//РІС‹РІРµСЃС‚Рё Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ dvalue РІ tTemplateItem
             }
         }
         reqString += rBracket;

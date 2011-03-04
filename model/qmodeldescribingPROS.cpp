@@ -1,4 +1,4 @@
-#include "qmodeldescribingPROS.h"
+﻿#include "qmodeldescribingPROS.h"
 
 //----------- --------QModelDescribingPros--------------------------------------
 QModelDescribingPros::QModelDescribingPros(QObject* parent):
@@ -26,7 +26,7 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
     QStringList textSplitted = text.split(QRegExp("\\n"));
     /**
       F5.TXT
-         � '  � '     � '       N '   Np '      NPOT '  9 '      10 '  ��� '  �����. '   14 '   14 '   15 '  16 '   18 '  18.1 '  18.2 '  19 '  19 '   20 '   20 '   20 '   20 '  �������             '   ���           '  ��������            ' ���� ����
+         Р '  В '     Г '       N '   Np '      NPOT '  9 '      10 '  Соц '  Должн. '   14 '   14 '   15 '  16 '   18 '  18.1 '  18.2 '  19 '  19 '   20 '   20 '   20 '   20 '  Фамилия             '   Имя           '  Отчество            ' Дата рожд
       */
     QString lineFromFile = textSplitted.at(2);//you see line above
     QStringList lineSplitted = (lineFromFile.remove(" ")).split('\'', QString::SkipEmptyParts);
@@ -37,7 +37,7 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
     foreach(QString nameKey, lineSplitted)
     {
         elementForAdding.insert(id, elementName + QString::number(count));
-        // ���������� ���������� ����� ��� ������ �� �����������
+        // Установить уникальные имена для файлов из прокуратуры
         elementForAdding.insert(name,additionToNames + setNameWithoutRepeat(nameKey, elements) );
         elements.append(elementForAdding);
         count++;
@@ -115,7 +115,7 @@ void QModelDescribingPros::addingLoadedDataInVisibleElementsWithData(QTextStream
         i++;
     }
     //iListData Element
-    //QMap = number, value Value и будет записываться в базу данных
+    //QMap = number, value Value Рё Р±СѓРґРµС‚ Р·Р°РїРёСЃС‹РІР°С‚СЊСЃСЏ РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
     qDebug() << " End. iListData count" << VisibleElementsWithDataForParticularFile.count();
 }
 

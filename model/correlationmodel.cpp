@@ -1,4 +1,4 @@
-#include <QVariantList>
+﻿#include <QVariantList>
 #include <QMap>
 #include <QString>
 

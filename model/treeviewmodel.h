@@ -1,10 +1,10 @@
-#ifndef TREEVIEWMODEL_H
+п»ї#ifndef TREEVIEWMODEL_H
 #define TREEVIEWMODEL_H
 #include <QTreeView>
 #include <QStandardItemModel>
 #include <QStringList>
 #include "qmodeldescribing.h"
-//Возможно наследование qmodeldescribing от QStandardItemModel
+//Р’РѕР·РјРѕР¶РЅРѕ РЅР°СЃР»РµРґРѕРІР°РЅРёРµ qmodeldescribing РѕС‚ QStandardItemModel
 class TreeViewModel: public QTreeView
 {
         Q_OBJECT

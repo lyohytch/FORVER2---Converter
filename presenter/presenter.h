@@ -21,7 +21,6 @@ protected:
     QTranslator translateUi;
     QTranslator translateModel;
     QTranslator translatePresenter;
-    QSettings translateSettings;
     void loadingModels(QObject* loadedModel, QObject* tree);
     QStringList getDefaultFilesForModel(QObject *loadedModel);
     bool selectDescription(const QStringList& filenames, int description_id);

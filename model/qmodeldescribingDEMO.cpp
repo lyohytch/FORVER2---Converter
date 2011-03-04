@@ -1,4 +1,4 @@
-#include "qmodeldescribingDEMO.h"
+﻿#include "qmodeldescribingDEMO.h"
 
 //------------------------------------------------------------------------------
 //-------------------QModelDescribingDemo--------------------------------------

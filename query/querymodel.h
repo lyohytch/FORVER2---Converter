@@ -1,4 +1,4 @@
-#ifndef QUERYMODEL_H
+п»ї#ifndef QUERYMODEL_H
 #define QUERYMODEL_H
 #include <QStringList>
 #include <QRunnable>
@@ -14,13 +14,13 @@ class querymodel: public QObject, public QRunnable
         Q_OBJECT
 
     protected:
-        QStringList listOfRequests;//список запросов к базе данных
+        QStringList listOfRequests;//СЃРїРёСЃРѕРє Р·Р°РїСЂРѕСЃРѕРІ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…
 
-        void resetList();//очистить список запросов к базе данных
+        void resetList();//РѕС‡РёСЃС‚РёС‚СЊ СЃРїРёСЃРѕРє Р·Р°РїСЂРѕСЃРѕРІ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…
         //bool convert();
         CorrelationModel* corrModel;
-        QStringList iQueryRequestDesc;//Данные для create table
-        QStringList iQueryRequestData;//Данные для insert into
+        QStringList iQueryRequestDesc;//Р”Р°РЅРЅС‹Рµ РґР»СЏ create table
+        QStringList iQueryRequestData;//Р”Р°РЅРЅС‹Рµ РґР»СЏ insert into
         QStringList iCreateTblRequests;
         bool isTarget;//True if it is target
         QString createRequest;

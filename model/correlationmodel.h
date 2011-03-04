@@ -1,4 +1,4 @@
-#ifndef CORRELATIONMODEL_H
+﻿#ifndef CORRELATIONMODEL_H
 #define CORRELATIONMODEL_H
 
 #include <QMap>

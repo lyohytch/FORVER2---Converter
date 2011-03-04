@@ -1,4 +1,4 @@
-#include <QFile>
+﻿#include <QFile>
 #include <QTextCodec>
 
 #include "qmodeldescribing.h"

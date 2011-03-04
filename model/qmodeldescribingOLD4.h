@@ -1,4 +1,4 @@
-#ifndef QMODELDESCRIBINGOLD4_H
+﻿#ifndef QMODELDESCRIBINGOLD4_H
 #define QMODELDESCRIBINGOLD4_H
 #include "qmodeldescribing.h"
 

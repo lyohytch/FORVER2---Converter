@@ -1,4 +1,4 @@
-#ifndef CONVERTER_H
+﻿#ifndef CONVERTER_H
 #define CONVERTER_H
 #include <QApplication>
 #include <QMainWindow>

@@ -1,4 +1,4 @@
-#ifndef QMODELDESCRIBINGDEMO_H
+﻿#ifndef QMODELDESCRIBINGDEMO_H
 #define QMODELDESCRIBINGDEMO_H
 #include "qmodeldescribing.h"
 

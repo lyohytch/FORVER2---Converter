@@ -1,4 +1,4 @@
-#ifndef CORRELATIONMODELFUNCTION_H
+﻿#ifndef CORRELATIONMODELFUNCTION_H
 #define CORRELATIONMODELFUNCTION_H
 
 #include "correlationmodel.h"
