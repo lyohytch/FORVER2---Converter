@@ -1,4 +1,4 @@
-﻿#include "qmodeldescribingPROS.h"
+#include "qmodeldescribingPROS.h"
 
 //----------- --------QModelDescribingPros--------------------------------------
 QModelDescribingPros::QModelDescribingPros(QObject* parent):

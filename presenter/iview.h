@@ -1,4 +1,4 @@
-﻿#ifndef IVIEW_H
+#ifndef IVIEW_H
 #define IVIEW_H
 #include <QMainWindow>
 class IView: public QMainWindow

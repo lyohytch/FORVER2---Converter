@@ -1,10 +1,21 @@
 #ifndef QMODELDESCRIBINGPROS_H
 #define QMODELDESCRIBINGPROS_H
 #include "qmodeldescribing.h"
+//! QModelDescribingPros - класс для классификаторов, составленных в прокуратуре
+/**
+  * Класс предоставляет функции для работы с файлами описания, составленными в прокуратуре. Файлы описания существенно
+  * отличаются от файлов описания для QModelDescribingOld4 и QModelDescribingDemo. Файлы описания выделяются тем,что классификатор не
+  * имеет древовидной структуры (все элементы только первого уровня). В настоящий момент этот класс не используется как приёмником, т.е.
+  * создавать структуры, в которые будут конвертироваться данные из других классификаторов, а является только источником данных.
+  */
 
 class QModelDescribingPros: public QModelDescribing
 {
     public:
+        /**
+          * Конструктор по умолчанию. Инициализирует QStandardItemModel
+          * \param parent указатель на родительский объект QObject
+          */
         QModelDescribingPros(QObject* parent = 0);
         ~QModelDescribingPros() {}
         virtual bool isValidElementsWithDataForParticularFile();
@@ -21,6 +32,9 @@ class QModelDescribingPros: public QModelDescribing
         virtual QVariantList processLineInDataFile(const QString& line, const QVariantList& DataStructure);
         virtual bool isValidStringInDataFileToAdd(const QVariantList& dataStructure);
         virtual void setElementNameByDataFile(const QString& filename);
+        /**
+          * \see QModelDescribingOld4::getIdByStatName()
+          */
         QVariant getIdByStatName(const QString& statName, const  QVariantList& oneRecord);
         virtual void preparingDataStructureBeforeFilling();//iListDataTemp=>iListData
         virtual bool checkFileFileStructureData(QTextStream* /*fileStream*/);

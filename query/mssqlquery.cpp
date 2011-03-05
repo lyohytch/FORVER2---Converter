@@ -1,4 +1,4 @@
-﻿#include <QSqlDatabase>
+#include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 

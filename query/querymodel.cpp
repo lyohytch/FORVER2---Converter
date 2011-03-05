@@ -1,4 +1,4 @@
-﻿#include "querymodel.h"
+#include "querymodel.h"
 
 querymodel::querymodel(CorrelationModel* acorrModel):
     corrModel(acorrModel)

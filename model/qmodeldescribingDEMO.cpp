@@ -1,4 +1,4 @@
-﻿#include "qmodeldescribingDEMO.h"
+#include "qmodeldescribingDEMO.h"
 
 //------------------------------------------------------------------------------
 //-------------------QModelDescribingDemo--------------------------------------
@@ -113,8 +113,9 @@ bool QModelDescribingDemo::isValidElementsWithDataForParticularFile()
     return isValidElementsWithData();
 }
 
-bool QModelDescribingDemo::checkFileFileStructureData(QTextStream* /*fileStream*/)
+bool QModelDescribingDemo::checkFileFileStructureData(QTextStream* fileStream)
 {
+    Q_UNUSED(fileStream);
     return true;
 }
 

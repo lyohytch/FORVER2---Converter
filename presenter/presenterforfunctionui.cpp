@@ -1,4 +1,4 @@
-﻿#include <QDesktopWidget>
+#include <QDesktopWidget>
 #include <QApplication>
 
 #include "presenterforfunctionui.h"

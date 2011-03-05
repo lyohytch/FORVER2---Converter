@@ -1,4 +1,4 @@
-﻿#include <QDateTime>
+#include <QDateTime>
 
 #include "correlationmodelfunction.h"
 

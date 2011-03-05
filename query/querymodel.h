@@ -1,4 +1,4 @@
-﻿#ifndef QUERYMODEL_H
+#ifndef QUERYMODEL_H
 #define QUERYMODEL_H
 #include <QStringList>
 #include <QRunnable>

@@ -1,4 +1,4 @@
-﻿#include <QModelIndex>
+#include <QModelIndex>
 #include <QDesktopWidget>
 #include <QApplication>
 #include <QFileDialog>

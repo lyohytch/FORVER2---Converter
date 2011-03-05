@@ -1,4 +1,4 @@
-﻿#ifndef MSSQLQUERY_H
+#ifndef MSSQLQUERY_H
 #define MSSQLQUERY_H
 
 #include <QObject>

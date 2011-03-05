@@ -1,4 +1,4 @@
-﻿#include <QFile>
+#include <QFile>
 #include <QTextCodec>
 
 #include "qmodeldescribing.h"
@@ -127,7 +127,7 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
     QString text = fileStream->readAll();
     QStringList textSplitted = text.split(QRegExp("\\n"));
     QStringList capturedText;
-    /**
+    /*
       ([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)"
       It' s regular expression for strings like
       "244	5					ed		1		ФИО:	888888888888888888888888	ФИО:	27		221		"
