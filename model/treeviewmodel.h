@@ -21,7 +21,7 @@ class TreeViewModel: public QTreeView
           * \param isT 1 - отображать как приёмник, 0 - отображать как источник
           */
         TreeViewModel(QWidget* parent = 0, bool isT = false);
-        ~TreeViewModel() {};
+        ~TreeViewModel() {}
         /**
           * Загружает модель. Модель уже должна быть сформирована из файлов описания
           * \param model указатель на QStandardItemModel, который будет моделью для TreeViewModel
