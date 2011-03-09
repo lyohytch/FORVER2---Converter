@@ -81,18 +81,19 @@ QString QModelDescribingFromJura::FromIntegerToBinaryString(int countDependField
    QString binaryString = QString();
    QString reverseBinaryString = QString();
 
-   while(countDependFields > 1)
+   int bynary = 1 << ( countDependFields  - 1);
+
+   while(bynary > 1)
    {
-       reverseBinaryString.append(QString::number(countDependFields % 2));
-       countDependFields /= 2;
+       reverseBinaryString.append(QString::number(bynary % 2));
+       bynary /= 2;
    }
-   reverseBinaryString.append(QString::number(countDependFields));
+   reverseBinaryString.append(QString::number(bynary));
    int reverseStringSize = reverseBinaryString.count();
    for(int i = 0; i < reverseStringSize; ++i)
    {
         binaryString.append(reverseBinaryString.at(reverseStringSize - i - 1));
    }
-
    return binaryString;
 }
 

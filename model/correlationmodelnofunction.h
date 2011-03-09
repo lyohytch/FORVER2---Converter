@@ -43,6 +43,7 @@ private:
     QVariant findTargetDataByName(const QString &targetTemplate, const QVariantList &convertedData);
     QString setNewDataValueByType(const QString &typeElement,  const QString &correlationValue, const QString &dataString);
     bool compareCompactCodes(const QString &codedDataWithoutCode, const QString & datafromTarget);
+    bool compareSimpleCodes(const QString &codedDataWithoutCode,  const QString &dataFromTarget);
     bool dependIdSetted(const QString &dependId, const QVariantList &convertedData);
     QStandardItem* addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate);
     QVariant findTargetDescriptionByName(const QString &targetTemplate);
