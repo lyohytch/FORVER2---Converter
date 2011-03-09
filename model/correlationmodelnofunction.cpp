@@ -282,8 +282,9 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
 
                 if(codedData.startsWith(simpleCode))
                 {
-                    QString codedDataWithoutCode = codedData.section(simpleCode, 0, 0, QString::SectionSkipEmpty);
-                   if( codedDataWithoutCode == foundTarget.toMap().value(dvalue).toString())
+                   QString codedDataWithoutCode = codedData.section(simpleCode, 0, 0, QString::SectionSkipEmpty);
+                   if( compareSimpleCodes(codedDataWithoutCode, foundTarget.toMap().value(dvalue).toString())  //Codes are equal
+                       || ( codedDataWithoutCode.isEmpty() && dataString == "Empty" )) //Code is empty. Accept it
                    {
                        dataString = setNewDataValueByType(typeElement, correlation, dataString);
                    }
@@ -319,7 +320,27 @@ bool CorrelationModelNoFunction::dependIdSetted(const QString &dependId, const Q
     return !(dataString == "Empty");
 }
 
-//QVariant CorrelationModelNoFunction::findTargetDescriptionByName()
+
+bool CorrelationModelNoFunction::compareSimpleCodes(const QString &codedDataWithoutCode,
+                                                    const QString &dataFromTarget)
+{
+    int diff = codedDataWithoutCode.size() - dataFromTarget.size();
+    QString targetData = dataFromTarget;
+    QString codedData = codedDataWithoutCode;
+    QString nullString = QString();
+    if( diff > 0)
+    {
+        nullString.fill('0', diff);
+        targetData = nullString + targetData;
+    }
+    else if( diff < 0)
+    {
+        nullString.fill('0', -diff);
+        codedData = nullString + codedData;
+    }
+
+    return  (targetData == codedData);
+}
 
 bool CorrelationModelNoFunction::compareCompactCodes(const QString &codedDataWithoutCode,
                                                      const QString & datafromTarget)
