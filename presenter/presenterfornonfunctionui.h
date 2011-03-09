@@ -36,7 +36,6 @@ class AdditionCorrelationTable : public QWidget
         QString nameOfTarget;
         QString typeOfElement;
     signals:
-        void sendDataToMainTableForm(const QModelIndex &tableData);
         void sendDataToMainTableForm(QStandardItem *item, int mRow, int mCol);
 };
 
