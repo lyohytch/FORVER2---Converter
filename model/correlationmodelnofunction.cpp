@@ -283,7 +283,7 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList &conver
                 if(codedData.startsWith(simpleCode))
                 {
                     QString codedDataWithoutCode = codedData.section(simpleCode, 0, 0, QString::SectionSkipEmpty);
-                   if( codedDataWithoutCode == foundTarget.toMap().value(dvalue).toString())
+                   if( codedDataWithoutCode == foundTarget.toMap().value(dvalue).toString() || codedDataWithoutCode.isEmpty())
                    {
                        dataString = setNewDataValueByType(typeElement, correlation, dataString);
                    }

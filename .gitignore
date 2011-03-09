@@ -17,3 +17,5 @@ build/lib
 qrc_*
 *.bundle
 Resources/Libs
+html/
+latex/

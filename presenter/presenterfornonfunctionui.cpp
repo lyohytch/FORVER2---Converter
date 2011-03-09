@@ -243,22 +243,25 @@ QVariantMap AdditionCorrelationTable::fillCorrelationMap()
     for(int i = 0; i < rowCount; ++i)
         for(int j = 0; j < colCount; ++j)
         {
-            switch(i)
+            if (tableModel->item(i, j) != NULL)
             {
-                case 0:
-                    names.append(tableModel->item(i, j)->text());
-                    break;
-                case 1:
-                    codes.append(tableModel->item(i, j)->text());
-                    break;
-                case 2:
-                    corrs.append(tableModel->item(i,j)->text());
-                    break;
-                case 3:
-                    depids.append(tableModel->item(i,j)->text());
-                    break;
-                default:
-                    break;
+                switch(i)
+                {
+                    case 0:
+                        names.append(tableModel->item(i, j)->text());
+                        break;
+                    case 1:
+                        codes.append(tableModel->item(i, j)->text());
+                        break;
+                    case 2:
+                        corrs.append(tableModel->item(i,j)->text());
+                        break;
+                    case 3:
+                        depids.append(tableModel->item(i,j)->text());
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     corrMap.insert(itemNamesInForm, names);
