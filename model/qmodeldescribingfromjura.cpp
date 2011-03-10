@@ -37,14 +37,12 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
             if(countDependFields)
             {
                 elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
-                //qDebug() << "elements => "<<elements[count].toMap().value(dependFields);
+                countDependFields = 0;
+                dependFieldList.clear();
             }
 
             elements.append(fillOneElement(capturedText));
-
             count++;
-            countDependFields = 0;
-            dependFieldList.clear();
          }
          else
          {
@@ -60,6 +58,13 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
              }
          }
     }
+    if( count != -1 && countDependFields)
+    {
+        elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
+        countDependFields = 0;
+        dependFieldList.clear();
+    }
+
     return elements;
 }
 
