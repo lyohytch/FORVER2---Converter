@@ -16,9 +16,9 @@ void mssqlquery::run()
     createRequestList = queryModel->getCreateTable();
     mutex.lock();
     //Создать базу данных, если нет её - добавить данные
-    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC3", "MainDBConnection");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC", "MainDBConnection");
     qDebug() << "ODBC driver valid?" << db.isValid();
-    db.setDatabaseName("Driver={SQL Server};Server=localhost\\SQLEXPRESS;Database=CrimDemoDB;Trusted_Connection=yes;");
+    db.setDatabaseName("Driver={SQL Native Client};Server=localhost\\SQLEXPRESS;Database=CrimDemoDB;Trusted_Connection=yes;");
     if (db.open())
     {
         //Create table or add data in table

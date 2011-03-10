@@ -159,7 +159,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
     if( textCodec->canEncode(text) )
     {
 #ifdef Q_OS_LINUX
-        textCodec = QTextCodec::codecForName("UTF-8");
+        //textCodec = QTextCodec::codecForName("UTF-8");
 #endif
         return textCodec;
     }
@@ -169,7 +169,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
         if ( textCodec->canEncode(text))
         {
 #ifdef Q_OS_LINUX
-            textCodec = QTextCodec::codecForName("Windows-1251");
+            //textCodec = QTextCodec::codecForName("Windows-1251");
 #endif
             return textCodec;
         }
