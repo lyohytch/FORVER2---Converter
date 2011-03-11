@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="ru_RU" sourcelanguage="en_US">
 <context>
     <name>AdditionCorrelationTable</name>
     <message>
@@ -145,6 +147,26 @@
     <message>
         <source>Target Description wasn&apos;t loaded</source>
         <translation>Описание источника не загружено</translation>
+    </message>
+    <message>
+        <source>Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)</source>
+        <translation>Файлы описания источника (Sprav?.txt ; sprav_d.txt ; F*.TXT)</translation>
+    </message>
+    <message>
+        <source>All files (*.*)</source>
+        <translation>Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <source>Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT ; Pros.txt)</source>
+        <translation>Файлы описания приёмника (Sprav?.txt ; sprav_d.txt ; F*.TXT ; Pros.txt)</translation>
+    </message>
+    <message>
+        <source>Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)</source>
+        <translation>Файлы приёмника с данными (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)</translation>
+    </message>
+    <message>
+        <source>Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)</source>
+        <translation>Файлы источника с данными (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)</translation>
     </message>
 </context>
 <context>
