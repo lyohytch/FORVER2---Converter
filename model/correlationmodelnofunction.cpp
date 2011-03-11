@@ -37,16 +37,17 @@ void CorrelationModelNoFunction::fillInTable()
         //QString formIdName = getTemplateModel()->getVisibleElements()[i].toMap().value(formId).toString();
         QString targetIdName = getTemplateModel()->getVisibleElements()[i].toMap().value(targetName).toString();
         qDebug()<<" Template by Ids => "<<getTemplateModel()->getVisibleElements()[i].toMap().value(id).toString();
-        QStandardItem *itemCurrent;
+        QStandardItem *itemTemplate;
         QStandardItem *itemTarget;
 
         nameCurrent = getTemplateModel()->getVisibleElements()[i].toMap().value(name).toString();
-        itemCurrent =  new QStandardItem(nameCurrent);
-        itemCurrent->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
-        itemCurrent->setEditable(false);
+        itemTemplate =  new QStandardItem(nameCurrent);
+        itemTemplate->setData(getTemplateModel()->getVisibleElements()[i], Qt::UserRole + 1);
+        itemTemplate->setEditable(false);
+        itemTemplate->setData(getTemplateModel()->getVisibleElements()[i].toMap().value(hint), Qt::ToolTipRole);
         itemTarget = addHeadAndDependingItemsInTarget(getTemplateModel()->getVisibleElements()[i]);
 
-        itemList.append(itemCurrent);
+        itemList.append(itemTemplate);
         itemList.append(itemTarget);
         getTableModel()->appendRow(itemList);
     }
@@ -67,10 +68,12 @@ void CorrelationModelNoFunction::fillInTable(QVariantMap mapTable)
         itemNames = mapTable.value(tempList).toList().at(i).toMap().value(name).toString();
         QStandardItem *item1 = new QStandardItem(itemNames);
         item1->setData(mapTable.value(tempList).toList().at(i), Qt::UserRole + 1);
+        item1->setData(mapTable.value(tempList).toList().at(i).toMap().value(hint), Qt::ToolTipRole);
         item1->setEditable(false);
         itemNames = mapTable.value(targList).toList().at(i).toMap().value(itemNamesInForm).toStringList().at(0);
         QStandardItem *item2 = new QStandardItem(itemNames);
         item2->setData(mapTable.value(targList).toList().at(i), Qt::UserRole + 1);
+        item2->setData(mapTable.value(targList).toList().at(i).toMap().value(hint), Qt::ToolTipRole);
         item2->setEditable(false);
         itemList.append(item1);
         itemList.append(item2);
@@ -81,7 +84,6 @@ void CorrelationModelNoFunction::fillInTable(QVariantMap mapTable)
 
 QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)
 {
-
 
    QStandardItem *item;
    QString nameItem;
@@ -124,6 +126,11 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
    // Нужно устанавливать номер!!!!
    item = new QStandardItem(nameItem);
    item->setData(corrDataForTable, Qt::UserRole + 1);
+   QVariant foundTarget = findTargetDescriptionByName(nameItem);
+   if (!foundTarget.isNull())
+   {
+       item->setData(foundTarget.toMap().value(hint), Qt::ToolTipRole);
+   }
    item->setEditable(false);
 
    return item;
@@ -425,7 +432,7 @@ QVariant CorrelationModelNoFunction::findTargetDescriptionByName(const QString &
     QVariantList searchList = getTargetModel()->getVisibleElements();
     foreach(QVariant el, searchList)
     {
-        if(el.toMap().value(id) == targetTemplate)
+        if(el.toMap().value(name) == targetTemplate)
         {
             return el;
         }

@@ -39,6 +39,7 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
         elementForAdding.insert(id, elementName + QString::number(count));
         // Установить уникальные имена для файлов из прокуратуры
         elementForAdding.insert(name,additionToNames + setNameWithoutRepeat(nameKey, elements) );
+        elementForAdding.insert(hint, additionToNames + setNameWithoutRepeat(nameKey, elements) );
         elements.append(elementForAdding);
         count++;
     }

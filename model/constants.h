@@ -77,6 +77,8 @@ const QString dependId("dependingId");
 
 const QString codingRules("codingRules"); // Encoding rules as described above
 
+const QString hint("whatisthis");
+
 //Data model fields
 const QString generic("generic_");
 const QString figurant("figurant_");

@@ -267,6 +267,7 @@ void QModelDescribing::createTreeFromElements(const QVariantList& iList, int i, 
     QStandardItem* child = new QStandardItem(iList[i].toMap().value(name).toString());
     child->setEditable(false);
     child->setData(iList[i], Qt::UserRole + 1);
+    child->setData(iList[i].toMap().value(hint), Qt::ToolTipRole);
     if (isVisibleElement(iList[i]))
     {
         QFont font = child->font();

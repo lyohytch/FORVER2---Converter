@@ -148,6 +148,7 @@ QVariantMap QModelDescribingFromJura::fillOneElement(const QStringList & capture
    element.insert(level, capturedText.at(2));
    element.insert(type, capturedText.at(3));
    element.insert(name, capturedText.at(5));
+   element.insert(hint, capturedText.at(5));
    if(!capturedText.at(6).isEmpty())
    {
         element.insert(name, capturedText.at(6));
