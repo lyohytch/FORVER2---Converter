@@ -132,7 +132,16 @@ class QModelDescribing : public QStandardItemModel
           * \note Выбираются так называемые значимые элементы: поля ввода, альтернативные, дистрибутивные вопросы и списки
           */
         virtual void createListofVisibleElements();
-
+        /**
+          * Считываение из MS Excel
+          * \param excSheet указатель на лист Excel с данными
+          * \note Только для OS Windows
+          */
+        virtual QVariantList getElementsFromExcel(QObject *excSheet)
+        {
+            Q_UNUSED(excSheet);
+            return QVariantList();
+        }
         //Operations with elements with data
         /**
           * Проверяет корректная или нет структура файла с данными

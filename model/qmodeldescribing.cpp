@@ -1,6 +1,12 @@
 #include <QFile>
 #include <QTextCodec>
 
+#ifdef Q_OS_WIN32
+#include <QAxObject>
+#include <QAxWidget>
+#endif
+
+
 #include "qmodeldescribing.h"
 
 QModelDescribing::QModelDescribing(QObject* parent):
@@ -68,7 +74,23 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
 
 void QModelDescribing::getDataFromExcelDocument(const QString &filename)
 {
+#ifdef Q_OS_WIN32
+    //Launch excel
+    QAxWidget excel("Excel.Application");
+    //In invisible mode
+    excel.dynamicCall("Visible", false);
+    //Get workbooks
+    QAxObject *workbooks = excel.querySubObject("Workbooks");
+    //Get workbooks from filename
+    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filename);
+    //Get first sheet in document
+    QAxObjects *sheet = workbook->querySubObject("Worksheets(int)", 1);
+    ElementsFromDescriptionFiles = getElementsFromExcel(sheet);
+    excel.dynamicCall("Quit(void)");
+#else
     Q_UNUSED(filename);
+    qCritical()<<"Support of reading from Excel documents only Windows platform";
+#endif
 }
 
 void QModelDescribing::getDataFromTextDocument(QFile& fileSource)
