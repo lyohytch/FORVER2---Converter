@@ -1,6 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-#include <QString>
+#include <QStringList>
 #include <QDebug>
 
 //Common
@@ -79,6 +79,9 @@ const QString codingRules("codingRules"); // Encoding rules as described above
 
 const QString hint("whatisthis");
 
+//Excel extensions
+const QStringList excelExts(QStringList()<<"xls"<<"xlsx");
+
 //Data model fields
 const QString generic("generic_");
 const QString figurant("figurant_");
@@ -127,6 +130,7 @@ const QString UiQmPath(":translations/ui/Resources/Translations/converter_ui_ru.
 
 const QString actionRussian("actionRussian");
 const QString actionEnglish("actionEnglish");
+
 
 const int iTemplate = 0;
 const int iTarget = 1;

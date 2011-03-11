@@ -32,12 +32,12 @@ protected:
     virtual void setModelsAndTreesObjects();
     void loadDescriptionModelFromFiles(const QStringList &filenames, int descriptionId);
     void loadDataFromFilesWithData(const QStringList &filenames, int descriptionId);
-    virtual QString setNameFilterForTargetFiles();
-    virtual QString setNameFilterForTemplateFiles();
-    virtual QString setNameFilterForDataTemplateFiles();
-    virtual QString setNameFilterForDataTargetFiles();
-    QStringList openFilesByAnyNameFilter(const QString &nameFilter);
-    QStringList openDataFilesByAnyNameFilter(const QString &nameFilter);
+    virtual QStringList setNameFilterForTargetFiles();
+    virtual QStringList setNameFilterForTemplateFiles();
+    virtual QStringList setNameFilterForDataTemplateFiles();
+    virtual QStringList setNameFilterForDataTargetFiles();
+    QStringList openFilesByAnyNameFilter(const QStringList &nameFilter);
+    QStringList openDataFilesByAnyNameFilter(const QStringList &nameFilter);
     void defaultTranslateSets();
     void loadTranslationFiles();
 protected slots:

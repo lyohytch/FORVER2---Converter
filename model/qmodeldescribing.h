@@ -300,7 +300,8 @@ class QModelDescribing : public QStandardItemModel
         void clearAllElements();
 
     private:
-
+        void getDataFromTextDocument(QFile& fileSource);
+        void getDataFromExcelDocument(const QString& filename);
         bool isElementWithData;
 };
 

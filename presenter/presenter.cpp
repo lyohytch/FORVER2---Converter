@@ -499,9 +499,9 @@ void Presenters::onOpenTargetFiles()
     loadDescriptionModelFromFiles(filenames, TARGETDESC);
 }
 
-QString Presenters::setNameFilterForTargetFiles()
+QStringList Presenters::setNameFilterForTargetFiles()
 {
-    return QString("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)");
+    return QStringList()<<tr("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)")<<tr("All files (*.*)");
 }
 
 void Presenters::loadDescriptionModelFromFiles(const QStringList &filenames, int descriptionId)
@@ -531,17 +531,17 @@ void Presenters::onOpenTemplateFiles()
     loadDescriptionModelFromFiles(filenames, TEMPLATEDESC);
 }
 
-QString Presenters::setNameFilterForTemplateFiles()
+QStringList Presenters::setNameFilterForTemplateFiles()
 {
-    return QString("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT ; Pros.txt)");
+    return QStringList()<<tr("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT ; Pros.txt)")<<tr("All files (*.*)");
 }
 
-QStringList Presenters::openFilesByAnyNameFilter(const QString &nameFilter)
+QStringList Presenters::openFilesByAnyNameFilter(const QStringList &nameFilter)
 {
     QFileDialog dialog((QWidget *)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr(nameFilter.toAscii()));
+    dialog.setNameFilters(nameFilter);
     dialog.setViewMode(QFileDialog::List);
     if (dialog.exec())
     {
@@ -559,20 +559,29 @@ bool Presenters::selectDescription(const QStringList& filenames, int description
     {
         foreach(QString fname, filenames)
         {
-            if (fname.contains("Sprav", Qt::CaseSensitive))
+            QString baseName;
+#ifdef Q_OS_LINUX
+            baseName = fname.section('/', -1);
+#else
+            baseName = fname.section('\\', -1);
+#endif
+
+            if (baseName.contains("Sprav", Qt::CaseSensitive))
             {
                 old4++;
             }
-            else if (fname.contains("sprav_d", Qt::CaseSensitive))
+            else if (baseName.contains("sprav_d", Qt::CaseSensitive))
             {
                 demo++;
             }
-            else if (fname.contains("F5.TXT", Qt::CaseSensitive))
+            else if (baseName.contains("F5.TXT", Qt::CaseInsensitive))
             {
                 pros++;
             }
             //TODO: reqorl it
-            else if (fname.contains("Pros.txt", Qt::CaseSensitive))
+            else if (baseName.contains("Pros.txt", Qt::CaseInsensitive) ||
+                     excelExts.contains( baseName.section('.', -1),
+                                         Qt::CaseInsensitive))
             {
                 jura++;
             }
@@ -663,17 +672,17 @@ void Presenters::loadDataFromFilesWithData(const QStringList &filenames, int des
     }
 }
 
-QString Presenters::setNameFilterForDataTemplateFiles()
+QStringList Presenters::setNameFilterForDataTemplateFiles()
 {
-    return QString("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)");
+    return QStringList()<<tr("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)")<<tr("All files (*.*)");
 }
 
-QStringList Presenters::openDataFilesByAnyNameFilter(const QString &nameFilter)
+QStringList Presenters::openDataFilesByAnyNameFilter(const QStringList &nameFilter)
 {
     QFileDialog dialog((QWidget *)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setNameFilter(tr(nameFilter.toAscii()));
+    dialog.setNameFilters(nameFilter);
     dialog.setViewMode(QFileDialog::List);
     if (dialog.exec())
     {
@@ -696,7 +705,7 @@ void Presenters::onLoadTargetData()
     loadDataFromFilesWithData(filenames, TARGETDESC);
 }
 
-QString Presenters::setNameFilterForDataTargetFiles()
+QStringList Presenters::setNameFilterForDataTargetFiles()
 {
-    return QString("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)");
+    return QStringList()<<tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)")<<tr("All files (*.*)");
 }

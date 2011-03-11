@@ -43,35 +43,57 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
     QFile fileSource(filename);
     if (fileSource.exists())
     {
+        // TODO: reading from excel
+        setElementNameByFile(filename);
+        setAdditionsToNamesByFile(filename);
+
         qDebug() << "File found. Try to take list";
-        if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
+
+        if ( excelExts.contains(filename.section('.',-1)) )
         {
-            qCritical() << "File " << filename << " can not be open.";
+            qDebug()<<"Try to use excel reader";
+            getDataFromExcelDocument(filename);
         }
         else
         {
-            QTextCodec *txtCodec = setFileEncodingByContain(&fileSource);
-
-            fileSource.close();
-            fileSource.open(QIODevice::ReadOnly | QIODevice::Text);
-            QTextStream fileStream(&fileSource);
-            fileStream.setCodec(txtCodec);
-
-            if (checkFileStructure(&fileStream))
-            {
-                setElementNameByFile(filename);
-                setAdditionsToNamesByFile(filename);
-                addingDataToBlankElements(&fileStream);
-            }
-            else
-            {
-                qWarning() << "File structure is incorrect.";
-            }
+            qDebug()<<"Read from txt file";
+            getDataFromTextDocument(fileSource);
         }
     }
     else
     {
         qCritical() << "File " << filename << " doesn't exist";
+    }
+}
+
+void QModelDescribing::getDataFromExcelDocument(const QString &filename)
+{
+    Q_UNUSED(filename);
+}
+
+void QModelDescribing::getDataFromTextDocument(QFile& fileSource)
+{
+    if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qCritical() << "File " << fileSource.fileName() << " can not be open as text";
+    }
+    else
+    {
+        QTextCodec *txtCodec = setFileEncodingByContain(&fileSource);
+
+        fileSource.close();
+        fileSource.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream fileStream(&fileSource);
+        fileStream.setCodec(txtCodec);
+
+        if (checkFileStructure(&fileStream))
+        {
+            addingDataToBlankElements(&fileStream);
+        }
+        else
+        {
+            qWarning() << "File structure is incorrect.";
+        }
     }
 }
 
@@ -101,7 +123,8 @@ void QModelDescribing::setElementNameByFile(const QString& filename)
         elementName = weapon;
     }
     //TODO: change fname
-    else if (filename.endsWith("Pros.txt", Qt::CaseSensitive))
+    else if (filename.endsWith("Pros.txt", Qt::CaseSensitive) ||
+             filename.endsWith("F_5_4.xls", Qt::CaseSensitive))
     {
         elementName = generic_F5;
     }
