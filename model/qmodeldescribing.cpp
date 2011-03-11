@@ -6,6 +6,8 @@
 #include <QAxWidget>
 #endif
 
+#include <QDir>
+
 
 #include "qmodeldescribing.h"
 
@@ -68,6 +70,7 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
     }
     else
     {
+        qCritical() << QDir::currentPath();
         qCritical() << "File " << filename << " doesn't exist";
     }
 }

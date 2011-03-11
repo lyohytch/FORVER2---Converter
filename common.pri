@@ -3,11 +3,10 @@ TEMPLATE = lib
 
 QT += gui core
 
-win32:CONFIG += qaxcontainer
-win32:DESTDIR = ../build/lib/$$TARGET
-win32:DLLDESTDIR = ../build/bin
+DESTDIR = ../build/lib/$$TARGET
 
-unix:DESTDIR = ../build/bin
+win32:CONFIG += qaxcontainer
+win32:DLLDESTDIR = ../build/bin
 
 MOC_DIR = ../build/mocs/$$TARGET
 OBJECTS_DIR = ../build/objs/$$TARGET

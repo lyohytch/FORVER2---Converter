@@ -63,10 +63,10 @@ void PresenterForNonFunctionUI::freeObjects()
 
     //Delete corr model
     if (_view->corrModel) delete _view->corrModel;
-    if (_view->models) delete _view->models;
+    if (_view->models) delete [] _view->models;
     if (_view->trees[TARGETDESC]) delete _view->trees[TARGETDESC];
     if (_view->trees[TEMPLATEDESC]) delete _view->trees[TEMPLATEDESC];
-    if (_view->trees) delete _view->trees;
+    if (_view->trees) delete []_view->trees;
 
     //Delete additional form
     if(AddTableForm) delete AddTableForm;
@@ -166,7 +166,7 @@ AdditionCorrelationTable::AdditionCorrelationTable(Presenters *presenter, IView 
     setWindowIcon(_view->windowIcon());
 
     viewMainCorrs = new QTableView(this);
-    tableModel = new QStandardItemModel;
+    tableModel = new QStandardItemModel(this);
     viewMainCorrs->setModel(tableModel);
 
     cLayout = new QVBoxLayout;

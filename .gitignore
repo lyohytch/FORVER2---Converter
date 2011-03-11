@@ -19,3 +19,4 @@ qrc_*
 Resources/Libs
 html/
 latex/
+*.ini
