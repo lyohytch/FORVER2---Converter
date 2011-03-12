@@ -112,7 +112,7 @@ class CorrelationModel: public QTableView
           * \param col столбец
           * \param row строка
           */
-        void saveDataForTarget(const QVariant &data, int row, int col);
+        void saveDataForTarget(const QVariant& data, int row, int col);
         /**
           * Изменяет значение в ячейке для столбца источника
           * \param col столбец
@@ -130,9 +130,10 @@ class CorrelationModel: public QTableView
           * \sa changeTargetValue () , changeTargetValue ()
           */
         virtual void changeFunctionValue(int col, int row, int funcId)
-        { Q_UNUSED(col);
-          Q_UNUSED(row);
-          Q_UNUSED(funcId)
+        {
+            Q_UNUSED(col);
+            Q_UNUSED(row);
+            Q_UNUSED(funcId)
         }
     protected:
         /**

@@ -9,15 +9,15 @@ QModelDescribingDemo::QModelDescribingDemo(QObject* parent):
 
 }
 
-QVariantMap QModelDescribingDemo::fillOneElement(const QStringList & capturedText)
+QVariantMap QModelDescribingDemo::fillOneElement(const QStringList& capturedText)
 {
-   QVariantMap element;
-   element.insert(id, elementName + capturedText.at(1));
-   element.insert(level, capturedText.at(2));
-   element.insert(type, capturedText.at(3));
-   element.insert(name, capturedText.at(5));
-   element.insert(repeat, capturedText.at(6));
-   return element;
+    QVariantMap element;
+    element.insert(id, elementName + capturedText.at(1));
+    element.insert(level, capturedText.at(2));
+    element.insert(type, capturedText.at(3));
+    element.insert(name, capturedText.at(5));
+    element.insert(repeat, capturedText.at(6));
+    return element;
 }
 
 bool QModelDescribingDemo::checkFileStructure(QTextStream* fileStream)
@@ -33,7 +33,7 @@ bool QModelDescribingDemo::isValidStringInDescriptionFileToAdd(const QMap<QStrin
 {
     bool isNull = ((checkMap.value(id) == NULL) || (checkMap.value(level) == NULL) ||
                    (checkMap.value(name) == NULL) || (checkMap.value(type) == NULL) ||
-                    (checkMap.value(repeat) == NULL));
+                   (checkMap.value(repeat) == NULL));
     if (!isNull)
         return ((checkMap.value(type).toString() == AV) || (checkMap.value(type).toString() == DV) || (checkMap.value(type).toString() == RM) ||
                 (checkMap.value(type).toString() == CB) || (checkMap.value(type).toString() == ED) || (checkMap.value(type).toString() == ET) ||
@@ -78,7 +78,7 @@ QVariantList QModelDescribingDemo::processLineInDataFile(const QString& line, co
         if (!turn(line, k, 1))
         {
             qWarning() << " String isn't valid";
-             return QVariantList();
+            return QVariantList();
         }
         retVar.append(oneDataMap);
     }

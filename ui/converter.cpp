@@ -8,7 +8,7 @@
 
 #include "presenterfornonfunctionui.h"
 
-converter::converter(QWidget* parent, QApplication *app) :
+converter::converter(QWidget* parent, QApplication* app) :
     IView(parent),
     ui(new Ui::converter)
 {
@@ -52,26 +52,26 @@ void converter::on_actionOpen_triggered()
 void converter::removeWidgets()
 {
     //template
-    layout->removeWidget((QTreeView *)trees[TEMPLATEDESC]);
+    layout->removeWidget((QTreeView*)trees[TEMPLATEDESC]);
     //table - corrModel
-    layout->removeWidget((QTableView *)corrModel);
+    layout->removeWidget((QTableView*)corrModel);
     //target
-    layout->removeWidget((QTreeView *)trees[TARGETDESC]);
+    layout->removeWidget((QTreeView*)trees[TARGETDESC]);
 
 }
 
 void converter::addWidgets()
 {
     //template
-    layout->addWidget((QTreeView *)trees[TEMPLATEDESC]);
+    layout->addWidget((QTreeView*)trees[TEMPLATEDESC]);
     //table - corrModel
-    layout->addWidget((QTableView *)corrModel);
+    layout->addWidget((QTableView*)corrModel);
     //target
-    layout->addWidget((QTreeView *)trees[TARGETDESC]);
+    layout->addWidget((QTreeView*)trees[TARGETDESC]);
 
 }
 
-void converter::updateTextLabel(const QString &txtMsg)
+void converter::updateTextLabel(const QString& txtMsg)
 {
     if (!pLabel)
     {
@@ -82,13 +82,13 @@ void converter::updateTextLabel(const QString &txtMsg)
 
 void converter::russianLanguageSet(bool check)
 {
-    QAction * action = this->findChild<QAction*>(actionRussian);
+    QAction* action = this->findChild<QAction*>(actionRussian);
     action->setChecked(check);
 }
 
 void converter::englishLanguageSet(bool check)
 {
-    QAction * action = this->findChild<QAction*>(actionEnglish);
+    QAction* action = this->findChild<QAction*>(actionEnglish);
     action->setChecked(check);
 }
 
@@ -127,7 +127,7 @@ void converter::on_actionExport_all_triggered()
 }
 
 
-void converter::init(QApplication *app)
+void converter::init(QApplication* app)
 {
     //Template
     qDebug();
@@ -154,7 +154,7 @@ void converter::init_setup_main_form()
     QVariant engSetted = settings.value(English);
     QVariant rusSetted = settings.value(Russian);
     bool isSettingsNone = engSetted.isNull() || rusSetted.isNull();
-    if (!isSettingsNone && (!engSetted.toBool() && rusSetted.toBool()) )
+    if (!isSettingsNone && (!engSetted.toBool() && rusSetted.toBool()))
     {
         russianLanguageSet(true);
         englishLanguageSet(false);
@@ -168,7 +168,7 @@ void converter::init_setup_desktop_widgets()
     //Put tree model on widget
     layout = new QHBoxLayout;
     this->centralWidget()->setLayout(layout);
-    if ( !pLabel )
+    if (!pLabel)
     {
         pLabel = new QLabel;
     }

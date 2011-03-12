@@ -81,7 +81,7 @@ const QString codingRules("codingRules"); // Encoding rules as described above
 const QString hint("whatisthis");
 
 //Excel extensions
-const QStringList excelExts(QStringList()<<"xls"<<"xlsx");
+const QStringList excelExts(QStringList() << "xls" << "xlsx");
 
 //Data model fields
 const QString generic("generic_");

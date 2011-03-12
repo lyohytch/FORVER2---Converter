@@ -40,7 +40,7 @@ QVariantList QModelDescribing::getElementsWithData() const
 {
     return VisibleElementWithData;
 }
-void QModelDescribing::getDataFromExcelDocument(const QString &filename)
+void QModelDescribing::getDataFromExcelDocument(const QString& filename)
 {
 #ifdef Q_OS_WIN32
     //Launch excel
@@ -48,23 +48,23 @@ void QModelDescribing::getDataFromExcelDocument(const QString &filename)
     //In invisible mode
     excel.dynamicCall("Visible", false);
     //Get workbooks
-    QAxObject *workbooks = excel.querySubObject("Workbooks");
+    QAxObject* workbooks = excel.querySubObject("Workbooks");
     //Get workbooks from filename
     workbooks->dynamicCall("Open(const QString&)", filename);
-    QAxObject *workbook = excel.querySubObject("ActiveWorkBook");
+    QAxObject* workbook = excel.querySubObject("ActiveWorkBook");
     //Get first sheet in document
-    QAxObject *sheet = workbook->querySubObject("Worksheets(int)", 1);
+    QAxObject* sheet = workbook->querySubObject("Worksheets(int)", 1);
     ElementsFromDescriptionFiles = getElementsFromExcel(sheet);
     delete workbook;
     delete workbooks;
     excel.dynamicCall("Quit(void)");
 #else
     Q_UNUSED(filename);
-    qCritical()<<"Support of reading from Excel documents only Windows platform";
+    qCritical() << "Support of reading from Excel documents only Windows platform";
 #endif
 }
 
-void QModelDescribing::getDataFromTextDocument(const QString &filename)
+void QModelDescribing::getDataFromTextDocument(const QString& filename)
 {
     QFile fileSource(filename);
     if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -73,7 +73,7 @@ void QModelDescribing::getDataFromTextDocument(const QString &filename)
     }
     else
     {
-        QTextCodec *txtCodec = setFileEncodingByContain(&fileSource);
+        QTextCodec* txtCodec = setFileEncodingByContain(&fileSource);
 
         fileSource.close();
         fileSource.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -105,14 +105,14 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
 
         qDebug() << "File found. Try to take list";
 
-        if ( excelExts.contains(filename.section('.',-1)) )
+        if (excelExts.contains(filename.section('.', -1)))
         {
-            qDebug()<<"Try to use excel reader";
+            qDebug() << "Try to use excel reader";
             getDataFromExcelDocument(filename);
         }
         else
         {
-            qDebug()<<"Read from txt file";
+            qDebug() << "Read from txt file";
             getDataFromTextDocument(filename);
         }
     }
@@ -178,33 +178,33 @@ QVariantList QModelDescribing::getElementsFromText(QTextStream* fileStream)
     /*
       ([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)"
       It' s regular expression for strings like
-      "244	5					ed		1		ФИО:	888888888888888888888888	ФИО:	27		221		"
+      "244  5                   ed      1       ФИО:    888888888888888888888888    ФИО:    27      221     "
     */
     QRegExp search("([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)");
     foreach(QString textLine, textSplitted)
     {
-         if(search.indexIn(textLine) != -1)
-         {
+        if (search.indexIn(textLine) != -1)
+        {
             capturedText = search.capturedTexts();
             elements.append(fillOneElement(capturedText));
-         }
-         else
-         {
-             //TODO: to file
-            qWarning()<<" Line in Description file is incorrect => "<< textLine;
-         }
+        }
+        else
+        {
+            //TODO: to file
+            qWarning() << " Line in Description file is incorrect => " << textLine;
+        }
     }
-    qDebug()<< "end. Elements =>"<< elements;
+    qDebug() << "end. Elements =>" << elements;
     return elements;
 }
 
 //TODO: rework it
-QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
+QTextCodec* QModelDescribing::setFileEncodingByContain(QFile* filesource)
 {
-    QTextCodec *textCodec = QTextCodec::codecForName("Windows-1251");
+    QTextCodec* textCodec = QTextCodec::codecForName("Windows-1251");
     QTextStream outStream(filesource);
     QString text = outStream.readAll();
-    if( textCodec->canEncode(text) )
+    if (textCodec->canEncode(text))
     {
 #ifdef Q_OS_LINUX
         //textCodec = QTextCodec::codecForName("UTF-8");
@@ -214,7 +214,7 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
     else
     {
         textCodec = QTextCodec::codecForName("UTF-8");
-        if ( textCodec->canEncode(text))
+        if (textCodec->canEncode(text))
         {
 #ifdef Q_OS_LINUX
             //textCodec = QTextCodec::codecForName("Windows-1251");
@@ -223,13 +223,13 @@ QTextCodec* QModelDescribing::setFileEncodingByContain(QFile *filesource)
         }
         else
         {
-            qWarning()<<"Unknown encoding";
+            qWarning() << "Unknown encoding";
         }
     }
     return textCodec;
 }
 
-void QModelDescribing::addNextElementsToList(const QVariantList & oneRec)
+void QModelDescribing::addNextElementsToList(const QVariantList& oneRec)
 {
     foreach(QVariant ElementFromList, oneRec)
     {
@@ -253,7 +253,7 @@ void QModelDescribing::loadingDataElementsFromFile(const QString& filename)
         }
         else
         {
-            QTextCodec *txtCodec = setFileEncodingByContain(&fileSource);
+            QTextCodec* txtCodec = setFileEncodingByContain(&fileSource);
 
             fileSource.close();
             fileSource.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -292,7 +292,7 @@ bool QModelDescribing::createTreeForViewing()
 
 void QModelDescribing::createListofVisibleElements()
 {
-    foreach (QVariant ElementFromList, ElementsFromDescriptionFiles)
+    foreach(QVariant ElementFromList, ElementsFromDescriptionFiles)
     {
         if (isVisibleElement(ElementFromList))
         {
@@ -362,7 +362,7 @@ void QModelDescribing::createTreeFromElements(const QVariantList& iList, int i, 
 
 bool QModelDescribing::isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap)
 {
-    bool isNull = ((checkMap.value(id ) == NULL) || (checkMap.value(level) == NULL) ||
+    bool isNull = ((checkMap.value(id) == NULL) || (checkMap.value(level) == NULL) ||
                    (checkMap.value(name) == NULL) || (checkMap.value(type) == NULL));
     if (!isNull)
         return ((checkMap.value(type).toString() == AV) || (checkMap.value(type).toString() == DV) || (checkMap.value(type).toString() == RM) ||
@@ -461,11 +461,11 @@ bool QModelDescribing::findByUIdInVisibleElements(const QVariant& uid, int& pos)
     int i =  0;
     foreach(QVariant ElementFromList, VisibleElementsWithDataForParticularFile)
     {
-        if (ElementFromList.toMap( ).value(id) == uid)
+        if (ElementFromList.toMap().value(id) == uid)
         {
             pos = i;
             return true;
-         }
+        }
         i++;
     }
 
@@ -475,7 +475,7 @@ bool QModelDescribing::findByUIdInVisibleElements(const QVariant& uid, int& pos)
 QVariantList QModelDescribing::initDataStructure()
 {
     QVariantList retVar;
-    foreach (QVariant ElementFromList, ElementsFromDescriptionFiles)
+    foreach(QVariant ElementFromList, ElementsFromDescriptionFiles)
     {
         if (ElementFromList.toMap().value(id).toString().contains(elementName))
         {

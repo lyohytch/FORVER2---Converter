@@ -38,41 +38,41 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
     {
         elementForAdding.insert(id, elementName + QString::number(count));
         // Установить уникальные имена для файлов из прокуратуры
-        elementForAdding.insert(name,additionToNames + setNameWithoutRepeat(nameKey, elements) );
-        elementForAdding.insert(hint, additionToNames + setNameWithoutRepeat(nameKey, elements) );
+        elementForAdding.insert(name, additionToNames + setNameWithoutRepeat(nameKey, elements));
+        elementForAdding.insert(hint, additionToNames + setNameWithoutRepeat(nameKey, elements));
         elements.append(elementForAdding);
         count++;
     }
     return elements;
 }
 
-QString QModelDescribingPros::setNameWithoutRepeat(const QString &namekey, const QVariantList &elements)
+QString QModelDescribingPros::setNameWithoutRepeat(const QString& namekey, const QVariantList& elements)
 {
     QString retStr = namekey;
     int amountElements = elements.count();
     int count = 0;
     foreach(QVariant el, elements)
     {
-        if(el.toMap().value(name).toString().section(additionToNames, 1, 1) == retStr)
+        if (el.toMap().value(name).toString().section(additionToNames, 1, 1) == retStr)
         {
             //Element exist. Need to add _i
-           int value = 0;
-           for(int i = count; i < amountElements; ++i)
-           {
-               if(elements[i].toMap().value(name).toString().section(additionToNames, 1, 1).startsWith(retStr + underline))
-               {
-                   value++;
-               }
-           }
-           retStr += underline + QString::number(value);
-           break;
+            int value = 0;
+            for (int i = count; i < amountElements; ++i)
+            {
+                if (elements[i].toMap().value(name).toString().section(additionToNames, 1, 1).startsWith(retStr + underline))
+                {
+                    value++;
+                }
+            }
+            retStr += underline + QString::number(value);
+            break;
         }
         count++;
     }
     return retStr;
 }
 
-void QModelDescribingPros::setAdditionsToNamesByFile(const QString &filename)
+void QModelDescribingPros::setAdditionsToNamesByFile(const QString& filename)
 {
     if (filename.endsWith("F1.TXT", Qt::CaseSensitive))
     {
@@ -155,7 +155,7 @@ QVariantList QModelDescribingPros::processLineInDataFile(const QString& line, co
     {
         return QVariantList();
     }
-     return retVar;
+    return retVar;
 }
 
 void QModelDescribingPros::setElementNameByDataFile(const QString& filename)
@@ -269,7 +269,7 @@ void QModelDescribingPros::preparingDataStructureBeforeFilling()
 
 bool QModelDescribingPros::isValidElementsWithDataForParticularFile()
 {
-    return (VisibleElementsWithDataForParticularFile.count() > 0 );
+    return (VisibleElementsWithDataForParticularFile.count() > 0);
 }
 
 bool QModelDescribingPros::checkFileFileStructureData(QTextStream* /*fileStream*/)

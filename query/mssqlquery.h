@@ -22,7 +22,7 @@ class mssqlquery : public QObject, public QRunnable
         void completeRequest()
         {
             qDebug() << Q_FUNC_INFO;
-        };
+        }
         QSqlDatabase db;
         querymodel* queryModel;
         QStringList iListofRequests;//Лист запросов для добавления в базу данных

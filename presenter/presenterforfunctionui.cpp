@@ -46,14 +46,14 @@ void PresenterForFunctionUI::freeObjects()
 
 void PresenterForFunctionUI::allocateCorrelationModel()
 {
-    _view->corrModel = new CorrelationModelFunction((QWidget *)_view,
-                                                    MODELS(TEMPLATEDESC),
-                                                    MODELS(TARGETDESC));
+    _view->corrModel = new CorrelationModelFunction((QWidget*)_view,
+            MODELS(TEMPLATEDESC),
+            MODELS(TARGETDESC));
     connect(CORR_MODEL, SIGNAL(doubleClicked(const QModelIndex&)), this,
             SLOT(ElementTableActivated(const QModelIndex&)), Qt::QueuedConnection);
 }
 
-void PresenterForFunctionUI::ElementTableActivated(const QModelIndex & index)
+void PresenterForFunctionUI::ElementTableActivated(const QModelIndex& index)
 {
     qDebug() << "index = " << index.data(Qt::UserRole + 1);
     //Определить row
@@ -65,8 +65,8 @@ void PresenterForFunctionUI::ElementTableActivated(const QModelIndex & index)
     {
         case iTemplate:
             {
-            CORR_MODEL->setApplyTreeClick(iTemplate);
-            _view->updateTextLabel(tr("Change template variable. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
+                CORR_MODEL->setApplyTreeClick(iTemplate);
+                _view->updateTextLabel(tr("Change template variable. Row: ") + QVariant(index.row() + 1).toString() + tr(" Column: ") + QVariant(index.column() + 1).toString());
             }
             break;
         case iTarget:

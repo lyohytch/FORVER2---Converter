@@ -13,11 +13,11 @@ void TreeViewModel::loadModel(QStandardItemModel* model)
 
     if (isTemplate)
     {
-        model->setHorizontalHeaderLabels(QStringList()<<tr("Receiver: where"));
+        model->setHorizontalHeaderLabels(QStringList() << tr("Receiver: where"));
     }
     else
     {
-        model->setHorizontalHeaderLabels(QStringList()<<tr("Source: what"));
+        model->setHorizontalHeaderLabels(QStringList() << tr("Source: what"));
     }
 
     this->reset();

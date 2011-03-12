@@ -46,7 +46,7 @@ class querymodel: public QObject, public QRunnable
             un
         };
         querymodel(CorrelationModel* acorrModel = 0);
-        querymodel(const querymodel &templateQueryModel);
+        querymodel(const querymodel& templateQueryModel);
         virtual void run();
         void makeRequest();
         QStringList getRequestDesc() const
@@ -75,11 +75,11 @@ class querymodel: public QObject, public QRunnable
         void setCellType(CellType type)
         {
             iCellType = type;
-        };
+        }
         CellType getCellType()
         {
             return iCellType;
-        };
+        }
         QString CellTypeToStr();
         QString CellTypeToStr(const QString& type);
         QString MapToStrDesc(const QVariantMap& map);

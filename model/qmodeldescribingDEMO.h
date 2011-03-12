@@ -9,10 +9,10 @@
 class QModelDescribingDemo: public QModelDescribing
 {
     public:
-       /**
-         * Конструктор по умолчанию. Инициализирует QStandardItemModel
-         * \param parent указатель на родительский объект QObject
-         */
+        /**
+          * Конструктор по умолчанию. Инициализирует QStandardItemModel
+          * \param parent указатель на родительский объект QObject
+          */
         QModelDescribingDemo(QObject* parent = 0);
         ~QModelDescribingDemo() {}
         virtual bool isValidElementsWithDataForParticularFile();
@@ -21,14 +21,14 @@ class QModelDescribingDemo: public QModelDescribing
         //Operations with elements without data
         virtual  bool checkFileStructure(QTextStream* fileStream);
         virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &checkMap);
-        virtual QVariantMap fillOneElement(const QStringList & capturedText);
+        virtual QVariantMap fillOneElement(const QStringList& capturedText);
         //Operations with elements with data
         virtual void addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream);
         virtual QVariantList processLineInDataFile(const QString& line, const QVariantList& DataStructure);
         virtual bool isValidStringInDataFileToAdd(const QVariantList& dataStructure);
         virtual QVariantList initDataStructure();
         virtual bool checkFileFileStructureData(QTextStream* fileStream);
-        virtual void setElementNameByDataFile(const QString &filename)
+        virtual void setElementNameByDataFile(const QString& filename)
         {
             Q_UNUSED(filename);
         };

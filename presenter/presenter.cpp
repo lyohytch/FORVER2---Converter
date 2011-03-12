@@ -15,20 +15,20 @@
 #include "querymodel.h"
 #include "mssqlquery.h"
 
-Presenters::Presenters(IView *view, QApplication *app)
+Presenters::Presenters(IView* view, QApplication* app)
 {
     _view = view;
 
     mainApplication = app;
 
-    connect(_view, SIGNAL(OnOpenTargetFiles()),this,
-             SLOT(onOpenTargetFiles()), Qt::QueuedConnection);
+    connect(_view, SIGNAL(OnOpenTargetFiles()), this,
+            SLOT(onOpenTargetFiles()), Qt::QueuedConnection);
     connect(_view, SIGNAL(OnOpenTemplateFiles()), this,
-             SLOT(onOpenTemplateFiles()), Qt::QueuedConnection);
+            SLOT(onOpenTemplateFiles()), Qt::QueuedConnection);
 
-    connect(_view, SIGNAL(OnLoadTemplateData()),this,
+    connect(_view, SIGNAL(OnLoadTemplateData()), this,
             SLOT(onLoadTemplateData()), Qt::QueuedConnection);
-    connect(_view, SIGNAL(OnLoadTargetData()),this,
+    connect(_view, SIGNAL(OnLoadTargetData()), this,
             SLOT(onLoadTargetData()), Qt::QueuedConnection);
 
     connect(_view, SIGNAL(CreateObjects()), this,
@@ -69,12 +69,12 @@ void Presenters::defaultTranslateSets()
     QVariant engSetted = translateSettings.value(English);
     QVariant rusSetted = translateSettings.value(Russian);
     bool isSettingNone = engSetted.isNull() || rusSetted.isNull();
-    if(isSettingNone)
+    if (isSettingNone)
     {
         translateSettings.setValue(English, QVariant(true));
         translateSettings.setValue(Russian, QVariant(false));
     }
-    else if( engSetted.toBool() && !rusSetted.toBool())
+    else if (engSetted.toBool() && !rusSetted.toBool())
     {
         translateSettings.setValue(English, QVariant(true));
         translateSettings.setValue(Russian, QVariant(false));
@@ -94,7 +94,7 @@ void Presenters::onEnglishChecked(bool /*checked*/)
     QSettings translateSettings(applicationIni, QSettings::IniFormat);
     QVariant engSetted = translateSettings.value(English);
     QVariant rusSetted = translateSettings.value(Russian);
-    if(engSetted.isNull() || rusSetted.isNull())
+    if (engSetted.isNull() || rusSetted.isNull())
     {
         translateSettings.setValue(English, QVariant(true));
         translateSettings.setValue(Russian, QVariant(false));
@@ -120,7 +120,7 @@ void Presenters::onRussianChecked(bool /*checked*/)
     QSettings translateSettings(applicationIni, QSettings::IniFormat);
     QVariant rusSetted = translateSettings.value(Russian);
     QVariant engSetted = translateSettings.value(English);
-    if(engSetted.isNull() || rusSetted.isNull())
+    if (engSetted.isNull() || rusSetted.isNull())
     {
         translateSettings.setValue(English, QVariant(true));
         translateSettings.setValue(Russian, QVariant(false));
@@ -144,10 +144,10 @@ void Presenters::onRussianChecked(bool /*checked*/)
 void Presenters::onSaveCorrelationTable()
 {
     //TEST IT
-    QFileDialog dialog((QWidget *)_view);
+    QFileDialog dialog((QWidget*)_view);
     dialog.setFileMode(QFileDialog::AnyFile);
     dialog.setViewMode(QFileDialog::List);
-    QString fname = dialog.getSaveFileName((QWidget *)_view, tr("Save File"),
+    QString fname = dialog.getSaveFileName((QWidget*)_view, tr("Save File"),
                                            QString(),
                                            tr("CorrelationModel files (*.cmf)"));
     if (!fname.endsWith(cmf))
@@ -190,7 +190,7 @@ void Presenters::onLoadCorrelationTable()
 {
     //Загрузить из файла модель таблицы
     //Удалить предыд таблицу и нарисовать новую
-    QFileDialog dialog((QWidget *)_view);
+    QFileDialog dialog((QWidget*)_view);
     QStringList filenames;
     QString fname = "";
     dialog.setFileMode(QFileDialog::ExistingFile);
@@ -344,19 +344,19 @@ void Presenters::loadingModels(QObject* loadedModel, QObject* tree)
 
     foreach(QString fname, filenames)
     {
-        ((QModelDescribing *)loadedModel)->appendFromDataFilesToDataElements(fname);
+        ((QModelDescribing*)loadedModel)->appendFromDataFilesToDataElements(fname);
     }
-    if (((QModelDescribing *)loadedModel)->isExistElementsWithoutData())
+    if (((QModelDescribing*)loadedModel)->isExistElementsWithoutData())
     {
         //TODO попробовать просто отобразить модель
-        ((QModelDescribing *)loadedModel)->createTreeForViewing();
-        ((TreeViewModel *)tree)->loadModel((QModelDescribing *)loadedModel);
+        ((QModelDescribing*)loadedModel)->createTreeForViewing();
+        ((TreeViewModel*)tree)->loadModel((QModelDescribing*)loadedModel);
         _view->updateTextLabel(tr("Model was loaded"));
         emit loadDescComplete();
     }
 }
 
-QStringList Presenters::getDefaultFilesForModel(QObject * loadedModel)
+QStringList Presenters::getDefaultFilesForModel(QObject* loadedModel)
 {
     QStringList filenames;
     if (loadedModel == _view->modelD)
@@ -377,7 +377,7 @@ QStringList Presenters::getDefaultFilesForModel(QObject * loadedModel)
         filenames.append(prosPathF5);
         filenames.append(prosPathF12);
     }
-    else if(loadedModel == _view->modelJURA)
+    else if (loadedModel == _view->modelJURA)
     {
         filenames.append(juraPath1);
     }
@@ -405,8 +405,8 @@ void Presenters::setModelsAndTreesObjects()
     _view->models[TEMPLATEDESC] = _view->modelD;
 
     _view->trees = new QObject*[2];
-    _view->trees[TARGETDESC] = new TreeViewModel((QWidget *)_view, TARGETDESC);
-    _view->trees[TEMPLATEDESC] = new TreeViewModel((QWidget *)_view, TEMPLATEDESC);
+    _view->trees[TARGETDESC] = new TreeViewModel((QWidget*)_view, TARGETDESC);
+    _view->trees[TEMPLATEDESC] = new TreeViewModel((QWidget*)_view, TEMPLATEDESC);
 }
 
 void Presenters::initializeObjects()
@@ -415,7 +415,7 @@ void Presenters::initializeObjects()
     setModelsAndTreesObjects();
     connectActionsToObjects();
     //Correlation model
-    allocateCorrelationModel();   
+    allocateCorrelationModel();
 }
 
 void Presenters::connectActionsToObjects()
@@ -429,7 +429,7 @@ void Presenters::connectActionsToObjects()
     connect(this, SIGNAL(loadDescComplete()), this, SLOT(FillTable()), Qt::QueuedConnection);
 }
 
-void Presenters::ElementTableActivated(const QModelIndex & index)
+void Presenters::ElementTableActivated(const QModelIndex& index)
 {
     qDebug() << "index = " << index.data(Qt::UserRole + 1);
     //Определить row
@@ -501,10 +501,10 @@ void Presenters::onOpenTargetFiles()
 
 QStringList Presenters::setNameFilterForTargetFiles()
 {
-    return QStringList()<<tr("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)")<<tr("All files (*.*)");
+    return QStringList() << tr("Text target files (Sprav?.txt ; sprav_d.txt ; F*.TXT)") << tr("All files (*.*)");
 }
 
-void Presenters::loadDescriptionModelFromFiles(const QStringList &filenames, int descriptionId)
+void Presenters::loadDescriptionModelFromFiles(const QStringList& filenames, int descriptionId)
 {
     if (selectDescription(filenames, descriptionId))
     {
@@ -514,7 +514,7 @@ void Presenters::loadDescriptionModelFromFiles(const QStringList &filenames, int
         {
             MODELS(descriptionId)->appendFromDataFilesToDataElements(fname);
         }
-        if ( MODELS(descriptionId)->isExistElementsWithoutData())
+        if (MODELS(descriptionId)->isExistElementsWithoutData())
         {
             //TODO попробовать просто отобразить модель
             MODELS(descriptionId)->createTreeForViewing();
@@ -533,12 +533,12 @@ void Presenters::onOpenTemplateFiles()
 
 QStringList Presenters::setNameFilterForTemplateFiles()
 {
-    return QStringList()<<tr("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT ; Pros.txt)")<<tr("All files (*.*)");
+    return QStringList() << tr("Text template files (Sprav?.txt ; sprav_d.txt ; F*.TXT ; Pros.txt)") << tr("All files (*.*)");
 }
 
-QStringList Presenters::openFilesByAnyNameFilter(const QStringList &nameFilter)
+QStringList Presenters::openFilesByAnyNameFilter(const QStringList& nameFilter)
 {
-    QFileDialog dialog((QWidget *)_view);
+    QFileDialog dialog((QWidget*)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setNameFilters(nameFilter);
@@ -580,8 +580,8 @@ bool Presenters::selectDescription(const QStringList& filenames, int description
             }
             //TODO: reqorl it
             else if (baseName.contains("Pros.txt", Qt::CaseInsensitive) ||
-                     excelExts.contains( baseName.section('.', -1),
-                                         Qt::CaseInsensitive))
+                     excelExts.contains(baseName.section('.', -1),
+                                        Qt::CaseInsensitive))
             {
                 jura++;
             }
@@ -607,7 +607,7 @@ bool Presenters::selectDescription(const QStringList& filenames, int description
     return false;
 }
 
-bool Presenters::refreshDescribingLists(int descriptionId, QObject * model)
+bool Presenters::refreshDescribingLists(int descriptionId, QObject* model)
 {
     switch (descriptionId)
     {
@@ -629,7 +629,7 @@ bool Presenters::refreshDescribingLists(int descriptionId, QObject * model)
     //Reallocate models
     _view->models[descriptionId] = model;
 
-    if(_view->corrModel)
+    if (_view->corrModel)
     {
         delete _view->corrModel;
         _view->corrModel = NULL;
@@ -646,14 +646,14 @@ void Presenters::onLoadTemplateData()
     if (!MODELS(TEMPLATEDESC)->isValidElementsWithoutData())
     {
         qWarning() << " Description wasn't loaded";
-      //  this->statusBar()->showMessage("Template Description wasn't loaded", 5000);
+        //  this->statusBar()->showMessage("Template Description wasn't loaded", 5000);
         return;
     }
     QStringList filenames = openDataFilesByAnyNameFilter(setNameFilterForDataTemplateFiles());
     loadDataFromFilesWithData(filenames, TEMPLATEDESC);
 }
 
-void Presenters::loadDataFromFilesWithData(const QStringList &filenames, int descriptionId)
+void Presenters::loadDataFromFilesWithData(const QStringList& filenames, int descriptionId)
 {
     //Append data
     foreach(QString fname, filenames)
@@ -674,12 +674,12 @@ void Presenters::loadDataFromFilesWithData(const QStringList &filenames, int des
 
 QStringList Presenters::setNameFilterForDataTemplateFiles()
 {
-    return QStringList()<<tr("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)")<<tr("All files (*.*)");
+    return QStringList() << tr("Text template data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt ; F*.TXT ; data_sprav_d.txt)") << tr("All files (*.*)");
 }
 
-QStringList Presenters::openDataFilesByAnyNameFilter(const QStringList &nameFilter)
+QStringList Presenters::openDataFilesByAnyNameFilter(const QStringList& nameFilter)
 {
-    QFileDialog dialog((QWidget *)_view);
+    QFileDialog dialog((QWidget*)_view);
     QStringList filenames;
     dialog.setFileMode(QFileDialog::ExistingFiles);
     dialog.setNameFilters(nameFilter);
@@ -707,5 +707,5 @@ void Presenters::onLoadTargetData()
 
 QStringList Presenters::setNameFilterForDataTargetFiles()
 {
-    return QStringList()<<tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)")<<tr("All files (*.*)");
+    return QStringList() << tr("Text target data files (*_C_*.txt ; *_FG_*.txt ; *_O_*.txt ; *__S.txt ; *_FP_*.txt; F*.TXT)") << tr("All files (*.*)");
 }

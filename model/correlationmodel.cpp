@@ -99,7 +99,7 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
         if (tableModel->item(i, iTemplate)->data(Qt::UserRole + 1) == search)
         {
             row = i;
-            if(tableModel->item(i, iTarget) != NULL )
+            if (tableModel->item(i, iTarget) != NULL)
             {
                 return tableModel->item(i, iTarget)->data(Qt::UserRole + 1);
             }
@@ -112,10 +112,10 @@ QVariant CorrelationModel::findItemInTableTemplate(const QVariant& search, int& 
     return QVariant();
 }
 
-void CorrelationModel::saveDataForTarget(const QVariant &data, int row, int col)
+void CorrelationModel::saveDataForTarget(const QVariant& data, int row, int col)
 {
     QStandardItem* item = NULL;
-    if( !data.isNull())
+    if (!data.isNull())
     {
         item = new QStandardItem(data.toMap().value(itemNamesInForm).toStringList().at(0));
         item->setData(data, Qt::UserRole + 1);

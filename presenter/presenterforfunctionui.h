@@ -20,26 +20,26 @@ class QWidgetFunction : public QWidget
 
 class PresenterForFunctionUI : public Presenters
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    PresenterForFunctionUI(IView *view, QApplication *app) : Presenters(view, app) {}
-private:
-    //For function support
-    QWidgetFunction* funcWidget;
-    //Function
-    QVBoxLayout* fLayout;
-    QRadioButton* a1;
-    QRadioButton* a2;
-    QRadioButton* a3;
-protected:
-    void setupFunctionWidget();
-    virtual void allocateCorrelationModel();
-protected slots:
-    virtual void createObjects();
-    virtual void freeObjects();
-    virtual void ElementTableActivated(const QModelIndex &);
-    void FunctionIsChecked(int functionId);
+    public:
+        PresenterForFunctionUI(IView* view, QApplication* app) : Presenters(view, app) {}
+    private:
+        //For function support
+        QWidgetFunction* funcWidget;
+        //Function
+        QVBoxLayout* fLayout;
+        QRadioButton* a1;
+        QRadioButton* a2;
+        QRadioButton* a3;
+    protected:
+        void setupFunctionWidget();
+        virtual void allocateCorrelationModel();
+    protected slots:
+        virtual void createObjects();
+        virtual void freeObjects();
+        virtual void ElementTableActivated(const QModelIndex&);
+        void FunctionIsChecked(int functionId);
 };
 
 #endif // PRESENTERFORFUNCTIONUI_H

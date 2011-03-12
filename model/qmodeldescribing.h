@@ -57,13 +57,13 @@ class QModelDescribing : public QStandardItemModel
           * \param fileStream поток текстовых данных
           * \return 1 - корректная, 0 - иначе
           */
-        virtual bool checkFileStructure(QTextStream *fileStream) = 0;
+        virtual bool checkFileStructure(QTextStream* fileStream) = 0;
         /**
           * Заполняет отдельный элемент из QModelDescribing::ElementsFromDescriptionFiles
           * \param capturedText данные, захваченные регулярным выражением
           * \return заполненый элемент
           */
-        virtual QVariantMap fillOneElement(const QStringList & capturedText) = 0;
+        virtual QVariantMap fillOneElement(const QStringList& capturedText) = 0;
         /**
           * Формирует данные для QModelDescribing::ElementsFromDescriptionFiles
           * \param fileStream текстовый файл
@@ -74,7 +74,7 @@ class QModelDescribing : public QStandardItemModel
           * Устанавливает QModelDescribing::additionToNames по имени файла
           * \param filename имя файла
           */
-        virtual void setAdditionsToNamesByFile(const QString & filename)
+        virtual void setAdditionsToNamesByFile(const QString& filename)
         {
             Q_UNUSED(filename);
         };
@@ -97,7 +97,7 @@ class QModelDescribing : public QStandardItemModel
           * \param filesource указатель на QFile
           * \note Читает весь файл. Нужно переоткрыть файл для дальнейшей работы
           */
-        QTextCodec* setFileEncodingByContain(QFile *filesource);
+        QTextCodec* setFileEncodingByContain(QFile* filesource);
         /**
           * Определяет можно ли добавить текущий элемент в QModelDescribing::ElementsFromDescriptionFiles
           * \param checkMap проверяемый элемент
@@ -109,7 +109,7 @@ class QModelDescribing : public QStandardItemModel
           * \param oneRec
           * \sa addingDataToBlankElements ()
         */
-        virtual void addNextElementsToList(const QVariantList & oneRec);
+        virtual void addNextElementsToList(const QVariantList& oneRec);
         /**
           * Считывает несколько символов из строки line до появления символа табуляции, начиная с символа k
           * \param line строка, из которой мы считываем данные
@@ -137,7 +137,7 @@ class QModelDescribing : public QStandardItemModel
           * \param excSheet указатель на лист Excel с данными
           * \note Только для OS Windows
           */
-        virtual QVariantList getElementsFromExcel(QObject *excSheet)
+        virtual QVariantList getElementsFromExcel(QObject* excSheet)
         {
             Q_UNUSED(excSheet);
             return QVariantList();
@@ -155,13 +155,13 @@ class QModelDescribing : public QStandardItemModel
           * \param DataStructure список, шаблон структуры, в которую будут записываться данные
           * \return заполненный данными список DataStructure
           */
-        virtual QVariantList processLineInDataFile(const QString& line, const QVariantList &DataStructure) = 0;
+        virtual QVariantList processLineInDataFile(const QString& line, const QVariantList& DataStructure) = 0;
         /**
           * Проверяет возможно ли добавление считанной информации из файла данных в список с данными
           * \param checkMap карта с данными, проверяемая на корректность
           * \return 1 - добавление возможно, 0 - иначе
           */
-        virtual bool isValidStringInDataFileToAdd(const QVariantList &checkMap) = 0;
+        virtual bool isValidStringInDataFileToAdd(const QVariantList& checkMap) = 0;
         /**
           * Отвечает за считывание данных из текствого файла. Для каждой структуры файла устанавливает свой алгоритм считывания
           * \param fileStream
@@ -171,7 +171,7 @@ class QModelDescribing : public QStandardItemModel
           * Устанавливает ID элемента, который будет представлен в БД, по имени файла c данными
           * \param filename имя файла
           */
-        virtual void setElementNameByDataFile(const QString &filename) = 0;
+        virtual void setElementNameByDataFile(const QString& filename) = 0;
         /**
           * Инициализирует список-шаблон, в который будут записываться данные
           * \return Инициализированный список-шаблон
@@ -309,7 +309,7 @@ class QModelDescribing : public QStandardItemModel
         void clearAllElements();
 
     private:
-        void getDataFromTextDocument(const QString &filename);
+        void getDataFromTextDocument(const QString& filename);
         void getDataFromExcelDocument(const QString& filename);
         bool isElementWithData;
 };

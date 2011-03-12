@@ -6,16 +6,16 @@ querymodel::querymodel(CorrelationModel* acorrModel):
     qDebug();
 }
 
-querymodel::querymodel(const querymodel &templateQueryModel):
-        QObject(),
-        corrModel(templateQueryModel.corrModel),
-        iQueryRequestDesc(templateQueryModel.iQueryRequestDesc),
-        iQueryRequestData(templateQueryModel.iQueryRequestData),
-        iCreateTblRequests(templateQueryModel.iCreateTblRequests),
-        isTarget(templateQueryModel.isTarget),
-        createRequest(templateQueryModel.createRequest),
-        updateRequest(templateQueryModel.updateRequest),
-        insertRequest(templateQueryModel.insertRequest)
+querymodel::querymodel(const querymodel& templateQueryModel):
+    QObject(),
+    corrModel(templateQueryModel.corrModel),
+    iQueryRequestDesc(templateQueryModel.iQueryRequestDesc),
+    iQueryRequestData(templateQueryModel.iQueryRequestData),
+    iCreateTblRequests(templateQueryModel.iCreateTblRequests),
+    isTarget(templateQueryModel.isTarget),
+    createRequest(templateQueryModel.createRequest),
+    updateRequest(templateQueryModel.updateRequest),
+    insertRequest(templateQueryModel.insertRequest)
 {
     qDebug();
 }

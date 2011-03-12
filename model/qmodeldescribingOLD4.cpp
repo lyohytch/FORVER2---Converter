@@ -4,7 +4,7 @@
 //start-----------------------------------------------------------------------
 QModelDescribingOld4::QModelDescribingOld4(QObject* parent):
     QModelDescribing(parent)
- {
+{
 
 }
 
@@ -17,14 +17,14 @@ bool QModelDescribingOld4::checkFileStructure(QTextStream* fileStream)
     return accept;
 }
 
-QVariantMap QModelDescribingOld4::fillOneElement(const QStringList & capturedText)
+QVariantMap QModelDescribingOld4::fillOneElement(const QStringList& capturedText)
 {
-   QVariantMap element;
-   element.insert(id, elementName + capturedText.at(1));
-   element.insert(level, capturedText.at(2));
-   element.insert(type, capturedText.at(3));
-   element.insert(name, capturedText.at(5));
-   return element;
+    QVariantMap element;
+    element.insert(id, elementName + capturedText.at(1));
+    element.insert(level, capturedText.at(2));
+    element.insert(type, capturedText.at(3));
+    element.insert(name, capturedText.at(5));
+    return element;
 }
 
 void QModelDescribingOld4::preparingDataStructureBeforeFilling()
@@ -37,7 +37,7 @@ void QModelDescribingOld4::preparingDataStructureBeforeFilling()
     QVariantMap tmpMap;
     QVariant uid;
     int count = 0;
-        int i = 0;
+    int i = 0;
     int  pos;
     while (!VisibleElementsWithDataForParticularFile.isEmpty())
     {
@@ -60,14 +60,14 @@ void QModelDescribingOld4::preparingDataStructureBeforeFilling()
             continue;
         }
         oneMap.insert(numb, i++);
-          oneMap.insert(rapid, oneRec);
+        oneMap.insert(rapid, oneRec);
         VisibleElementWithData.append(oneMap);
     }
     qDebug() << "  ===END===   ";
 
 }
 void QModelDescribingOld4::addingLoadedDataInVisibleElementsWithData(QTextStream* fileStream)
-    {
+{
     qDebug() << " Start";
     QVariantList oneRecord;
     QVariantMap oneData;
@@ -106,9 +106,9 @@ int QModelDescribingOld4::setSeekofLine(const QString& statName)
     {
         offset = 11;
     }
-     else if (statName == locus)
+    else if (statName == locus)
     {
-         offset = 13;
+        offset = 13;
     }
     else if (statName == weapon)
     {
@@ -141,7 +141,7 @@ QVariantList QModelDescribingOld4::processLineInDataFile(const QString& line, co
         {
             retVar.append(oneDataMap);
         }
-            j++;
+        j++;
     }
     if (isValidStringInDataFileToAdd(retVar))
     {
