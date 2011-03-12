@@ -4,7 +4,6 @@ CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget* parent, QModelDe
         CorrelationModel(parent, templ, target)
 {
     setupTableModel(getTableModel());
-    this->show();
 }
 
 CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget *parent, QModelDescribing *templ, QModelDescribing *target, QStandardItemModel *iTableModel):
@@ -80,6 +79,7 @@ void CorrelationModelNoFunction::fillInTable(QVariantMap mapTable)
         getTableModel()->appendRow(itemList);
     }
     this->resizeColumnsToContents();
+    this->show();
 }
 
 QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(const QVariant &elemFromTemplate)

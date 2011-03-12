@@ -1,8 +1,172 @@
 #include "qmodeldescribingfromjura.h"
 
+#ifdef Q_OS_WIN32
+#include <QAxObject>
+#include <QAxWidget>
+#endif
+
+//TODO: move to config
+namespace CapsExcel
+{
+    enum caps
+    {
+        Id = 1,
+        Lev = 2,
+        Type = 7,
+        Dop = 8,
+        Comm = 11,
+        Red = 12,
+        Form = 13,
+        Name = 15,
+        Val = 16
+    };
+}
+
 QModelDescribingFromJura::QModelDescribingFromJura(QObject* parent):
         QModelDescribing(parent)
 {
+}
+
+QVariantList QModelDescribingFromJura::getElementsFromExcel(QObject *excSheet)
+{
+    QVariantList elements = QVariantList();
+#ifdef Q_OS_WIN32
+    QAxObject *sheet = (QAxObject*)excSheet;
+    QAxObject* usedrange = sheet->querySubObject("UsedRange");
+    QAxObject* rows = usedrange->querySubObject("Rows");
+    int intRowStart = usedrange->property("Row").toInt();
+    int intRows = rows->property("Count").toInt();
+    qDebug()<<"row Count: "<<intRows;
+    qDebug()<<"row Start: "<<intRowStart;
+    //QVariantMap elementForAdding; //Основные элементы
+    //QVariantMap dependElementForAdding; // Элементы из dependList
+    QVariantMap tmpElement = QVariantMap();
+
+    int countDependFields = 0;
+    int count = -1;
+    QVariantList dependFieldList;
+    for (int i = intRowStart; i < intRows; ++i)
+    {
+            tmpElement = getTmpElementFromExcel(sheet, i);
+        if (isHeadElement(tmpElement))
+        {
+            if(countDependFields)
+            {
+                elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
+                countDependFields = 0;
+                dependFieldList.clear();
+            }
+            elements.append(tmpElement);
+            count++;
+        }
+        else if(isDependElement(tmpElement) && count != -1)
+        {
+            dependFieldList.append(setDependFieldInfo(tmpElement, ++countDependFields));
+        }
+        else
+        {
+            qWarning()<<"Line in description is incorrect";
+        }
+    }
+    //Post processing
+    if(count != -1 && countDependFields)
+    {
+        elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
+        countDependFields = 0;
+        dependFieldList.clear();
+    }
+
+    delete rows;
+    delete usedrange;
+    delete sheet;
+
+#endif
+    return elements;
+}
+
+#ifdef Q_OS_WIN32
+QVariant QModelDescribingFromJura::getCellValueFromExcel(QObject * qaxSheet, int row, int col)
+{
+    QAxObject *cell = ((QAxObject*)(qaxSheet))->querySubObject("Cells(int,int)", row, col);
+    QVariant valueCell = cell->dynamicCall("Value()");
+    delete cell;
+    return valueCell;
+}
+#endif
+
+#ifdef Q_OS_WIN32
+QVariantMap QModelDescribingFromJura::getTmpElementFromExcel(QObject *qaxSheet, int row)
+{
+    QVariant valueCell;
+    QVariantMap tmpElement;
+    //Get ID
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Id);
+    qDebug()<<row<<CapsExcel::Id<<valueCell;
+    tmpElement.insert(id, valueCell);
+    //Get Level
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Lev);
+    qDebug()<<row<<CapsExcel::Lev<<valueCell;
+    tmpElement.insert(level, valueCell);
+    //Get type
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Type);
+    qDebug()<<row<<CapsExcel::Type<<valueCell;
+    tmpElement.insert(type, valueCell);
+    // Get dop
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Dop);
+    qDebug()<<row<<CapsExcel::Dop<<valueCell;
+    tmpElement.insert(dependId, valueCell);
+    //Get comment . It's hint
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Comm);
+    qDebug()<<row<<CapsExcel::Comm<<valueCell;
+    tmpElement.insert(hint, valueCell);
+    //Set name
+    tmpElement.insert(name, valueCell);
+    //Get reduce name
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Red);
+    qDebug()<<row<<CapsExcel::Red<<valueCell;
+    if( !valueCell.isNull())
+    {
+        tmpElement.insert(name, valueCell);
+    }
+    //Get form
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Form);
+    qDebug()<<row<<CapsExcel::Form<<valueCell;
+    tmpElement.insert(formId, valueCell);
+    //Get depend target name
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Name);
+    qDebug()<<row<<CapsExcel::Name<<valueCell;
+    tmpElement.insert(targetName, valueCell);
+    //Get targetDataForConvert value
+    valueCell = getCellValueFromExcel(qaxSheet, row, CapsExcel::Val);
+    qDebug()<<row<<CapsExcel::Val<<valueCell;
+    tmpElement.insert(targetDataForConvert, valueCell);
+    return tmpElement;
+}
+
+#endif
+
+bool QModelDescribingFromJura::isDependElement(const QVariantMap & tmpElement)
+{
+    bool isDepend = tmpElement.value(id).isNull();
+    isDepend = isDepend && tmpElement.value(level).isNull();
+    isDepend = isDepend && tmpElement.value(type).isNull();
+    isDepend = isDepend && !tmpElement.value(hint).isNull();
+    return isDepend;
+}
+
+bool QModelDescribingFromJura::isHeadElement(const QVariantMap & tmpElement)
+{
+    bool isHead = !tmpElement.value(id).isNull() && tmpElement.value(id).type() == QVariant::Double;
+    isHead = isHead && !tmpElement.value(level).isNull() && tmpElement.value(level).type() == QVariant::Double;
+    isHead = isHead && !tmpElement.value(type).isNull() && isType(tmpElement.value(type).toString());
+    return isHead;
+}
+
+bool QModelDescribingFromJura::isType(const QString & tstType)
+{
+    bool isElementType = (ME == tstType) || (AV == tstType) || (DV == tstType) ||
+                         (ED == tstType) || (ET == tstType) || (RM == tstType) || (CB == tstType);
+    return isElementType;
 }
 
 QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStream)
@@ -12,13 +176,13 @@ QVariantList QModelDescribingFromJura::getElementsFromText(QTextStream* fileStre
     QStringList textSplitted = text.split(QRegExp("\\n"));
     QStringList capturedText = QStringList();
     // TODO: rework regexp
-    /**
+    /*
       It's regular expression for strings like
       "101	2					ed				Год возбуждения		Ф5	3	Г	знач"
     */
     //               1id          2level          3type       4dop        Mask    Config    5Comment   6Short Name  7Form      8Position-InForm    9Name      10Encoding data
     QRegExp search("([^\\t]+)\\t([^\\t]+)\\t{5}([^\\t]+)\\t([^\\t]*)\\t[^\\t]*\\t[^\\t]*\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)\\t([^\\t]*)");
-    /**
+    /*
       It's regular expression for strings like
       "							120			Водный	водный				30000	"
     */
@@ -131,13 +295,40 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList &capt
     {
         element.insert(dependId, elementName + capturedText.at(1));
     }
-    //For av, dv, cb these fields should be empty
     element.insert(formId, getElementNameByCodeForm(capturedText.at(4)));//F5 , F1 , F2 or F12
     element.insert(targetName, getElementNameByCodeForm(capturedText.at(4)) + underline + capturedText.at(6));
     element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(7)));
     element.insert(correlationValue, FromIntegerToBinaryString(countDependFields) );
 
     return element;
+}
+
+QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QVariantMap &tmpElement, int countDependFields)
+{
+   QVariantMap element;
+   element.insert(dependId, QString(" "));
+   if( !tmpElement.value(dependId).isNull())
+   {
+       element.insert(dependId, elementName + tmpElement.value(dependId).toString());
+   }
+   element.insert(formId, QString(" "));
+   if (!tmpElement.value(formId).isNull())
+   {
+       element.insert(formId, getElementNameByCodeForm(tmpElement.value(formId).toString()));
+   }
+   element.insert(targetName, QString(" "));
+   if(!tmpElement.value(formId).isNull() && !tmpElement.value(targetName).isNull())
+   {
+       element.insert(targetName, getElementNameByCodeForm( tmpElement.value(formId).toString()) + underline + tmpElement.value(targetName).toString() ) ;
+   }
+   qDebug()<<element.value(targetName);
+   element.insert(targetDataForConvert, QString(" "));
+   if( !tmpElement.value(targetDataForConvert).isNull())
+   {
+       element.insert(targetDataForConvert, setTargetDataForConvert(tmpElement.value(targetDataForConvert).toString()));
+   }
+   element.insert(correlationValue, FromIntegerToBinaryString(countDependFields) );
+   return element;
 }
 
 QVariantMap QModelDescribingFromJura::fillOneElement(const QStringList & capturedText)

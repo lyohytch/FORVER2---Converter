@@ -28,6 +28,7 @@ protected:
     virtual bool isValidStringInDescriptionFileToAdd(const QMap<QString, QVariant> &/*checkMap*/) {return true;}
     virtual QVariantMap fillOneElement(const QStringList & capturedText);
     virtual QVariantList getElementsFromText(QTextStream* fileStream);
+    virtual QVariantList getElementsFromExcel(QObject *excSheet);
 
 
     //Operation with data. Not needed. I have to move basic class
@@ -43,10 +44,19 @@ protected:
 private:
     QString setTargetDataForConvert(const QString & dataFor);
     QVariantMap setDependFieldInfo(const QStringList &capturedText, int countDependFields);
+    QVariantMap setDependFieldInfo(const QVariantMap &tmpElement, int countDependFields);
     QString FromIntegerToBinaryString(int countDependFields);
     void alignOneAndZerosInCorrelationCodes(int valueOfOnesAndZeros, QVariantList *dependList);
     QVariantMap getNewAlignedCorrelationsList(int countDependFields, const QVariantMap &element, QVariantList *dependFieldList);
     QString getElementNameByCodeForm(const QString&);
+
+    bool isDependElement(const QVariantMap & tmpElement);
+    bool isHeadElement(const QVariantMap & tmpElement);
+    bool isType(const QString & tstType);
+#ifdef Q_OS_WIN32
+    QVariant getCellValueFromExcel(QObject * qaxSheet, int row, int col);
+    QVariantMap getTmpElementFromExcel(QObject *qaxSheet, int row);
+#endif
 };
 
 #endif // QMODELDESCRIBINGFROMJURA_H

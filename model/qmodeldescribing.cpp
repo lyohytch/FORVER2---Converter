@@ -6,9 +6,6 @@
 #include <QAxWidget>
 #endif
 
-#include <QDir>
-
-
 #include "qmodeldescribing.h"
 
 QModelDescribing::QModelDescribing(QObject* parent):
@@ -70,7 +67,6 @@ void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename
     }
     else
     {
-        qCritical() << QDir::currentPath();
         qCritical() << "File " << filename << " doesn't exist";
     }
 }
@@ -85,10 +81,13 @@ void QModelDescribing::getDataFromExcelDocument(const QString &filename)
     //Get workbooks
     QAxObject *workbooks = excel.querySubObject("Workbooks");
     //Get workbooks from filename
-    QAxObject *workbook = workbooks->querySubObject("Open(const QString&)", filename);
+    workbooks->dynamicCall("Open(const QString&)", filename);
+    QAxObject *workbook = excel.querySubObject("ActiveWorkBook");
     //Get first sheet in document
-    QAxObjects *sheet = workbook->querySubObject("Worksheets(int)", 1);
+    QAxObject *sheet = workbook->querySubObject("Worksheets(int)", 1);
     ElementsFromDescriptionFiles = getElementsFromExcel(sheet);
+    delete workbook;
+    delete workbooks;
     excel.dynamicCall("Quit(void)");
 #else
     Q_UNUSED(filename);
