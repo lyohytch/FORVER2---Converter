@@ -2,6 +2,7 @@
 #define CONSTANTS_H
 #include <QStringList>
 #include <QDebug>
+#include <QDir>
 
 //Common
 const QString dot(".");
@@ -168,6 +169,7 @@ const QString prosPathF2("..\\Resources\\Description\\PROS\\F2.TXT");
 const QString prosPathF5("..\\Resources\\Description\\PROS\\F5.TXT");
 const QString prosPathF12("..\\Resources\\Description\\PROS\\F12.TXT");
 const QString juraPath1("..\\Resources\\Description\\Jura\\Pros.txt");
+const QString juraPathExcel("..\\Resources\\Description\\Jura\\F_5_4.xls");
 #else
 const QString demopath("..\\..\\Resources\\Description\\Demo\\sprav_d.txt");
 const QString target1path("..\\..\\Resources\\Description\\4Views\\Sprav1.txt");
@@ -179,6 +181,7 @@ const QString prosPathF2("..\\..\\Resources\\Description\\PROS\\F2.TXT");
 const QString prosPathF5("..\\..\\Resources\\Description\\PROS\\F5.TXT");
 const QString prosPathF12("..\\..\\Resources\\Description\\PROS\\F12.TXT");
 const QString juraPath1("..\\..\\Resources\\Description\\Jura\\Pros.txt");
+const QString juraPathExcel(QDir::currentPath() + "\\..\\..\\Resources\\Description\\Jura\\F_5_4.xls");
 #endif
 
 #ifdef DEBUGING

@@ -379,7 +379,7 @@ QStringList Presenters::getDefaultFilesForModel(QObject * loadedModel)
     }
     else if(loadedModel == _view->modelJURA)
     {
-        filenames.append(juraPath1);
+        filenames.append(juraPathExcel);
     }
     return filenames;
 }
