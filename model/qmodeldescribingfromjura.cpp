@@ -50,14 +50,13 @@ QVariantList QModelDescribingFromJura::getElementsFromExcel(QObject *excSheet)
         tmpElement = getTmpElementFromExcel(sheet, i);
         if (isHeadElement(tmpElement))
         {
-            tmpElement.insert(id, elementName + tmpElement.value(id).toString());
             if(countDependFields)
             {
                 elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
                 countDependFields = 0;
                 dependFieldList.clear();
             }
-            elements.append(tmpElement);
+            elements.append(fillOneElement(tmpElement));
             count++;
         }
         else if(isDependElement(tmpElement) && count != -1)
@@ -301,6 +300,32 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList &capt
     element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(7)));
     element.insert(correlationValue, FromIntegerToBinaryString(countDependFields) );
 
+    return element;
+}
+
+QVariantMap QModelDescribingFromJura::fillOneElement(const QVariantMap& tmpElement)
+{
+    QVariantMap element;
+    element.insert(id, elementName + tmpElement.value(id).toString());
+    element.insert(level, tmpElement.value(level));
+    element.insert(type, tmpElement.value(type));
+    element.insert(name, tmpElement.value(name));
+    element.insert(hint, tmpElement.value(hint));
+    if (!tmpElement.value(formId).isNull())
+    {
+        element.insert(formId, getElementNameByCodeForm(tmpElement.value(formId).toString()));
+    }
+
+    if(!tmpElement.value(targetName).isNull() && !tmpElement.value(formId).isNull())
+    {
+        element.insert(targetName,getElementNameByCodeForm(tmpElement.value(formId).toString()) + underline +
+                          tmpElement.value(targetName).toString());
+    }
+    if (!tmpElement.value(targetDataForConvert).isNull())
+    {
+        element.insert(targetDataForConvert,
+                          setTargetDataForConvert(tmpElement.value(targetDataForConvert).toString()));
+    }
     return element;
 }
 

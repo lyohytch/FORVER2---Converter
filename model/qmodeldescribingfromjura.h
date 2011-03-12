@@ -45,6 +45,7 @@ private:
     QString setTargetDataForConvert(const QString & dataFor);
     QVariantMap setDependFieldInfo(const QStringList &capturedText, int countDependFields);
     QVariantMap setDependFieldInfo(const QVariantMap &tmpElement, int countDependFields);
+    QVariantMap fillOneElement(const QVariantMap& tmpElement);
     QString FromIntegerToBinaryString(int countDependFields);
     void alignOneAndZerosInCorrelationCodes(int valueOfOnesAndZeros, QVariantList *dependList);
     QVariantMap getNewAlignedCorrelationsList(int countDependFields, const QVariantMap &element, QVariantList *dependFieldList);
