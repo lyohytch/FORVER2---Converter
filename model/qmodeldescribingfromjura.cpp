@@ -47,9 +47,10 @@ QVariantList QModelDescribingFromJura::getElementsFromExcel(QObject *excSheet)
     QVariantList dependFieldList;
     for (int i = intRowStart; i < intRows; ++i)
     {
-            tmpElement = getTmpElementFromExcel(sheet, i);
+        tmpElement = getTmpElementFromExcel(sheet, i);
         if (isHeadElement(tmpElement))
         {
+            tmpElement.insert(id, elementName + tmpElement.value(id).toString());
             if(countDependFields)
             {
                 elements[count] = getNewAlignedCorrelationsList(countDependFields, elements[count].toMap(), &dependFieldList);
