@@ -40,37 +40,6 @@ QVariantList QModelDescribing::getElementsWithData() const
 {
     return VisibleElementWithData;
 }
-
-void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename)
-{
-    qDebug();
-    //Open file
-    QFile fileSource(filename);
-    if (fileSource.exists())
-    {
-        // TODO: reading from excel
-        setElementNameByFile(filename);
-        setAdditionsToNamesByFile(filename);
-
-        qDebug() << "File found. Try to take list";
-
-        if ( excelExts.contains(filename.section('.',-1)) )
-        {
-            qDebug()<<"Try to use excel reader";
-            getDataFromExcelDocument(filename);
-        }
-        else
-        {
-            qDebug()<<"Read from txt file";
-            getDataFromTextDocument(fileSource);
-        }
-    }
-    else
-    {
-        qCritical() << "File " << filename << " doesn't exist";
-    }
-}
-
 void QModelDescribing::getDataFromExcelDocument(const QString &filename)
 {
 #ifdef Q_OS_WIN32
@@ -95,8 +64,9 @@ void QModelDescribing::getDataFromExcelDocument(const QString &filename)
 #endif
 }
 
-void QModelDescribing::getDataFromTextDocument(QFile& fileSource)
+void QModelDescribing::getDataFromTextDocument(const QString &filename)
 {
+    QFile fileSource(filename);
     if (!fileSource.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qCritical() << "File " << fileSource.fileName() << " can not be open as text";
@@ -118,6 +88,37 @@ void QModelDescribing::getDataFromTextDocument(QFile& fileSource)
         {
             qWarning() << "File structure is incorrect.";
         }
+    }
+}
+
+
+void QModelDescribing::appendFromDataFilesToDataElements(const QString& filename)
+{
+    qDebug();
+    //Open file
+    QFile fileSource(filename);
+    if (fileSource.exists())
+    {
+        // TODO: reading from excel
+        setElementNameByFile(filename);
+        setAdditionsToNamesByFile(filename);
+
+        qDebug() << "File found. Try to take list";
+
+        if ( excelExts.contains(filename.section('.',-1)) )
+        {
+            qDebug()<<"Try to use excel reader";
+            getDataFromExcelDocument(filename);
+        }
+        else
+        {
+            qDebug()<<"Read from txt file";
+            getDataFromTextDocument(filename);
+        }
+    }
+    else
+    {
+        qCritical() << "File " << filename << " doesn't exist";
     }
 }
 
@@ -237,6 +238,7 @@ void QModelDescribing::addNextElementsToList(const QVariantList & oneRec)
     }
 }
 
+//TODO: make it async
 void QModelDescribing::loadingDataElementsFromFile(const QString& filename)
 {
     qDebug();

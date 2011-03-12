@@ -1,3 +1,14 @@
+## CONFIG settings(debug)
+#CONFIG += debug
+#CONFIG -= release
+#DEFINES += DEBUGING
+#DEFINES += PROS
+
+## CONFIG settings (release)
+CONFIG += release
+CONFIG -= debug
+DEFINES += QT_NO_DEBUG QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+
 TARGET = Demo.Converter
 TEMPLATE = app
 DESTDIR = ./bin
