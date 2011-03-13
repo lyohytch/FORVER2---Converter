@@ -1,3 +1,8 @@
+AUTHOR = Alexey Kulyasov
+EMAIL = alexey.kulyasov@gmail.com
+LICENSE = LGPL v2.1
+LANGUAGE = C++
+
 INCLUDEPATH += . ..
 TEMPLATE = lib
 
