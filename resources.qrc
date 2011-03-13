@@ -1,7 +1,4 @@
 <RCC>
-    <qresource prefix="/application_icon">
-        <file>Resources/Icons/converter.ico</file>
-    </qresource>
     <qresource prefix="/translations/model">
         <file>Resources/Translations/converter_model_ru.qm</file>
     </qresource>
