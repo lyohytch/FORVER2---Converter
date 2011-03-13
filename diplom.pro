@@ -7,4 +7,3 @@ SUBDIRS += model \
            build
 TARGET = Demo.Converter
 DESTDIR = ./build/bin
-
