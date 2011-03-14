@@ -51,15 +51,26 @@ void PresenterForNonFunctionUI::setModelsAndTreesObjects()
 
 void PresenterForNonFunctionUI::freeObjects()
 {
-    //Delete target
-    if (_view->model4) delete _view->model4;
+    if (_view->model4)
+    {
+        delete _view->model4;
+    }
     //Delete template
-    if (_view->modelD) delete _view->modelD;
+    if (_view->modelD)
+    {
+        delete _view->modelD;
+    }
 
     //Delete template pros
-    if (_view->modelP) delete _view->modelP;
+    if (_view->modelP)
+    {
+        delete _view->modelP;
+    }
 
-    if (_view->modelJURA) delete _view->modelJURA;
+    if (_view->modelJURA)
+    {
+        delete _view->modelJURA;
+    }
 
     //Delete corr model
     if (_view->corrModel) delete _view->corrModel;
@@ -116,6 +127,11 @@ void PresenterForNonFunctionUI::setupAddTableForm()
     AddTableForm = new AdditionCorrelationTable(this, _view);
     connect(AddTableForm, SIGNAL(sendDataToMainTableForm(QStandardItem*, int, int)), this,
             SLOT(getDataFromAddCorrelationTable(QStandardItem*, int, int)), Qt::QueuedConnection);
+}
+
+PresenterForNonFunctionUI::~PresenterForNonFunctionUI()
+{
+    disconnect(this, SLOT(getDataFromAddCorrelationTable(QStandardItem*, int, int)));
 }
 
 void PresenterForNonFunctionUI::getDataFromAddCorrelationTable(QStandardItem* item, int mainRow, int mainColumn)
@@ -175,7 +191,6 @@ AdditionCorrelationTable::AdditionCorrelationTable(Presenters* presenter, IView*
 
     isWaitChanges = false; // Не ждём изменений
 
-
     connect(presenter, SIGNAL(sendDataToAddCorrForm(const QModelIndex&)), this,
             SLOT(processDataFromMainPresenter(const QModelIndex&)), Qt::QueuedConnection);
 
@@ -189,6 +204,12 @@ AdditionCorrelationTable::AdditionCorrelationTable(Presenters* presenter, IView*
             SLOT(updateElementInCorrTable(int, const QString&)), Qt::QueuedConnection);
 
 
+}
+
+AdditionCorrelationTable::~AdditionCorrelationTable()
+{
+    disconnect(this, SLOT(processDataFromMainPresenter(const QModelIndex&)));
+    disconnect(this, SLOT(updateElementInCorrTable(int, const QString&)));
 }
 
 void AdditionCorrelationTable::updateElementInCorrTable(int descriptionId, const QString& value)

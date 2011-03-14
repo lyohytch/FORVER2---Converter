@@ -13,7 +13,7 @@ class AdditionCorrelationTable : public QWidget
         Q_OBJECT
     public:
         AdditionCorrelationTable(Presenters* presenter, IView* _view);
-        ~AdditionCorrelationTable() {}
+        ~AdditionCorrelationTable();
     protected:
         virtual void closeEvent(QCloseEvent */*clEvent*/);
         QVariantMap fillCorrelationMap();
@@ -45,6 +45,7 @@ class PresenterForNonFunctionUI: public Presenters
         Q_OBJECT
     public:
         PresenterForNonFunctionUI(IView* view, QApplication* app): Presenters(view, app) {};
+        ~PresenterForNonFunctionUI();
     protected:
         virtual void allocateCorrelationModel();
         virtual QVariant switchFunction(int /*id*/, const QVariantList& /*parameters*/)

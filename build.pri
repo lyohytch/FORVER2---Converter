@@ -4,15 +4,15 @@ LICENSE = LGPL v2.1
 LANGUAGE = C++
 
 ## CONFIG settings(debug)
-#CONFIG += debug
-#CONFIG -= release
-#DEFINES += DEBUGING
-#DEFINES += PROS
+CONFIG += debug
+CONFIG -= release
+DEFINES += DEBUGING
+DEFINES += PROS
 
 ## CONFIG settings (release)
-CONFIG += release
-CONFIG -= debug
-DEFINES += QT_NO_DEBUG QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+#CONFIG += release
+#CONFIG -= debug
+#DEFINES += QT_NO_DEBUG QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 TARGET = Demo.Converter
 TEMPLATE = app
