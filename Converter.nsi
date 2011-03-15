@@ -5,7 +5,7 @@
   !define PRODUCT_NAME              "Forver2-Converter"
   !define PRODUCT_NAME_SHORT        "frvconv"  
   !define PRODUCT_VERSION           "1.0.0"            
-  !define PRODUCT_FILENAME          "exe"              
+  !define PRODUCT_FILENAME          "Demo.Converter.exe"              
   !define PRODUCT_UNFILENAME        "uninst.exe"                                                      
   !define PRODUCT_PUBLISHER         "Alexey Kulyasov"
   !define PRODUCT_DESCRIPTION       "FORVER2-Converter"
@@ -42,7 +42,8 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 Section "Main" mainSec
   SectionIn RO
   SetOutPath $INSTDIR\Main\bin
-  File "Converter.nsi"
+  File "build\bin\*.*"
+  File "Resources\Libs\*.*"
   ; uninstall.exe in $INSTDIR
   writeUninstaller "${PRODUCT_UNFILENAME}"
 SectionEnd
@@ -54,7 +55,7 @@ FunctionEnd
 
 Section "Resources" resSec
   SetOutPath $INSTDIR
-  File /r "Resources"
+  File /r /x "Libs" "Resources"
 SectionEnd  
 
 Section "Source files" srcSec
@@ -78,22 +79,40 @@ SectionEnd
   
 Section "Start menu Shortcuts" shortcutSec
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\Main\bin\Converter.nsi" "" "$INSTDIR\Main\bin\Converter.nsi" 0
+  SetOutPath "$INSTDIR\Main\bin"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\Main\bin\${PRODUCT_FILENAME}" "" "$INSTDIR\Main\bin\${PRODUCT_FILENAME}" 0
+  CreateShortCut "$DESKTOP\${PRODUCT_NAME}.lnk" "$INSTDIR\Main\bin\${PRODUCT_FILENAME}" "" "$INSTDIR\Main\bin\${PRODUCT_FILENAME}" 0
+  SetOutPath "$INSTDIR"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_UNFILENAME}.lnk" "$INSTDIR\${PRODUCT_UNFILENAME}" "" "$INSTDIR\${PRODUCT_UNFILENAME}" 0
 SectionEnd 
 
-;Write text for Russian
+;Russian
+LangString descMain ${LANG_RUSSIAN} "Основные файлы программы: исполняемые и динамические библиотеки"
+LangString descRes ${LANG_RUSSIAN} "Ресурсы: примерные файлы данных, перевод, иконки"
+LangString descSrc ${LANG_RUSSIAN} "Исходный код"
+LangString descDocs ${LANG_RUSSIAN} "Документация исходного кода"
+LangString descShort ${LANG_RUSSIAN} "Значки в меню и на рабочем столе"
+;English
+LangString descMain ${LANG_ENGLISH} "Main (executable files and dlls)"
+LangString descRes ${LANG_ENGLISH} "Resource files: example data file, translation, icons"
+LangString descSrc ${LANG_ENGLISH} "Source files"
+LangString descDocs ${LANG_ENGLISH} "Documentation of source code"
+LangString descShort ${LANG_ENGLISH} "Shourtcut files"
+
+
+
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${mainSec} "Main (executable files and dlls)"
-  !insertmacro MUI_DESCRIPTION_TEXT ${resSec} "Resource files: example data file, translation, icons"
-  !insertmacro MUI_DESCRIPTION_TEXT ${srcSec} "Source files"
-  !insertmacro MUI_DESCRIPTION_TEXT ${docsSec} "Documentation of source code"
-  !insertmacro MUI_DESCRIPTION_TEXT ${shortcutSec} "Shourtcut files"
+  !insertmacro MUI_DESCRIPTION_TEXT ${mainSec} $(descMain)
+  !insertmacro MUI_DESCRIPTION_TEXT ${resSec} $(descRes)
+  !insertmacro MUI_DESCRIPTION_TEXT ${srcSec} $(descSrc)
+  !insertmacro MUI_DESCRIPTION_TEXT ${docsSec} $(descDocs)
+  !insertmacro MUI_DESCRIPTION_TEXT ${shortcutSec} $(descShort)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
   Delete $INSTDIR\${PRODUCT_UNFILENAME}
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
+  Delete "$DESKTOP\${PRODUCT_NAME}.lnk"
   
   RMDir /r "$INSTDIR\Main"
   RMDir /r "$INSTDIR\Src"
@@ -103,11 +122,6 @@ Section "Uninstall"
   RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
   RMDir "$INSTDIR"
 SectionEnd 
-;Uninstaller Functions
-Function un.onInit
-  !insertmacro MUI_UNGETLANGUAGE  
-FunctionEnd
-
 ; info in file
   VIProductVersion ${PRODUCT_VERSION}.0
   VIAddVersionKey /LANG=${LANG_RUSSIAN} ProductName     "${PRODUCT_NAME}"
