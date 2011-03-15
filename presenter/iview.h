@@ -20,9 +20,21 @@ class IView: public QMainWindow
           */
         IView(QWidget* parent) : QMainWindow(parent) {}
         /**
-          * Указатели на объекты QModelDescribing
+          * Указатель на объект QModelDescribingOld4
           */
-        QObject* model4, *modelP, *modelD, *modelJURA;
+        QObject* model4;
+        /**
+          * Указатель на объект QModelDescribingPros
+          */
+        QObject* modelP;
+        /**
+          * Указатель на объект QModelDescribingDemo
+          */
+        QObject* modelD;
+        /**
+          * Указатель на объект QModelDescribingFromJura
+          */
+        QObject* modelJURA;
         /**
           * Массив объектов QModelDescribing
           */
@@ -62,34 +74,81 @@ class IView: public QMainWindow
           * \param check true - установить, false - иначе
           */
         virtual void englishLanguageSet(bool check) = 0;
+        /**
+          * Установить или нет русский язык
+          * \param check true - установить, false - иначе
+          */
         virtual void russianLanguageSet(bool check) = 0;
-
+        /**
+          * Выбранная строка в корреляционной таблице
+          */
         int activeRowId;
+        /**
+          * True - значение для источника в корреляционной таблице выставляется в первый раз, 0 - иначе
+          * \note В случае с false предыдущее значение не стирается, к нему добавляется новое
+          */
         bool countTV;
 
     signals:
+        /**
+          * Сигнал посылается в случае открытия пользователем файлов источника
+          */
         void OnOpenTargetFiles();
+        /**
+          * Сигнал посылается в случае открытия пользователем файлов приёмника
+          */
         void OnOpenTemplateFiles();
-
+        /**
+          * Сигнал посылается в случае попытки загрузить пользователем файлов данных источника
+          */
         void OnLoadTargetData();
+        /**
+          * Сигнал посылается в случае попытки загрузить пользователем файлов данных приёмника
+          */
         void OnLoadTemplateData();
-
+        /**
+          * Сигнал посылается Presenters для создания необходимых для работы объектов
+          * \sa Presenters
+          */
         void CreateObjects();
+        /**
+          * Сигнал посылается Presenters для удаления объектов
+          * \sa Presenters
+          */
         void FreeObjects();
-
+        /**
+          * Сигнал посылается в случае попытки загрузить пользователем данных приёмника в базу данных
+          */
         void OnExportTemplateDataToDB();
+        /**
+          * Сигнал посылается в случае попытки загрузить пользователем данных источника в базу данных
+          */
         void OnExportTargetDataToDB();
-
-        void refreshDescribingLists(int descriptionId, QObject* model);
-
+        /**
+          * Сигнал посылается при двойном щелчке пользователя на дерево источника
+          */
         void OnElementTreeTargetActivated();
+        /**
+          * Сигнал посылается при двойном щелчке пользователя на дерево приёмника
+          */
         void OnElementTreeTemplateActivated();
-
+        /**
+          * Сигнал посылается в случае попытки сохранить пользователем корреляционную таблицу в файл
+          */
         void OnSaveCorrelationTable();
+        /**
+          * Сигнал посылается в случае попытки загрузить пользователем корреляционную таблицу из файла
+          */
         void OnLoadCorrelationTable();
 
         //Translations
+        /**
+          * Сигнал посылается при смене языка в меню на английский
+          */
         void OnEnglishChecked(bool);
+        /**
+          * Сигнал посылается при смене языка в меню на русский
+          */
         void OnRussianChecked(bool);
 };
 
