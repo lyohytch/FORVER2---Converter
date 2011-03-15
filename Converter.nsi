@@ -54,27 +54,32 @@ Function .onInit
 FunctionEnd
 
 Section "Resources" resSec
-  SetOutPath $INSTDIR
-  File /r /x "Libs" "Resources"
+  SetOutPath $INSTDIR\Resources
+  File /r /x "Libs" "Resources\*"
 SectionEnd  
 
 Section "Source files" srcSec
    SetOutPath $INSTDIR\Src
-   File "*.pro"
-   File "*.pri"
-   File "*.qrc"
-   File "*.rc"
-   File "*.py"
-   File /r /x "Makefile*" /x "bin" /x "lib" /x "mocs" /x "objs" /x "res" "build" 
-   File /r /x "Makefile*" /x "Doxyfile" "model"
-   File /r /x "Makefile*" /x "Doxyfile" "presenter"
-   File /r /x "Makefile*" /x "Doxyfile" "query"
-   File /r /x "Makefile*" /x "Doxyfile" "ui"
+   File  "*.pro"
+   File  "*.pri"
+   File  "*.qrc"
+   File  "*.rc"
+   File  "*.py"
+   SetOutPath $INSTDIR\Src\build
+   File /r /x "Makefile*" /x "bin" /x "lib" /x "mocs" /x "objs" /x "res" "build\*.*" 
+   SetOutPath $INSTDIR\Src\model
+   File /r /x "Makefile*" /x "Doxyfile" "model\*.*"
+   SetOutPath $INSTDIR\Src\presenter
+   File /r /x "Makefile*" /x "Doxyfile" "presenter\*.*"
+   SetOutPath $INSTDIR\Src\query
+   File /r /x "Makefile*" /x "Doxyfile" "query\*.*"
+   SetOutPath $INSTDIR\Src\ui
+   File /r /x "Makefile*" /x "Doxyfile" "ui\*.*"
 SectionEnd
 
 Section "Docs" docsSec
-  SetOutPath $INSTDIR
-  File /r /x "*.rar" "Docs"
+  SetOutPath $INSTDIR\Docs
+  File /r /x "*.rar" "Docs\*"
 SectionEnd
   
 Section "Start menu Shortcuts" shortcutSec
