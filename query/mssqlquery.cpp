@@ -32,16 +32,17 @@ void mssqlquery::run()
     else
     {
         // Возможно, нашей БД нет, коннектимся к master
-        db.setDatabaseName(connectString.arg(driver, server, masterDB, trusted));
-        if (db.open())
+        QSqlDatabase dbNew = QSqlDatabase::addDatabase("QODBC");
+        dbNew.setDatabaseName(connectString.arg(driver, server, masterDB, trusted));
+        if (dbNew.open())
         {
             //создаём нашу БД
             if (!createDB())
             {
-                db.close();
+                dbNew.close();
                 return;
             }
-            db.close();
+            dbNew.close();
             //Коннектимся к нашей созданной БД
             db.setDatabaseName(connectString.arg(driver, server, criminalDB, trusted));
             if (db.open())
@@ -62,8 +63,8 @@ void mssqlquery::run()
         else
         {
             //Ошибка не можем приконнектиться к мастеру
-            qDebug() << db.lastError().text();
-            emit complete(1, db.lastError().text());
+            qDebug() << dbNew.lastError().text();
+            emit complete(1, dbNew.lastError().text());
             return;
         }
     }
@@ -113,14 +114,21 @@ bool mssqlquery::makeRequests()
         {
             if (tables.contains(name))
             {
-                if (!execRequest(removeRequestList.value(name).toString()))
+                if(!removeRequestList.value(name).toString().isEmpty())
+                {
+                    if (!execRequest(removeRequestList.value(name).toString()))
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (!createRequestList.value(name).toString().isEmpty() &&
+                createRequestList.value(name).toString().contains(name + underline))
+            {
+                if (!execRequest(createRequestList.value(name).toString()))
                 {
                     return false;
                 }
-            }
-            if (!execRequest(createRequestList.value(name).toString()))
-            {
-                return false;
             }
         }
     }

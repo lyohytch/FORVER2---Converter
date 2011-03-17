@@ -45,7 +45,7 @@ void querymodel::makeCreateTableRequest()
     {
         foreach(QString createTblReq, tblNames)
         {
-           createTblRequests.insert(createTblReq, createTbl + space + createTblReq + lBracket + requestDataFromList(templateForCreateRequests, createTblReq) + rBracket);
+           createTblRequests.insert(createTblReq, createTbl + space + createTblReq + lBracket + requestDataFromList(templateForCreateRequests, createTblReq).remove(-1,1) + rBracket);
         }
     }
     //createRequest = "CREATE TABLE TBLNAME()" - запрос создаёт пустую табдицу
@@ -91,7 +91,7 @@ void querymodel::makeInsertIntoListRequests()
         foreach(QString name, tblNames)
         {
             QString insertRequest = insertTbl + space + name + lBracket +
-                                    requestDataFromList(templateForInsertRequests, name) +
+                                    requestDataFromList(templateForInsertRequests, name).remove(-1, 1) +
                                     rBracket + space + valuesTbl + lBracket;
             insertRequests.insert(name, insertRequest);
         }

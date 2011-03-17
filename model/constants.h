@@ -23,7 +23,7 @@ const QChar k_eng('k');
 //Sql
 //DB names and connection string
 const QString masterDB("master");
-const QString criminalDB("CriminalDB");
+const QString criminalDB("CrimDemoDB");
 const QString driver("SQL Native Client");
 const QString server("localhost\\SQLEXPRESS");
 const QString trusted("yes");
