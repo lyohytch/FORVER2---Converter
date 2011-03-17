@@ -215,8 +215,10 @@ AdditionCorrelationTable::~AdditionCorrelationTable()
 void AdditionCorrelationTable::updateElementInCorrTable(int descriptionId, const QString& value)
 {
     qDebug() << "START";
-    bool isApplicableChanges = ((descriptionId == iTarget && activeRow == 0) ||
-                                (descriptionId == iTemplate && activeRow == 3));
+    //bool isApplicableChanges = ((descriptionId == iTarget && activeRow == 0) ||
+    //                            (descriptionId == iTemplate && activeRow == 3));
+    bool isApplicableChanges = ((descriptionId == iTarget && activeColumn == 1) ||
+                                (descriptionId == iTemplate && activeColumn == 4));
     if (isWaitChanges && isApplicableChanges)
     {
         QStandardItem* item = new QStandardItem(value);
@@ -229,7 +231,8 @@ void AdditionCorrelationTable::updateElementInCorrTable(int descriptionId, const
 void AdditionCorrelationTable::elementInCorrTableActivated(const QModelIndex& index)
 {
     qDebug();
-    bool isEditable = (index.row() == 1 || index.row() == 2);
+    //bool isEditable = (index.row() == 1 || index.row() == 2);
+    bool isEditable = (index.column() == 2 || index.column() == 3);
     activeRow = index.row();
     activeColumn = index.column();
     if (isEditable)
@@ -258,6 +261,7 @@ QVariantMap AdditionCorrelationTable::fillCorrelationMap()
     QVariantList codes = QVariantList();
     QVariantList corrs = QVariantList();
     QVariantList depids = QVariantList();
+    QVariantList tempNames = QVariantList();
 
     int rowCount = tableModel->rowCount();
     int colCount = tableModel->columnCount();
@@ -266,18 +270,21 @@ QVariantMap AdditionCorrelationTable::fillCorrelationMap()
         {
             if (tableModel->item(i, j) != NULL)
             {
-                switch (i)
+                switch (j)
                 {
                     case 0:
-                        names.append(tableModel->item(i, j)->text());
+                        tempNames.append((tableModel->item(i,j)->text()));
                         break;
                     case 1:
-                        codes.append(tableModel->item(i, j)->text());
+                        names.append(tableModel->item(i, j)->text());
                         break;
                     case 2:
-                        corrs.append(tableModel->item(i, j)->text());
+                        codes.append(tableModel->item(i, j)->text());
                         break;
                     case 3:
+                        corrs.append(tableModel->item(i, j)->text());
+                        break;
+                    case 4:
                         depids.append(tableModel->item(i, j)->text());
                         break;
                     default:
@@ -291,6 +298,7 @@ QVariantMap AdditionCorrelationTable::fillCorrelationMap()
     corrMap.insert(dependIdsInForm, depids);
     corrMap.insert(templateNameInForm, nameOfTarget);
     corrMap.insert(typeNameInForm, typeOfElement);
+    corrMap.insert(dependListNames, tempNames);
 
     return corrMap;
 }
@@ -301,8 +309,8 @@ void AdditionCorrelationTable::processDataFromMainPresenter(const QModelIndex& t
 
     tableModel->clear();
     tableModel = createModelFromData(tableData.data(Qt::UserRole + 1));
-    tableModel->setHorizontalHeaderLabels(QStringList() << tr("Heads") << tr("Depend fields"));
-    tableModel->setVerticalHeaderLabels(QStringList() << tr("Names") << tr("Codes") << tr("Values") << tr("Depend ID"));
+    //tableModel->setVerticalHeaderLabels(QStringList() << tr("Heads") << tr("Depend fields"));
+    tableModel->setHorizontalHeaderLabels(QStringList() << tr("Depend Element Names") << tr("Names") << tr("Codes") << tr("Values") << tr("Depend ID"));
 
     viewMainCorrs->resizeColumnsToContents();
     nameOfTarget = tableData.data(Qt::UserRole + 1).toMap().value(templateNameInForm).toString();
@@ -320,6 +328,7 @@ QStandardItemModel* AdditionCorrelationTable::createModelFromData(const QVariant
     QList<QStandardItem*> tCodes;
     QList<QStandardItem*> tValues;
     QList<QStandardItem*> tDepIds;
+    QList<QStandardItem*> tDepListNames;
 
     if (!corrData.isNull())
     {
@@ -327,17 +336,28 @@ QStandardItemModel* AdditionCorrelationTable::createModelFromData(const QVariant
         QVariantList codes = corrData.toMap().value(codesInForm).toList();
         QVariantList corrs = corrData.toMap().value(corrValuesInForm).toList();
         QVariantList depids = corrData.toMap().value(dependIdsInForm).toList();
+        QVariantList depListNames = corrData.toMap().value(dependListNames).toList();
 
-        tNames = fillRowInAdditionalTable(names, 0);
-        tCodes = fillRowInAdditionalTable(codes, 1);
-        tValues = fillRowInAdditionalTable(corrs, 2);
-        tDepIds = fillRowInAdditionalTable(depids, 3);
+        tDepListNames = fillColumnInAdditionTable(depListNames, 0);//No edit
+        tNames = fillColumnInAdditionTable(names, 1);//No edit
+        tCodes = fillColumnInAdditionTable(codes, 2); //Edit
+        tValues = fillColumnInAdditionTable(corrs, 3);//Edit
+        tDepIds = fillColumnInAdditionTable(depids, 4);//No edit
+
+    }
+    QStringList verticalHeaders = QStringList()<<tr("Heads");
+    int countDepends = tDepListNames.count();
+    for(int i = 1; i < countDepends; ++i)
+    {
+        verticalHeaders.append(QString::number(i));
     }
 
-    tModel->insertRow(0, tNames);
-    tModel->insertRow(1, tCodes);
-    tModel->insertRow(2, tValues);
-    tModel->insertRow(3, tDepIds);
+    tModel->setVerticalHeaderLabels(verticalHeaders);
+    tModel->insertColumn(0, tDepListNames);
+    tModel->insertColumn(1, tNames);
+    tModel->insertColumn(2, tCodes);
+    tModel->insertColumn(3, tValues);
+    tModel->insertColumn(4, tDepIds);
 
     return tModel;
 }
@@ -361,10 +381,33 @@ QList<QStandardItem*> AdditionCorrelationTable::fillRowInAdditionalTable(QVarian
     return tmpList;
 }
 
+QList<QStandardItem*> AdditionCorrelationTable::fillColumnInAdditionTable(QVariantList &elfill, int col)
+{
+    QList<QStandardItem*> tmpList;
+    QStandardItem* item = new QStandardItem(elfill.takeFirst().toString());
+    bool isEditable = (col == 2 || col == 3);
+    item->setEditable(isEditable);
+    tmpList.append(item);
+    if (elfill.count() > 0)
+    {
+        for (int i = 0; i < elfill.count(); ++i)
+        {
+            QStandardItem* itLoc = new QStandardItem(elfill.at(i).toString());
+            itLoc->setEditable(isEditable);
+            tmpList.append(itLoc);
+        }
+    }
+    return tmpList;
+}
+
 void AdditionCorrelationTable::elementInCorrTableClear(const QModelIndex& elementData)
 {
     QStandardItem* item = new QStandardItem;
-    bool isEditable = (elementData.row() == 1 || elementData.row() == 2);
-    item->setEditable(isEditable);
-    tableModel->setItem(elementData.row(), elementData.column(), item);
+    bool isEditable = (elementData.column() == 2 || elementData.column() == 3);
+    bool isMayClear = (elementData.column() != 0);
+    if (isMayClear)
+    {
+        item->setEditable(isEditable);
+        tableModel->setItem(elementData.row(), elementData.column(), item);
+    }
 }

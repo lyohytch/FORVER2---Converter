@@ -96,6 +96,7 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
     QString typeName = elemFromTemplate.toMap().value(type).toString(); //"typeName"
     QString templateName = elemFromTemplate.toMap().value(name).toString();//"templateName"
     QStringList dependIds = QStringList();//"dependIds" - dopy
+    QStringList templateNames = QStringList();//
 
     QVariantList dependList = elemFromTemplate.toMap().value(dependFields).toList();
 
@@ -103,12 +104,14 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
     corrValues.append(elemFromTemplate.toMap().value(correlationValue).toString());
     codes.append(elemFromTemplate.toMap().value(targetDataForConvert).toString());
     dependIds.append(QString(" "));
+    templateNames.append(QString(" "));
     foreach(QVariant dependElement, dependList)
     {
         itemNames.append(dependElement.toMap().value(targetName).toString());
         corrValues.append(dependElement.toMap().value(correlationValue).toString());
         codes.append(dependElement.toMap().value(targetDataForConvert).toString());
         dependIds.append(dependElement.toMap().value(dependId).toString());
+        templateNames.append(dependElement.toMap().value(name).toString());
     }
 
     if (itemNames.count() > 0)
@@ -122,6 +125,7 @@ QStandardItem* CorrelationModelNoFunction::addHeadAndDependingItemsInTarget(cons
     corrDataForTable.insert(typeNameInForm, typeName);
     corrDataForTable.insert(dependIdsInForm, dependIds);
     corrDataForTable.insert(templateNameInForm, templateName);
+    corrDataForTable.insert(dependListNames, templateNames);
 
     // Нужно устанавливать номер!!!!
     item = new QStandardItem(nameItem);

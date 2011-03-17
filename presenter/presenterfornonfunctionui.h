@@ -28,6 +28,7 @@ class AdditionCorrelationTable : public QWidget
         QStandardItemModel* tableModel;
         QStandardItemModel* createModelFromData(const QVariant& corrData);
         QList<QStandardItem*> fillRowInAdditionalTable(QVariantList& elfill, int row);
+        QList<QStandardItem*> fillColumnInAdditionTable(QVariantList &elfill, int col);
         int activeRow;
         int activeColumn;
         int mainRow;

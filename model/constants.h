@@ -118,6 +118,7 @@ const QString codesInForm("codeValues");
 const QString typeNameInForm("typeName");
 const QString dependIdsInForm("dependIds");
 const QString templateNameInForm("templateName");
+const QString dependListNames("dependListNames");
 
 //Translations
 const QString English("EnglishSetting");

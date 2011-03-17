@@ -79,7 +79,8 @@ QVariantList QModelDescribingFromJura::getElementsFromExcel(QObject* excSheet)
     delete rows;
     delete usedrange;
     delete sheet;
-
+#else
+    Q_UNUSED(excSheet);
 #endif
     return elements;
 }
@@ -295,6 +296,7 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QStringList& capt
     {
         element.insert(dependId, elementName + capturedText.at(1));
     }
+    element.insert(name, capturedText.at(2));
     element.insert(formId, getElementNameByCodeForm(capturedText.at(4)));//F5 , F1 , F2 or F12
     element.insert(targetName, getElementNameByCodeForm(capturedText.at(4)) + underline + capturedText.at(6));
     element.insert(targetDataForConvert, setTargetDataForConvert(capturedText.at(7)));
@@ -336,6 +338,11 @@ QVariantMap QModelDescribingFromJura::setDependFieldInfo(const QVariantMap& tmpE
     if (!tmpElement.value(dependId).isNull())
     {
         element.insert(dependId, elementName + tmpElement.value(dependId).toString());
+    }
+    element.insert(name, QString(" "));
+    if (!tmpElement.value(name).isNull())
+    {
+        element.insert(name, tmpElement.value(name));
     }
     element.insert(formId, QString(" "));
     if (!tmpElement.value(formId).isNull())

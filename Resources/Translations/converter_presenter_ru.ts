@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Depend fields</source>
-        <translation>Зависимые поля</translation>
+        <translation type="obsolete">Зависимые поля</translation>
     </message>
     <message>
         <source>Names</source>
@@ -26,6 +26,10 @@
     <message>
         <source>Depend ID</source>
         <translation>Дополнительные ИД</translation>
+    </message>
+    <message>
+        <source>Depend Element Names</source>
+        <translation>Имена зависимых элементов</translation>
     </message>
 </context>
 <context>
