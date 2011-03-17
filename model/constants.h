@@ -21,11 +21,29 @@ const QChar one('1');
 const QChar X_Eng('X');
 const QChar k_eng('k');
 //Sql
+//DB names and connection string
+const QString masterDB("master");
+const QString criminalDB("CriminalDB");
+const QString driver("SQL Native Client");
+const QString server("localhost\\SQLEXPRESS");
+const QString trusted("yes");
+const QString connectString("Driver={%1};Server=%2;Database=%3;Trusted_Connection=%4;");
+const QString createDBReq(QString("CREATE DATABASE %1").arg(criminalDB));
+//Requests
 const QString createTbl("CREATE TABLE");
 const QString insertTbl("INSERT INTO");
 const QString valuesTbl("VALUES");
 const QString dropTbl("DROP TABLE");
-const QString nameTbl("DemoTblName");
+//Demo tbl name
+const QString demoNameTbl("DemoTblName");
+//Table names
+const QString genericNameTbl("generic");
+const QString figurantNameTbl("figurant");
+const QString locusNameTbl("locus_delicti");
+const QString weaponNameTbl("weapon");
+
+const QStringList tblNames(QStringList()<<genericNameTbl<<figurantNameTbl<<locusNameTbl<<weaponNameTbl);
+
 const QString updateTbl("UPDATE");
 const QString setTbl("SET");
 const QString whereTbl("WHERE");
@@ -88,6 +106,8 @@ const QString generic("generic_");
 const QString figurant("figurant_");
 const QString locus("locus_delicti_");
 const QString weapon("weapon_");
+
+//Dont use it
 const QString generic_F5("generic_F5_");
 
 const QString F5_names("F5_");

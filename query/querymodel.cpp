@@ -9,13 +9,9 @@ querymodel::querymodel(CorrelationModel* acorrModel):
 querymodel::querymodel(const querymodel& templateQueryModel):
     QObject(),
     corrModel(templateQueryModel.corrModel),
-    iQueryRequestDesc(templateQueryModel.iQueryRequestDesc),
-    iQueryRequestData(templateQueryModel.iQueryRequestData),
-    iCreateTblRequests(templateQueryModel.iCreateTblRequests),
-    isTarget(templateQueryModel.isTarget),
-    createRequest(templateQueryModel.createRequest),
-    updateRequest(templateQueryModel.updateRequest),
-    insertRequest(templateQueryModel.insertRequest)
+    templateForCreateRequests(templateQueryModel.templateForCreateRequests),
+    templateForInsertRequests(templateQueryModel.templateForInsertRequests),
+    createTblRequests(templateQueryModel.createTblRequests)
 {
     qDebug();
 }
@@ -35,6 +31,7 @@ void querymodel::makeRequest()
     makeCreateTableRequest();//выполниться один раз
     makeUpdateTableRequest();//выполниться один раз
     makeInsertIntoListRequests();//выполниться один раз
+    makeRemoveTableRequest();
     //Fill in list for request
     //1 request = 1 item in iListData
     //Заполняется один раз
@@ -44,46 +41,60 @@ void querymodel::makeRequest()
 void querymodel::makeCreateTableRequest()
 {
     qDebug() << " Generating template for create table";
-    if (createRequest.isEmpty())
+    if ( createTblRequests.isEmpty() )
     {
-        createRequest += createTbl + space + nameTbl + lBracket + iQueryRequestDesc[0] + rBracket;
-        iCreateTblRequests.clear();
-        iCreateTblRequests.append(createRequest);
-        QString altRequest;
-        for (int i = 1; i < iQueryRequestDesc.count(); i++)
+        foreach(QString createTblReq, tblNames)
         {
-            altRequest = alterTbl + space + nameTbl + space + addTbl + space +
-                         iQueryRequestDesc[i];
-            iCreateTblRequests.append(altRequest);
+           createTblRequests.insert(createTblReq, createTbl + space + createTblReq + lBracket + requestDataFromList(templateForCreateRequests, createTblReq) + rBracket);
         }
     }
-
     //createRequest = "CREATE TABLE TBLNAME()" - запрос создаёт пустую табдицу
     //altRequest = "ALTER TABLE TBLNAME ADD(...)"
 }
+
+void querymodel::makeRemoveTableRequest()
+{
+    qDebug()<< "Generate remove tables requests";
+    if ( removeTblRequests.isEmpty())
+    {
+        foreach(QString remTbl, tblNames)
+        {
+            removeTblRequests.insert(remTbl, dropTbl + space + remTbl);
+        }
+    }
+}
+
+QString querymodel::requestDataFromList(const QStringList &queryList, const QString  &templ)
+{
+    QString retStr = "";
+    foreach(QString el, queryList)
+    {
+        if (el.contains(templ))
+        {
+            retStr += el;
+        }
+    }
+    return retStr;
+}
+
 void  querymodel::makeUpdateTableRequest()
 {
     qDebug() << " Not implemented yet";
 }
+
 void querymodel::makeInsertIntoListRequests()
 {
     //в запросе только один элемент
     qDebug() << " Generating template for insert into";
-    if (insertRequest.isEmpty())
+    if (insertRequests.isEmpty())
     {
-        insertRequest += insertTbl + space + nameTbl + lBracket;
-        for (int i = 0; i < iQueryRequestData.count(); i++)
+        foreach(QString name, tblNames)
         {
-            if (i == 0)
-            {
-                insertRequest += iQueryRequestData[i];
-            }
-            else
-            {
-                insertRequest += comma + iQueryRequestData[i];
-            }
+            QString insertRequest = insertTbl + space + name + lBracket +
+                                    requestDataFromList(templateForInsertRequests, name) +
+                                    rBracket + space + valuesTbl + lBracket;
+            insertRequests.insert(name, insertRequest);
         }
-        insertRequest += rBracket + space + valuesTbl + lBracket;
     }
     //insertRequest = "INSERT INTO TBLNAME(...) VALUE("
 }
@@ -91,15 +102,14 @@ void querymodel::initlist()
 {
     qDebug();
     QMap<QString, QVariant> oneMap;
-    if (iQueryRequestDesc.isEmpty() && iQueryRequestData.isEmpty())
+    if (templateForCreateRequests.isEmpty() && templateForInsertRequests.isEmpty())
     {
         QVariantList reqList = corrModel->getTemplateModel()->getVisibleElements();
         for (int i = 0; i < reqList.count() ; i++)
         {
-            //I know that cpDescribeList[i] is QMap object
             oneMap = reqList[i].toMap();
-            iQueryRequestDesc.append(MapToStrDesc(oneMap));
-            iQueryRequestData.append(MapToStrData(oneMap));
+            templateForCreateRequests.append(MapToStrDesc(oneMap));
+            templateForInsertRequests.append(MapToStrData(oneMap));
         }
     }
 
@@ -131,20 +141,18 @@ QString querymodel::CellTypeToStr(const QString& type)
 
 QString querymodel::MapToStrDesc(const QVariantMap& map)
 {
-    return (map.value(id).toString() + space + CellTypeToStr(map.value(type).toString())/* + comma*/);//generic_id type for create taable
+    return (map.value(id).toString() + space + CellTypeToStr(map.value(type).toString()) + comma);//generic_id type for create taable
 }
 QString querymodel::MapToStrData(const QVariantMap& map)
 {
-    return (map.value(id).toString()/* + comma*/);
+    return (map.value(id).toString() + comma);
 }
 
 void querymodel::resetList()
 {
-    listOfRequests.clear();
-    iQueryRequestDesc.clear();
-    iQueryRequestData.clear();
-    createRequest.clear();
-    insertRequest.clear();
+    listOAllfRequests.clear();
+    templateForCreateRequests.clear();
+    templateForInsertRequests.clear();
 }
 
 void querymodel::fillingRequestList()
@@ -152,37 +160,56 @@ void querymodel::fillingRequestList()
     qDebug();
     //Более простая реализация
     //Сначала для темплейта
-    listOfRequests.clear();
+    listOAllfRequests.clear();
+
     QVariantList tTemplate = corrModel->getTemplateModel()->getElementsWithData();//Записали все дела из демо
-    QVariantList tTemplateItem;
     QVariantList reqList = corrModel->getTemplateModel()->getVisibleElements();
-    QString reqString;
+
     tTemplate.append(corrModel->targetToTemplate());// добавили переконвертированные дела из старой версии
     //qDebug()<<Q_FUNC_INFO<<tTemplate.at(1).toMap().value(rapid).toList().at(0).toMap().value(dvalue);
     for (int i = 0 ; i < tTemplate.count(); i++)
     {
-        //TODO как представляется iListData
-        reqString = insertRequest;
-        tTemplateItem = tTemplate[i].toMap().value(rapid).toList();//Кажись так
-        for (int j = 0; j < reqList.count(); j++)
-        {
-            //Нужно найти для каждого reqList такой же элемент в tTemplateItem
-            //Если он есть, то добавить значение - нет, добавить пустое место
-            QVariant searchTmpl = reqList[j].toMap().value(id);//Значение ID
-            QString foundValue = findByID(tTemplateItem, searchTmpl).toString();
-            qDebug() << foundValue;
-            if (j == 0)
-            {
-                reqString += quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
-            }
-            else
-            {
-                reqString += comma + quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
-            }
-        }
-        reqString += rBracket;
-        listOfRequests.append(reqString);
+        listOAllfRequests.append(fillOneRequest(tTemplate[i].toMap().value(rapid).toList(),
+                                                reqList) );
     }
+}
+
+QString querymodel::fillOneRequest(const QVariantList &templateItem, const QVariantList &visElements)
+{
+    QString reqString;
+
+    reqString = chooseRequestString(visElements[0].toMap().value(id).toString());
+        //Кажись так
+    for (int j = 0; j < visElements.count(); j++)
+    {
+        //Нужно найти для каждого reqList такой же элемент в tTemplateItem
+        //Если он есть, то добавить значение - нет, добавить пустое место
+        QVariant searchTmpl = visElements[j].toMap().value(id);//Значение ID
+        QString foundValue = findByID(templateItem, searchTmpl).toString();
+        qDebug() << foundValue;
+        if (j == 0)
+        {
+            reqString += quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
+        }
+        else
+        {
+            reqString += comma + quote + foundValue + quote;//вывести значение поля dvalue в tTemplateItem
+        }
+    }
+    reqString += rBracket;
+    return reqString;
+}
+
+QString querymodel::chooseRequestString(const QString &temp)
+{
+    foreach(QString name, tblNames)
+    {
+         if (temp.contains(name))
+         {
+             return insertRequests.value(name).toString();
+         }
+    }
+    return QString();
 }
 
 QVariant querymodel::findByID(const QVariantList& list, const QVariant& searchTmpl)

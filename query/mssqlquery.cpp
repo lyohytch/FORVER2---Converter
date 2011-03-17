@@ -14,83 +14,129 @@ void mssqlquery::run()
     qDebug() << "Requests = " << queryModel->getRequestList();
     iListofRequests.append(queryModel->getRequestList());
     createRequestList = queryModel->getCreateTable();
-    mutex.lock();
-    //Создать базу данных, если нет её - добавить данные
-    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC", "MainDBConnection");
+    removeRequestList = queryModel->getRemoveTable();
+
+    db = QSqlDatabase::addDatabase("QODBC", "MainDBConnection");
     qDebug() << "ODBC driver valid?" << db.isValid();
-    db.setDatabaseName("Driver={SQL Native Client};Server=localhost\\SQLEXPRESS;Database=CrimDemoDB;Trusted_Connection=yes;");
+    db.setDatabaseName(connectString.arg(driver, server, criminalDB, trusted));
+    //Пробуем открыть нашу базу данных
     if (db.open())
     {
-        //Create table or add data in table
-        qDebug() << "Tables in database";
-        QStringList tables =  db.tables();
-        bool isTableinDB = false;
-        foreach(QString table, tables)
+        // Заполняем таблицы данными
+        if (!makeRequests())
         {
-            qDebug() << "\t" << table;
-            if (table == nameTbl)
-            {
-                isTableinDB = true;
-                break;
-            }
+            db.close();
+            return;
         }
-        if (!isTableinDB)
-        {
-            //Create table
-            //TODO проверить поддерживаются ли транзакции
-            db.transaction();
-            for (int i = 0; i < createRequestList.count(); i++)
-            {
-                if (db.lastError().type() != QSqlError::NoError)
-                {
-                    qDebug() << "Error: " << db.lastError().text();
-                    db.rollback();
-                    mutex.unlock();
-                    emit complete(1, db.lastError().text());
-                    return;
-                }
-                try
-                {
-                    db.exec(createRequestList[i]);
-                }
-                catch (QSqlError e)
-                {
-                    qDebug() << " err was occured";
-                    db.rollback();
-                    mutex.unlock();
-                    emit complete(1, e.text());
-                    return;
-                }
-            }
-            db.commit();
-
-        }
-        //DemoTblName
-        qDebug() << "::" << "Adding data to DB";
-        foreach(QString request, iListofRequests)
-        {
-            db.transaction();
-            if (db.lastError().type() != QSqlError::NoError)
-            {
-                qDebug() << "Error: " << db.lastError().text();
-                db.rollback();
-                mutex.unlock();
-                emit complete(1, db.lastError().text());
-                return;
-            }
-            db.exec(request);
-            db.commit();
-        }
-
     }
     else
     {
-        qDebug() << db.lastError().text();
-        mutex.unlock();
-        emit complete(1, db.lastError().text());
-        return;
+        // Возможно, нашей БД нет, коннектимся к master
+        db.setDatabaseName(connectString.arg(driver, server, masterDB, trusted));
+        if (db.open())
+        {
+            //создаём нашу БД
+            if (!createDB())
+            {
+                db.close();
+                return;
+            }
+            db.close();
+            //Коннектимся к нашей созданной БД
+            db.setDatabaseName(connectString.arg(driver, server, criminalDB, trusted));
+            if (db.open())
+            {
+                if (!makeRequests())
+                {
+                    db.close();
+                    return;
+                }
+            }
+            else
+            {
+                qDebug() << db.lastError().text();
+                emit complete(1, db.lastError().text());
+                return;
+            }
+        }
+        else
+        {
+            //Ошибка не можем приконнектиться к мастеру
+            qDebug() << db.lastError().text();
+            emit complete(1, db.lastError().text());
+            return;
+        }
     }
     db.close();
-    mutex.unlock();
-    emit complete(0, "SUCCESS");
+    emit complete(0, tr("SUCCESS"));
+}
+
+bool mssqlquery::execRequest(const QString& requestString)
+{
+    db.transaction();
+    if (db.lastError().type() != QSqlError::NoError)
+    {
+        qDebug() << "Error: " << db.lastError().text();
+        db.rollback();
+        emit complete(1, db.lastError().text());
+        return false;
+    }
+    db.exec(requestString);
+    db.commit();
+    return true;
+}
+
+bool mssqlquery::checkAllTablesInDB(const QStringList& tables)
+{
+    bool ret = false;
+    foreach(QString name, tblNames)
+    {
+        if (!tables.contains(name))
+        {
+            ret = false;
+            break;
+        }
+        ret = true;
+    }
+    return ret;
+}
+
+bool mssqlquery::makeRequests()
+{
+    //Create table or add data in table
+    qDebug() << "Tables in database";
+    QStringList tables =  db.tables();
+    bool isAllTablesInDB = checkAllTablesInDB(tables);
+    if (!isAllTablesInDB)
+    {
+        foreach(QString name, tblNames)
+        {
+            if (tables.contains(name))
+            {
+                if (!execRequest(removeRequestList.value(name).toString()))
+                {
+                    return false;
+                }
+            }
+            if (!execRequest(createRequestList.value(name).toString()))
+            {
+                return false;
+            }
+        }
+    }
+    //DemoTblName
+    qDebug() << "::" << "Adding data to DB";
+    foreach(QString request, iListofRequests)
+    {
+        if (!execRequest(request))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool mssqlquery::createDB()
+{
+    return execRequest(createDBReq);
 }

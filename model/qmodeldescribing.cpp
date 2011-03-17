@@ -151,7 +151,7 @@ void QModelDescribing::setElementNameByFile(const QString& filename)
     else if (filename.endsWith("Pros.txt", Qt::CaseSensitive) ||
              filename.endsWith("F_5_4.xls", Qt::CaseSensitive))
     {
-        elementName = generic_F5;
+        elementName = generic;
     }
     else
     {

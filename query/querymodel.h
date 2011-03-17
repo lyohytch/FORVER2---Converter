@@ -14,19 +14,21 @@ class querymodel: public QObject, public QRunnable
         Q_OBJECT
 
     protected:
-        QStringList listOfRequests;//список запросов к базе данных
+        QStringList listOAllfRequests;//список запросов к базе данных
 
         void resetList();//очистить список запросов к базе данных
         //bool convert();
         CorrelationModel* corrModel;
-        QStringList iQueryRequestDesc;//Данные для create table
-        QStringList iQueryRequestData;//Данные для insert into
-        QStringList iCreateTblRequests;
-        bool isTarget;//True if it is target
-        QString createRequest;
-        QString updateRequest;
-        QString insertRequest;
+        QStringList templateForCreateRequests;//Данные для create table
+        QStringList templateForInsertRequests;//Данные для insert into
+
+        QVariantMap createTblRequests;//Реквесты для создания таблиц
+        QVariantMap removeTblRequests; //Реквесты для удаления таблиц
+        QVariantMap insertRequests;//Реквесты для вставки данных
+        QVariantMap updateRequests;//Реквесты для обновления таблицы
+
         void makeCreateTableRequest();
+        void makeRemoveTableRequest();
         void makeUpdateTableRequest();
         void makeInsertIntoListRequests();
         QVariant findByID(const QVariantList& list, const QVariant& searchTmpl);
@@ -51,20 +53,24 @@ class querymodel: public QObject, public QRunnable
         void makeRequest();
         QStringList getRequestDesc() const
         {
-            return iQueryRequestDesc;
+            return templateForCreateRequests;
         };
         QStringList getRequestData() const
         {
-            return iQueryRequestData;
+            return templateForInsertRequests;
         };
         QStringList getRequestList() const
         {
-            return listOfRequests;
+            return listOAllfRequests;
         };
-        QStringList getCreateTable() const
+        QVariantMap getCreateTable() const
         {
-            return iCreateTblRequests;
+            return createTblRequests;
         };
+        QVariantMap getRemoveTable() const
+        {
+            return removeTblRequests;
+        }
 
     signals:
         void makeRequestSignal();
@@ -84,5 +90,8 @@ class querymodel: public QObject, public QRunnable
         QString CellTypeToStr(const QString& type);
         QString MapToStrDesc(const QVariantMap& map);
         QString MapToStrData(const QVariantMap& map);
+        QString requestDataFromList(const QStringList &queryList, const QString  &templ);
+        QString fillOneRequest(const QVariantList &templateItem, const QVariantList &visElements);
+        QString chooseRequestString(const QString &temp);
 };
 #endif // QUERYMODEL_H

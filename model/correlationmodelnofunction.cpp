@@ -222,7 +222,7 @@ QString CorrelationModelNoFunction::processTargetData(const QVariantList& conver
         const QVariant& elementFromCorrTable)
 {
     //elementFromCorrTable is QVariantMap with each element is QStringList except templateName and typeName
-    QString dataString("Empty");
+    QString dataString("");
 
     if (!elementFromCorrTable.isNull())
     {

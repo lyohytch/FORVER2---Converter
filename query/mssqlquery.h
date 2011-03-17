@@ -5,8 +5,6 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QRunnable>
-#include <QMutex>
-#include <QWaitCondition>
 
 #include "qmodeldescribing.h"
 #include "querymodel.h"
@@ -19,20 +17,19 @@ class mssqlquery : public QObject, public QRunnable
         Q_OBJECT
     public:
         mssqlquery(QObject* parent = 0, querymodel* model = 0);
-        void completeRequest()
-        {
-            qDebug() << Q_FUNC_INFO;
-        }
         QSqlDatabase db;
         querymodel* queryModel;
         QStringList iListofRequests;//Лист запросов для добавления в базу данных
-        QStringList createRequestList;// Лист запросов для создания таблицы базы данных
+        QVariantMap createRequestList;// Лист запросов для создания таблицы базы данных
+        QVariantMap removeRequestList;//Лист запросов для удаления таблиц
         virtual void run();
     signals:
         void complete(int aError, QString errStr);
-    public slots:
-    private:
-        QMutex mutex;
+       private:
+         bool execRequest(const QString & requestString);
+         bool checkAllTablesInDB(const QStringList &tables);
+         bool createDB();
+         bool makeRequests();
 };
 
 #endif // MSSQLQUERY_H
