@@ -2,8 +2,6 @@
 #define TREEVIEWMODEL_H
 #include <QTreeView>
 #include <QStandardItemModel>
-#include <QStringList>
-#include "qmodeldescribing.h"
 
 //! TreeViewModel - класс для визуального представления QStandardItemModel на форме
 /**

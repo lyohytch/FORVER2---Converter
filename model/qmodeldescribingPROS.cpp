@@ -1,4 +1,6 @@
 #include "qmodeldescribingPROS.h"
+#include "constants.h"
+#include "constants_model.h"
 
 //----------- --------QModelDescribingPros--------------------------------------
 QModelDescribingPros::QModelDescribingPros(QObject* parent):

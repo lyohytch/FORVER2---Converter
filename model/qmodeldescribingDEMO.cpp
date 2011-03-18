@@ -1,4 +1,6 @@
 #include "qmodeldescribingDEMO.h"
+#include "constants.h"
+#include "constants_model.h"
 
 //------------------------------------------------------------------------------
 //-------------------QModelDescribingDemo--------------------------------------

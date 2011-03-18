@@ -4,6 +4,7 @@
 
 #include "correlationmodel.h"
 #include "constants.h"
+#include "constants_model.h"
 
 //Describing model fields
 /*const QString id("id");

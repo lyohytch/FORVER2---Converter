@@ -1,4 +1,3 @@
-#include <QFile>
 #include <QTextCodec>
 
 #ifdef Q_OS_WIN32
@@ -7,6 +6,8 @@
 #endif
 
 #include "qmodeldescribing.h"
+#include "constants.h"
+#include "constants_model.h"
 
 QModelDescribing::QModelDescribing(QObject* parent):
     QStandardItemModel(parent)

@@ -1,9 +1,12 @@
 #include "qmodeldescribingfromjura.h"
+#include "constants.h"
+#include "constants_model.h"
 
 #ifdef Q_OS_WIN32
 #include <QAxObject>
 #include <QAxWidget>
 #endif
+
 
 //TODO: move to config
 namespace CapsExcel

@@ -44,6 +44,7 @@ Section "Main" mainSec
   SetOutPath $INSTDIR\Main\bin
   File "build\bin\*.*"
   File "Resources\Libs\*.*"
+  File /r "Resources\Libs\sqldrivers"
   ; uninstall.exe in $INSTDIR
   writeUninstaller "${PRODUCT_UNFILENAME}"
 SectionEnd

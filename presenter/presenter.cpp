@@ -7,6 +7,7 @@
 #include "presenter.h"
 
 #include "constants.h"
+#include "constants_presenter.h"
 #include "correlationmodel.h"
 #include "qmodeldescribingDEMO.h"
 #include "qmodeldescribingOLD4.h"

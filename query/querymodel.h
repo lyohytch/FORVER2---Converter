@@ -6,6 +6,7 @@
 #include "qmodeldescribing.h"
 #include "correlationmodel.h"
 #include "constants.h"
+#include "constants_query.h"
 //About class: QModelDescribing => QStringList
 //me,dv,av,ed,cb,et,rm
 

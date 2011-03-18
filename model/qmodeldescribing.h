@@ -7,8 +7,6 @@
 #include <QStandardItemModel>
 #include <QFile>
 
-#include "constants.h"
-
 //! QModelDescribing - базовый класс для файлов описания классификатора
 /**
   * Класс предоставляет функции для работы с файлами описания классификаторов.

@@ -1,6 +1,9 @@
 #include <QDateTime>
 
 #include "correlationmodelfunction.h"
+#include "constants.h"
+#include "constants_model.h"
+
 
 CorrelationModelFunction::CorrelationModelFunction(QWidget* parent, QModelDescribing* templ, QModelDescribing* target):
     CorrelationModel(parent, templ, target)

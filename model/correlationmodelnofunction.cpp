@@ -1,4 +1,6 @@
 #include "correlationmodelnofunction.h"
+#include "constants.h"
+#include "constants_model.h"
 
 CorrelationModelNoFunction::CorrelationModelNoFunction(QWidget* parent, QModelDescribing* templ, QModelDescribing* target):
     CorrelationModel(parent, templ, target)

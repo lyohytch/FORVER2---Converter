@@ -5,6 +5,7 @@
 
 #include "presenterfornonfunctionui.h"
 #include "constants.h"
+#include "constants_presenter.h"
 #include "correlationmodelnofunction.h"
 #include "qmodeldescribingDEMO.h"
 #include "qmodeldescribingfromjura.h"
