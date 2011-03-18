@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDir>
 
+//TODO: move more settings to config file
 //Common
 const QString dot(".");
 const QString comma(",");
@@ -23,11 +24,12 @@ const QChar k_eng('k');
 //Sql
 //DB names and connection string
 const QString masterDB("master");
-const QString criminalDB("CrimDemoDB");
+const QString criminalDB("CriminalDB");
 const QString driver("SQL Native Client");
 const QString server("localhost\\SQLEXPRESS");
-const QString trusted("yes");
-const QString connectString("Driver={%1};Server=%2;Database=%3;Trusted_Connection=%4;");
+const QString saUID("sa");
+const QString saPWD("NNSU");
+const QString connectString("DRIVER={%1};SERVER=%2;DATABASE=%3;UID=%4;PWD=%5;");
 const QString createDBReq(QString("CREATE DATABASE %1").arg(criminalDB));
 //Requests
 const QString createTbl("CREATE TABLE");

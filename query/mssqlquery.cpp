@@ -16,14 +16,14 @@ void mssqlquery::run()
     createRequestList = queryModel->getCreateTable();
     removeRequestList = queryModel->getRemoveTable();
 
-    db = QSqlDatabase::addDatabase("QODBC", "MainDBConnection");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC", "MainDBConnection");
     qDebug() << "ODBC driver valid?" << db.isValid();
-    db.setDatabaseName(connectString.arg(driver, server, criminalDB, trusted));
+    db.setDatabaseName(connectString.arg(driver, server, criminalDB, saUID, saPWD));
     //Пробуем открыть нашу базу данных
     if (db.open())
     {
         // Заполняем таблицы данными
-        if (!makeRequests())
+        if (!makeRequests(db))
         {
             db.close();
             return;
@@ -32,22 +32,17 @@ void mssqlquery::run()
     else
     {
         // Возможно, нашей БД нет, коннектимся к master
-        QSqlDatabase dbNew = QSqlDatabase::addDatabase("QODBC");
-        dbNew.setDatabaseName(connectString.arg(driver, server, masterDB, trusted));
-        if (dbNew.open())
+        db.setDatabaseName(connectString.arg(driver, server, masterDB, saUID, saPWD));
+        if (db.open())
         {
             //создаём нашу БД
-            if (!createDB())
-            {
-                dbNew.close();
-                return;
-            }
-            dbNew.close();
+            db.exec(createDBReq);
+            db.close();
             //Коннектимся к нашей созданной БД
-            db.setDatabaseName(connectString.arg(driver, server, criminalDB, trusted));
+            db.setDatabaseName(connectString.arg(driver, server, criminalDB, saUID, saPWD));
             if (db.open())
             {
-                if (!makeRequests())
+                if (!makeRequests(db))
                 {
                     db.close();
                     return;
@@ -63,8 +58,8 @@ void mssqlquery::run()
         else
         {
             //Ошибка не можем приконнектиться к мастеру
-            qDebug() << dbNew.lastError().text();
-            emit complete(1, dbNew.lastError().text());
+            qDebug() << db.lastError().text();
+            emit complete(1, db.lastError().text());
             return;
         }
     }
@@ -72,7 +67,7 @@ void mssqlquery::run()
     emit complete(0, tr("SUCCESS"));
 }
 
-bool mssqlquery::execRequest(const QString& requestString)
+bool mssqlquery::execRequest(QSqlDatabase &db, const QString& requestString)
 {
     db.transaction();
     if (db.lastError().type() != QSqlError::NoError)
@@ -102,7 +97,7 @@ bool mssqlquery::checkAllTablesInDB(const QStringList& tables)
     return ret;
 }
 
-bool mssqlquery::makeRequests()
+bool mssqlquery::makeRequests(QSqlDatabase &db)
 {
     //Create table or add data in table
     qDebug() << "Tables in database";
@@ -116,7 +111,7 @@ bool mssqlquery::makeRequests()
             {
                 if(!removeRequestList.value(name).toString().isEmpty())
                 {
-                    if (!execRequest(removeRequestList.value(name).toString()))
+                    if (!execRequest(db, removeRequestList.value(name).toString()))
                     {
                         return false;
                     }
@@ -125,7 +120,7 @@ bool mssqlquery::makeRequests()
             if (!createRequestList.value(name).toString().isEmpty() &&
                 createRequestList.value(name).toString().contains(name + underline))
             {
-                if (!execRequest(createRequestList.value(name).toString()))
+                if (!execRequest(db, createRequestList.value(name).toString()))
                 {
                     return false;
                 }
@@ -136,15 +131,10 @@ bool mssqlquery::makeRequests()
     qDebug() << "::" << "Adding data to DB";
     foreach(QString request, iListofRequests)
     {
-        if (!execRequest(request))
+        if (!execRequest(db, request))
         {
             return false;
         }
     }
     return true;
-}
-
-bool mssqlquery::createDB()
-{
-    return execRequest(createDBReq);
 }

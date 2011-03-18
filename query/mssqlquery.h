@@ -17,7 +17,6 @@ class mssqlquery : public QObject, public QRunnable
         Q_OBJECT
     public:
         mssqlquery(QObject* parent = 0, querymodel* model = 0);
-        QSqlDatabase db;
         querymodel* queryModel;
         QStringList iListofRequests;//Лист запросов для добавления в базу данных
         QVariantMap createRequestList;// Лист запросов для создания таблицы базы данных
@@ -26,10 +25,9 @@ class mssqlquery : public QObject, public QRunnable
     signals:
         void complete(int aError, QString errStr);
        private:
-         bool execRequest(const QString & requestString);
+         bool execRequest(QSqlDatabase &db, const QString & requestString);
          bool checkAllTablesInDB(const QStringList &tables);
-         bool createDB();
-         bool makeRequests();
+         bool makeRequests(QSqlDatabase &db);
 };
 
 #endif // MSSQLQUERY_H
