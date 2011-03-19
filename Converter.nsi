@@ -11,7 +11,7 @@
   !define PRODUCT_DESCRIPTION       "FORVER2-Converter"
   !define LICENSE_NAME              "LGPL v2.1 1999"
   !define PRODUCT_WEB_SITE          "http://github.com/lyohytch/FORVER2---Converter"                                           
-  !define /date                     NOW "%d.%m.%Y"    
+  !define /date                     NOW "%Y%m%d"    
 ;Compression level
 SetCompress force
 SetCompressor /SOLID lzma
