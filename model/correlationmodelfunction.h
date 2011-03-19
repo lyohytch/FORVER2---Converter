@@ -5,7 +5,6 @@
 //! CorrelationModelFunction - класс для построения корреляционных таблиц c функциями
 /**
   * Класс используется для работы с корреляционной таблицей, в которой добавлен столбец Функция
-  *
   */
 class CorrelationModelFunction: public CorrelationModel
 {

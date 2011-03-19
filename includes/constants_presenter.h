@@ -5,7 +5,6 @@
 //Translations
 const QString English("EnglishSetting");
 const QString Russian("RussianSetting");
-const QString applicationIni("converter.ini");
 const QString TranslateSettings("Translate");
 
 const QString modelQmPath(":translations/model/Resources/Translations/converter_model_ru.qm");
@@ -14,6 +13,8 @@ const QString UiQmPath(":translations/ui/Resources/Translations/converter_ui_ru.
 
 const QString actionRussian("actionRussian");
 const QString actionEnglish("actionEnglish");
+
+const QString translateSection("Program_Language");
 
 //Describing definitions
 const int TARGETDESC = 0;

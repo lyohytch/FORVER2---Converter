@@ -31,7 +31,7 @@ class QModelDescribingDemo: public QModelDescribing
         virtual void setElementNameByDataFile(const QString& filename)
         {
             Q_UNUSED(filename);
-        };
-        virtual void preparingDataStructureBeforeFilling() {};
+        }
+        virtual void preparingDataStructureBeforeFilling() {}
 };
 #endif // QMODELDESCRIBINGDEMO_H

@@ -5,7 +5,10 @@
 #include <QRadioButton>
 
 #include "presenter.h"
-//Класс для выбора функции
+//! QWidgetFunction класс для выбора функции
+/**
+  * Класс для отображения диалога выбора функции
+  */
 class QWidgetFunction : public QWidget
 {
         Q_OBJECT
@@ -15,6 +18,10 @@ class QWidgetFunction : public QWidget
     protected:
         virtual void closeEvent(QCloseEvent */*clEvent*/);
     signals:
+        /**
+          * Сигнализирует Presenters о выбранной функции
+          * \param id идентификатор выбранной функции
+          */
         void FuncWasChecked(int id);
 };
 

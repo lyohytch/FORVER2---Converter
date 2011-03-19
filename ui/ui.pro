@@ -1,4 +1,5 @@
-HEADERS += converter.h
+HEADERS += converter.h \
+    description.h
 
 SOURCES += converter.cpp
 

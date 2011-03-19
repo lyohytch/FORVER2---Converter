@@ -154,8 +154,8 @@ void converter::init_setup_main_form()
 
     //Set Language checkbox
     QSettings settings(applicationIni, QSettings::IniFormat);
-    QVariant engSetted = settings.value(English);
-    QVariant rusSetted = settings.value(Russian);
+    QVariant engSetted = settings.value(translateSection + slash + English);
+    QVariant rusSetted = settings.value(translateSection + slash + Russian);
     bool isSettingsNone = engSetted.isNull() || rusSetted.isNull();
     if (!isSettingsNone && (!engSetted.toBool() && rusSetted.toBool()))
     {

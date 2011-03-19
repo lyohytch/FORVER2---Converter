@@ -19,9 +19,8 @@ def run_doxy(dirname):
         if os.path.isdir(cpDir):
             shutil.rmtree(cpDir)   
     shutil.copytree(dirname + '/' + htmls, cpDir + htmls)
-    shutil.copytree(dirname + '/' + latexs, cpDir + latexs)
     shutil.rmtree(dirname + '/' + htmls)
-    shutil.rmtree(dirname + '/' + latexs)    
+
 #MAIN
 if __name__ == '__main__':
     print 'Generate docs started...'

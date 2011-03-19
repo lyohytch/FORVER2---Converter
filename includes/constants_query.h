@@ -3,32 +3,38 @@
 #include <QString>
 
 //Sql field types
-const QString VCHAR("VCHAR");//to query constant
-const QString VCHARMAX("VARCHAR(500)");//to query constant
-const QString INTEGER("INT");//to query constant
+const QString VCHAR("VCHAR");
+const QString VCHARMAX("VARCHAR(500)");
+const QString INTEGER("INT");
 
 //Sql
 //DB names and connection string
-const QString masterDB("master"); //to query_constants.h
+const QString masterDB("master");
 const QString criminalDB("CriminalDB"); //to config
-const QString driver("SQL Native Client"); // to query constant
+const QString driver("SQL Native Client");
 const QString server("localhost\\SQLEXPRESS");//to config
 const QString saUID("sa"); //to config
 const QString saPWD("NNSU");//to config
 
-const QString connectString("DRIVER={%1};SERVER=%2;DATABASE=%3;UID=%4;PWD=%5;");//to query constant
-const QString createDBReq(QString("CREATE DATABASE %1").arg(criminalDB));//to query constant
+const QString sqlServerSettings("SQL_Server_Settings");
+const QString srvName("Server");
+const QString dtbsName("Database");
+const QString userName("User");
+const QString pwdUser("Password");
+
+const QString connectString("DRIVER={%1};SERVER=%2;DATABASE=%3;UID=%4;PWD=%5;");
+const QString createDBReq("CREATE DATABASE %1");
 //Requests
-const QString createTbl("CREATE TABLE");//to query constant
-const QString insertTbl("INSERT INTO");//to query constant
-const QString valuesTbl("VALUES");//to query constant
-const QString dropTbl("DROP TABLE");//to query constant
+const QString createTbl("CREATE TABLE");
+const QString insertTbl("INSERT INTO");
+const QString valuesTbl("VALUES");
+const QString dropTbl("DROP TABLE");
 //Demo tbl name
-const QString demoNameTbl("DemoTblName");//to query constant
+const QString demoNameTbl("DemoTblName");
 //Table names
-const QString genericNameTbl("generic");//to query constant
-const QString figurantNameTbl("figurant");//to query constant
-const QString locusNameTbl("locus_delicti");//to query constant
+const QString genericNameTbl("generic");
+const QString figurantNameTbl("figurant");
+const QString locusNameTbl("locus_delicti");
 const QString weaponNameTbl("weapon");
 
 const QStringList tblNames(QStringList()<<genericNameTbl<<figurantNameTbl<<locusNameTbl<<weaponNameTbl);//to query constant

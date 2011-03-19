@@ -1,7 +1,6 @@
 #include <QFileDialog>
 #include <QDesktopWidget>
 #include <QThreadPool>
-#include <QSettings>
 
 #include "presenter.h"
 
@@ -66,45 +65,49 @@ void Presenters::loadTranslationFiles()
 void Presenters::defaultTranslateSets()
 {
     QSettings translateSettings(applicationIni, QSettings::IniFormat);
-    QVariant engSetted = translateSettings.value(English);
-    QVariant rusSetted = translateSettings.value(Russian);
+    QVariant engSetted = translateSettings.value(translateSection + slash + English);
+    QVariant rusSetted = translateSettings.value(translateSection + slash + Russian);
     bool isSettingNone = engSetted.isNull() || rusSetted.isNull();
     if (isSettingNone)
     {
-        translateSettings.setValue(English, QVariant(true));
-        translateSettings.setValue(Russian, QVariant(false));
+        setTranslationSettings(translateSettings, true, false);
     }
     else if (engSetted.toBool() && !rusSetted.toBool())
     {
-        translateSettings.setValue(English, QVariant(true));
-        translateSettings.setValue(Russian, QVariant(false));
+        setTranslationSettings(translateSettings, true, false);
     }
     else if (rusSetted.toBool() && !engSetted.toBool())
     {
-        translateSettings.setValue(English, QVariant(false));
-        translateSettings.setValue(Russian, QVariant(true));
+        setTranslationSettings(translateSettings, false, true);
         mainApplication->installTranslator(&translateModel);
         mainApplication->installTranslator(&translateUi);
         mainApplication->installTranslator(&translatePresenter);
     }
 
 }
+
+void Presenters::setTranslationSettings(QSettings & trSettings, bool english, bool russian)
+{
+    trSettings.beginGroup(translateSection);
+    trSettings.setValue(English, QVariant(english));
+    trSettings.setValue(Russian, QVariant(russian));
+    trSettings.endGroup();
+}
+
 void Presenters::onEnglishChecked(bool /*checked*/)
 {
     QSettings translateSettings(applicationIni, QSettings::IniFormat);
-    QVariant engSetted = translateSettings.value(English);
-    QVariant rusSetted = translateSettings.value(Russian);
+    QVariant engSetted = translateSettings.value(translateSection + slash + English);
+    QVariant rusSetted = translateSettings.value(translateSection + slash + Russian);
     if (engSetted.isNull() || rusSetted.isNull())
     {
-        translateSettings.setValue(English, QVariant(true));
-        translateSettings.setValue(Russian, QVariant(false));
+        setTranslationSettings(translateSettings, true, false);
         _view->englishLanguageSet(true);
         _view->russianLanguageSet(false);
     }
     else if (rusSetted.toBool() && !engSetted.toBool())
     {
-        translateSettings.setValue(English, QVariant(true));
-        translateSettings.setValue(Russian, QVariant(false));
+        setTranslationSettings(translateSettings, true, false);
         _view->englishLanguageSet(true);
         _view->russianLanguageSet(false);
     }
@@ -118,19 +121,17 @@ void Presenters::onEnglishChecked(bool /*checked*/)
 void Presenters::onRussianChecked(bool /*checked*/)
 {
     QSettings translateSettings(applicationIni, QSettings::IniFormat);
-    QVariant rusSetted = translateSettings.value(Russian);
-    QVariant engSetted = translateSettings.value(English);
+    QVariant rusSetted = translateSettings.value(translateSection + slash + Russian);
+    QVariant engSetted = translateSettings.value(translateSection + slash + English);
     if (engSetted.isNull() || rusSetted.isNull())
     {
-        translateSettings.setValue(English, QVariant(true));
-        translateSettings.setValue(Russian, QVariant(false));
+        setTranslationSettings(translateSettings, true, false);
         _view->englishLanguageSet(true);
         _view->russianLanguageSet(false);
     }
     else if (engSetted.toBool() && !rusSetted.toBool())
     {
-        translateSettings.setValue(English, QVariant(false));
-        translateSettings.setValue(Russian, QVariant(true));
+        setTranslationSettings(translateSettings, false, true);
         _view->englishLanguageSet(false);
         _view->russianLanguageSet(true);
     }

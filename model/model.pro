@@ -8,7 +8,8 @@ HEADERS += \
     qmodeldescribingfromjura.h \
     qmodeldescribingOLD4.h \
     qmodeldescribingPROS.h \
-    treeviewmodel.h
+    treeviewmodel.h \
+    description.h
 SOURCES += correlationmodel.cpp \
     correlationmodelfunction.cpp \
     correlationmodelnofunction.cpp \

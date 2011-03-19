@@ -3,6 +3,7 @@
 #include <QModelIndex>
 #include <QTranslator>
 #include <QApplication>
+#include <QSettings>
 
 #include "iview.h"
 
@@ -229,6 +230,8 @@ class Presenters: public QObject
           * Сигнал посылается в том случае, если описание модели загружено
           */
         void loadDescComplete();
+    private:
+        void setTranslationSettings(QSettings& trSettings, bool english, bool russian);
 };
 
 

@@ -5,19 +5,86 @@
 
 #include "correlationmodel.h"
 
-//About class: QModelDescribing => QStringList
-//me,dv,av,ed,cb,et,rm
+//! querymodel класс преобразующий QModelDescribing в строки для SQL-запросов
+/**
+  * Класс для преобразования из QModelDescribing в строки для SQL-запросов. Запуск процедуры преобразования
+  * асинхронный. Преобразованные строки передаются в mssqlquery для добавления в базу данных
+  * \sa mssqlquery
+  */
 
 class querymodel: public QObject, public QRunnable
 {
         Q_OBJECT
-
-    protected:
+    public:
+        /**
+          * Тип элементов из файла описания
+          */
+        enum CellType
+        {
+            /** Элемент текстового ввода*/
+            ed = 0,
+            /** Элемент дистрибутивного ввода*/
+            dv,
+            /** Элемент альтернативного ввода*/
+            av,
+            /** Элемент многострочного текстового ввода*/
+            me,
+            /** Элемент текстового ввода*/
+            et,
+            /** Раскрывающийся список*/
+            cb = 5,
+            /** Рамка, не используется для ввода*/
+            rm,
+            /** Неопределённый тип*/
+            un
+        };
+        /**
+          * Конструктор по умолчанию
+          * \param acorrModel указатель на корреляционную таблицу CorrelationModel
+          */
+        querymodel(CorrelationModel* acorrModel = 0);
+        /**
+          * Конструктор копирования
+          * \param templateQueryModel другой экземпляр qquerymodel
+          */
+        querymodel(const querymodel& templateQueryModel);
+        /**
+          * Запуск асинхронной процедуры преобразования из QModelDescribing в строки SQL-запросов
+          */
+        virtual void run();
+        /**
+          * Возвращает список всех SQL-запросов для добавления в БД
+          * \return Список всех SQL-запросов
+          */
+        QStringList getRequestList() const
+        {
+            return listOAllfRequests;
+        }
+        /**
+          * Возвращает список всех SQL-запросов для создания новых таблиц в БД
+          * \return Список SQL-запросов
+          */
+        QVariantMap getCreateTable() const
+        {
+            return createTblRequests;
+        }
+        /**
+          * Возвращает список всех SQL-запросов для удаления таблиц из БД
+          * \return Список SQL-запросов
+          */
+        QVariantMap getRemoveTable() const
+        {
+            return removeTblRequests;
+        }
+    signals:
+        /**
+          * Сигнализирует о завершении операции преобразовании из QModelDescribingModel в строки
+          */
+        void makeRequestSignal();
+    private:
+        CorrelationModel* corrModel;
         QStringList listOAllfRequests;//список запросов к базе данных
 
-        void resetList();//очистить список запросов к базе данных
-        //bool convert();
-        CorrelationModel* corrModel;
         QStringList templateForCreateRequests;//Данные для create table
         QStringList templateForInsertRequests;//Данные для insert into
 
@@ -26,54 +93,6 @@ class querymodel: public QObject, public QRunnable
         QVariantMap insertRequests;//Реквесты для вставки данных
         QVariantMap updateRequests;//Реквесты для обновления таблицы
 
-        void makeCreateTableRequest();
-        void makeRemoveTableRequest();
-        void makeUpdateTableRequest();
-        void makeInsertIntoListRequests();
-        QVariant findByID(const QVariantList& list, const QVariant& searchTmpl);
-
-        void fillingRequestList();
-        void initlist();
-    public:
-        enum CellType
-        {
-            ed = 0,
-            dv,
-            av,
-            me,
-            et,
-            cb = 5,
-            rm,
-            un
-        };
-        querymodel(CorrelationModel* acorrModel = 0);
-        querymodel(const querymodel& templateQueryModel);
-        virtual void run();
-        void makeRequest();
-        QStringList getRequestDesc() const
-        {
-            return templateForCreateRequests;
-        }
-        QStringList getRequestData() const
-        {
-            return templateForInsertRequests;
-        }
-        QStringList getRequestList() const
-        {
-            return listOAllfRequests;
-        }
-        QVariantMap getCreateTable() const
-        {
-            return createTblRequests;
-        }
-        QVariantMap getRemoveTable() const
-        {
-            return removeTblRequests;
-        }
-
-    signals:
-        void makeRequestSignal();
-    private:
         CellType iCellType;
         //Fill in lists
         void setCellType(const QString& type);
@@ -89,8 +108,17 @@ class querymodel: public QObject, public QRunnable
         QString CellTypeToStr(const QString& type);
         QString MapToStrDesc(const QVariantMap& map);
         QString MapToStrData(const QVariantMap& map);
-        QString requestDataFromList(const QStringList &queryList, const QString  &templ);
-        QString fillOneRequest(const QVariantList &templateItem, const QVariantList &visElements);
-        QString chooseRequestString(const QString &temp);
+        QString requestDataFromList(const QStringList& queryList, const QString&  templ);
+        QString fillOneRequest(const QVariantList& templateItem, const QVariantList& visElements);
+        QString chooseRequestString(const QString& temp);
+        void makeCreateTableRequest();
+        void makeRemoveTableRequest();
+        void makeUpdateTableRequest();
+        void makeInsertIntoListRequests();
+        void fillingRequestList();
+        void initlist();
+        QVariant findByID(const QVariantList& list, const QVariant& searchTmpl);
+        void makeRequest();
+        void resetList();
 };
 #endif // QUERYMODEL_H

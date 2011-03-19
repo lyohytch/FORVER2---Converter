@@ -45,7 +45,7 @@ class PresenterForNonFunctionUI: public Presenters
 {
         Q_OBJECT
     public:
-        PresenterForNonFunctionUI(IView* view, QApplication* app): Presenters(view, app) {};
+        PresenterForNonFunctionUI(IView* view, QApplication* app): Presenters(view, app) {}
         ~PresenterForNonFunctionUI();
     protected:
         virtual void allocateCorrelationModel();

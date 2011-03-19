@@ -1,5 +1,6 @@
 HEADERS += mssqlquery.h \
-           querymodel.h
+           querymodel.h \
+    description.h
 
 SOURCES += mssqlquery.cpp \
            querymodel.cpp

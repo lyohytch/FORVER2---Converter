@@ -13,6 +13,7 @@ const QString lBracket("(");
 const QString quote2("\"");
 const QString quote("\'");
 const QString underline("_");
+const QString slash("/");
 
 //Description file:type of fields
 const QString ME("me");
@@ -65,6 +66,8 @@ const QString dependListNames("dependListNames");
 const int iTemplate = 0;
 const int iTarget = 1;
 const int iFunction = 2;
+
+const QString applicationIni("converter.ini");
 
 //Excel extensions
 const QStringList excelExts(QStringList() << "xls" << "xlsx");
