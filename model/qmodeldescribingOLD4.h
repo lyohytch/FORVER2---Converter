@@ -7,7 +7,6 @@
   * Класс обрабатывает четыре файла описания: Sprav1.txt, Sprav2.txt, Sprav3.txt, Sprav4.txt - полученные сохранением
   * из XLS файлов классификаторов.Для каждого типа файлов существует свой файл с данными. Каждому файлу описания соответствует
   * свой ID в базе данных QModelDescribing::elementName. Файлы описания похожи на файл описания для QModelDescribingDemo
-  * \mainpage QModelDescribingOld4
   */
 class QModelDescribingOld4: public QModelDescribing
 {
