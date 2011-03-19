@@ -1,7 +1,3 @@
-#include <QVariantList>
-#include <QMap>
-#include <QString>
-
 #include "correlationmodel.h"
 #include "constants.h"
 #include "constants_model.h"

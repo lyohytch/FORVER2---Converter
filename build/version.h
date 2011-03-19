@@ -16,6 +16,6 @@
 #define VER_ORIGINALFILENAME_STR    "Demo.Converter.exe\0"
 #define VER_PRODUCTNAME_STR         "Demo.Converter\0"
 
-#define VER_COMPANYDOMAIN_STR       "github.com/lyohytch/FORVER2---Converter\0"
+#define VER_COMPANYDOMAIN_STR       "http://github.com/lyohytch/FORVER2---Converter\0"
 
 #endif // VERSION_H

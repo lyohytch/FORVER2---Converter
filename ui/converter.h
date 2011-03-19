@@ -1,12 +1,9 @@
 #ifndef CONVERTER_H
 #define CONVERTER_H
+
 #include <QApplication>
-#include <QMainWindow>
 #include <QHBoxLayout>
-#include <QProgressBar>
 #include <QLabel>
-#include <QRadioButton>
-#include <QVariantList>
 
 #include "iview.h"
 

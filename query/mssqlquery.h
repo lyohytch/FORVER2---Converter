@@ -1,13 +1,11 @@
 #ifndef MSSQLQUERY_H
 #define MSSQLQUERY_H
 
-#include <QObject>
 #include <QSqlDatabase>
-#include <QSqlTableModel>
 #include <QRunnable>
 
-#include "qmodeldescribing.h"
 #include "querymodel.h"
+
 /**This class provide API for MS SQL Server
  * For example, connect, disconnect and other
  */

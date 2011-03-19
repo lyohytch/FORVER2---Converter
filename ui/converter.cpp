@@ -1,6 +1,7 @@
 #include <QDesktopWidget>
 #include <QTreeView>
 #include <QTableView>
+#include <QSettings>
 
 #include "converter.h"
 #include "ui_converter.h"
@@ -13,8 +14,6 @@ converter::converter(QWidget* parent, QApplication* app) :
     IView(parent),
     ui(new Ui::converter)
 {
-    pLabel = NULL;
-    layout = NULL;
     init(app);
 }
 
@@ -132,6 +131,9 @@ void converter::init(QApplication* app)
 {
     //Template
     qDebug();
+
+    pLabel = NULL;
+    layout = NULL;
 
     //new PresenterForFunctionUI(this);
     new PresenterForNonFunctionUI(this, app);

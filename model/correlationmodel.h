@@ -1,9 +1,6 @@
 #ifndef CORRELATIONMODEL_H
 #define CORRELATIONMODEL_H
 
-#include <QMap>
-#include <QString>
-#include <QVariant>
 #include <QTableView>
 
 #include "qmodeldescribing.h"

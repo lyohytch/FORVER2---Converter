@@ -1,8 +1,7 @@
 #include <QFileDialog>
 #include <QDesktopWidget>
 #include <QThreadPool>
-#include <QTranslator>
-
+#include <QSettings>
 
 #include "presenter.h"
 

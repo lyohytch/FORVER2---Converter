@@ -1,8 +1,9 @@
-#include <QSqlDatabase>
-#include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlError>
 
 #include "mssqlquery.h"
+#include "constants.h"
+#include "constants_query.h"
 
 mssqlquery::mssqlquery(QObject* parent, querymodel* model) :
     QObject(parent), queryModel(model)

@@ -1,7 +1,4 @@
-#include <QHeaderView>
-
 #include "treeviewmodel.h"
-
 
 TreeViewModel::TreeViewModel(QWidget* parent, bool isT):
     QTreeView(parent), isTemplate(isT)

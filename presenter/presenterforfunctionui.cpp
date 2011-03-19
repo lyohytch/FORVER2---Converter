@@ -1,5 +1,4 @@
 #include <QDesktopWidget>
-#include <QApplication>
 
 #include "presenterforfunctionui.h"
 #include "constants.h"

@@ -1,4 +1,8 @@
+
+#include "constants.h"
+#include "constants_query.h"
 #include "querymodel.h"
+
 
 querymodel::querymodel(CorrelationModel* acorrModel):
     corrModel(acorrModel)

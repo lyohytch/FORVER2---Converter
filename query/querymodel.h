@@ -1,12 +1,10 @@
 #ifndef QUERYMODEL_H
 #define QUERYMODEL_H
-#include <QStringList>
+
 #include <QRunnable>
-#include <QObject>
-#include "qmodeldescribing.h"
+
 #include "correlationmodel.h"
-#include "constants.h"
-#include "constants_query.h"
+
 //About class: QModelDescribing => QStringList
 //me,dv,av,ed,cb,et,rm
 
@@ -55,19 +53,19 @@ class querymodel: public QObject, public QRunnable
         QStringList getRequestDesc() const
         {
             return templateForCreateRequests;
-        };
+        }
         QStringList getRequestData() const
         {
             return templateForInsertRequests;
-        };
+        }
         QStringList getRequestList() const
         {
             return listOAllfRequests;
-        };
+        }
         QVariantMap getCreateTable() const
         {
             return createTblRequests;
-        };
+        }
         QVariantMap getRemoveTable() const
         {
             return removeTblRequests;

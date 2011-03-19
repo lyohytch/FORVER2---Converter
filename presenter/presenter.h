@@ -1,7 +1,6 @@
 #ifndef PRESENTER_H
 #define PRESENTER_H
 #include <QModelIndex>
-#include <QSettings>
 #include <QTranslator>
 #include <QApplication>
 
