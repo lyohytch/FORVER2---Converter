@@ -11,5 +11,6 @@
   * \ref CorrelationModel \n
   * \ref CorrelationModelFunction \n
   * \ref CorrelationModelNoFunction \n
+  * \author Алексей Кулясов
   */
 #endif // DESCRIPTION_H

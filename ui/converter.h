@@ -11,22 +11,52 @@ namespace Ui
 {
     class converter;
 }
-
+//! converter интерфейс, реализующий интерфейс IView
+/**
+  * Класс, который реализует интерфейс IView
+  */
 class converter : public IView
 {
         Q_OBJECT
 
     public:
+        /**
+          * Конструктор по-умолчанию. Инициализирует основную форму, меню и другие виджеты на форме
+          * \param parent указатель на родительский виджет
+          * \param app указатель на QApplication. Используется для перевода приложения
+          */
         converter(QWidget* parent = 0, QApplication *app = 0);
         ~converter();
-
+        /**
+          * Удалить какие-нибудь виджеты
+          */
         virtual void removeWidgets();
+        /**
+          * Добавить какие-нибудь виджеты
+          */
         virtual void addWidgets();
+        /**
+          * Обновить сообщение на форме
+          * \param txtMsg текстовое сообщение
+          */
         virtual void updateTextLabel(const QString &txtMsg);
+        /**
+          * Установить или нет английский язык
+          * \param check true - установить, false - иначе
+          */
         virtual void englishLanguageSet(bool check);
+        /**
+          * Установить или нет русский язык
+          * \param check true - установить, false - иначе
+          */
         virtual void russianLanguageSet(bool check);
 
     protected:
+        /**
+          * Обработка сигнала QEvent
+          * \param e сигнал QEvent
+          * \note Данная функция не используется
+          */
         void changeEvent(QEvent* e);
 
     private:
@@ -53,9 +83,6 @@ class converter : public IView
         void on_actionLoad_Template_Data_triggered();
         void on_actionOpen_template_triggered();
         void on_actionOpen_triggered();
-    signals:
-        void loadDataComplete();
-
 };
 
 #endif // CONVERTER_H

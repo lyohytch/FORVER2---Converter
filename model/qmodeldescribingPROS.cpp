@@ -26,7 +26,7 @@ QVariantList QModelDescribingPros::getElementsFromText(QTextStream* fileStream)
     QVariantList elements;
     QString text = fileStream->readAll();
     QStringList textSplitted = text.split(QRegExp("\\n"));
-    /**
+    /*
       F5.TXT
          Р '  В '     Г '       N '   Np '      NPOT '  9 '      10 '  Соц '  Должн. '   14 '   14 '   15 '  16 '   18 '  18.1 '  18.2 '  19 '  19 '   20 '   20 '   20 '   20 '  Фамилия             '   Имя           '  Отчество            ' Дата рожд
       */

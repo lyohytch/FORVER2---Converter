@@ -6,5 +6,6 @@
   * \ref Presenters \n
   * \ref PresenterForFunctionUI \n
   * \ref PresenterForNonFunctionUI \n
+  * \author Алексей Кулясов
   */
 #endif // DESCRIPTION_H
