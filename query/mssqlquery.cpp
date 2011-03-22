@@ -1,6 +1,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSettings>
+#include <QDir>
 
 #include "mssqlquery.h"
 #include "constants.h"
@@ -19,6 +20,7 @@ void mssqlquery::run()
     dbName = sqlSettings.value(sqlServerSettings + slash + dtbsName, criminalDB).toString();
     uidName = sqlSettings.value(sqlServerSettings + slash + userName, saUID).toString();
     pwdUid = sqlSettings.value(sqlServerSettings + slash + pwdUser, saPWD).toString();
+    dbPath = sqlSettings.value(sqlServerSettings + slash + dbpath, "").toString();
 
     qDebug() << "Requests = " << queryModel->getRequestList();
     iListofRequests.append(queryModel->getRequestList());
@@ -45,7 +47,22 @@ void mssqlquery::run()
         if (db.open())
         {
             //создаём нашу БД
-            db.exec(createDBReq.arg(dbName));
+            if (dbPath.isEmpty())
+            {
+                db.exec(createDBReqSimple.arg(dbName));
+            }
+            else
+            {
+                QDir dbDir(dbPath);
+                if ( !dbDir.exists(dbDir.canonicalPath()))
+                {
+                    qDebug()<<dbPath;
+                    dbDir.mkpath(dbPath);
+                    dbDir = QDir(dbPath);
+                    qDebug()<<dbDir.canonicalPath();
+                }
+                db.exec(createDBReqAdvanced.arg(dbName, dbDir.canonicalPath().replace("/","\\")));
+            }
             db.close();
             //Коннектимся к нашей созданной БД
             db.setDatabaseName(connectString.arg(driver, serverName, dbName, uidName, pwdUid));

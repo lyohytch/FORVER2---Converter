@@ -21,3 +21,6 @@ html/
 latex/
 *.ini
 *.lnk
+*.mdf
+*.ldf
+*.db

@@ -56,7 +56,7 @@ FunctionEnd
 
 Section "Resources" resSec
   SetOutPath $INSTDIR\Resources
-  File /r /x "Libs" "Resources\*"
+  File /r /x "Libs" /x "*.mdf" /x "*.ldf" "Resources\*"
 SectionEnd  
 
 Section "Source files" srcSec

@@ -21,9 +21,11 @@ const QString srvName("Server");
 const QString dtbsName("Database");
 const QString userName("User");
 const QString pwdUser("Password");
+const QString dbpath("Path");
 
 const QString connectString("DRIVER={%1};SERVER=%2;DATABASE=%3;UID=%4;PWD=%5;");
-const QString createDBReq("CREATE DATABASE %1");
+const QString createDBReqSimple("CREATE DATABASE %1");
+const QString createDBReqAdvanced("CREATE DATABASE %1 ON PRIMARY (NAME=%1, FILENAME='%2/%1.mdf', SIZE=20MB, MAXSIZE=100MB, FILEGROWTH=20%) LOG ON (NAME=%1_log, FILENAME='%2/%1_log.ldf', SIZE=10MB, MAXSIZE=50MB, FILEGROWTH=20%)");
 //Requests
 const QString createTbl("CREATE TABLE");
 const QString insertTbl("INSERT INTO");

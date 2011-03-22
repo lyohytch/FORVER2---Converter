@@ -66,6 +66,7 @@ class mssqlquery : public QObject, public QRunnable
         QString dbName;
         QString uidName;
         QString pwdUid;
+        QString dbPath;
 
 };
 
