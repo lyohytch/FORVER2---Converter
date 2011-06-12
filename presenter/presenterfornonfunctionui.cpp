@@ -1,5 +1,6 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "presenterfornonfunctionui.h"
 #include "constants.h"
@@ -201,8 +202,6 @@ AdditionCorrelationTable::AdditionCorrelationTable(Presenters* presenter, IView*
 
     connect(presenter, SIGNAL(sendChangedDataToAddCorrForm(int, const QString&)), this,
             SLOT(updateElementInCorrTable(int, const QString&)), Qt::QueuedConnection);
-
-
 }
 
 AdditionCorrelationTable::~AdditionCorrelationTable()
@@ -401,12 +400,21 @@ QList<QStandardItem*> AdditionCorrelationTable::fillColumnInAdditionTable(QVaria
 
 void AdditionCorrelationTable::elementInCorrTableClear(const QModelIndex& elementData)
 {
-    QStandardItem* item = new QStandardItem;
-    bool isEditable = (elementData.column() == 2 || elementData.column() == 3);
-    bool isMayClear = (elementData.column() != 0);
-    if (isMayClear)
+    qDebug()<<"Show accept window";
+    int ret = QMessageBox::question(this, tr("Accept action"), tr(" Do you want clear this item?"),
+                                   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel,
+                                   QMessageBox::Cancel);
+    if ( ret == QMessageBox::Yes)
     {
-        item->setEditable(isEditable);
-        tableModel->setItem(elementData.row(), elementData.column(), item);
+        qDebug()<<"Action accepted";
+        QStandardItem* item = new QStandardItem;
+        bool isEditable = (elementData.column() == 2 || elementData.column() == 3);
+        bool isMayClear = (elementData.column() != 0);
+        if (isMayClear)
+        {
+            item->setEditable(isEditable);
+            tableModel->setItem(elementData.row(), elementData.column(), item);
+        }
     }
+    qDebug()<<"Ended";
 }
